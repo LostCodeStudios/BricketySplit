@@ -13,11 +13,13 @@ function Wall(width) {
         return this.lanes[lane] % 2 == 1;
     }
     
-    this.supportingLane = function (lane) {        
-        return this.isOffset(this.lanes[lane]) ? lane - 1 : lane + 1;
+    this.supportingLane = function (lane) {
+        return this.isOffset(lane) ? lane + 1 : lane - 1;
     }
     
     this.addBrick = function (lane) {
+        console.log('Dropping brick in lane ' + lane);
+        
         this.lanes[lane]++;
         
         if (this.lanes[lane] > this.height) {
@@ -28,6 +30,7 @@ function Wall(width) {
     
     this.canBrickFall = function (lane) {
         console.log('Checking if brick can spawn in lane ' + lane);
+        console.log('The lane is ' + (this.isOffset(lane) ? 'offset' : 'normal'));
         
         if (this.lanes[lane] == 0) {
             return true;

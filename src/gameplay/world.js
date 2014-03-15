@@ -21,11 +21,11 @@ function World() {
         
         if (this.canBrickFall) {
             var lane = this.wall.nextLane();
-            this.wall.addBrick(lane);
             
             var brick = new Brick(lane, this.wall.isOffset(lane));
             this.fallingBrick = brick;
             
+            this.wall.addBrick(lane);
             this.canBrickFall = false;
         }
         

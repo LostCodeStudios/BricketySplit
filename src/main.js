@@ -10,7 +10,6 @@ var lastTime;
 
 var state;
 
-var initialized = false;
 var mobile = false;
 
 function preload() {
@@ -25,22 +24,30 @@ function create() {
     
     setState(new MainMenu());
     
+    if (!game.device.desktop) {
+        mobile = true;
+        
+        game.stage.fullScreenScaleMode = Phaser.StageScaleMode.EXACT_FIT;        
+        game.stage.scale.forceOrientation(true, false);
+        game.stage.scale.enterIncorrectOrientation.add(enterIncorrectOrientation, this);
+        game.stage.scale.leaveIncorrectOrientation.add(leaveIncorrectOrientation, this);
+        game.stage.scale.startFullScreen();
+        
+        game.stage.scale.setShowAll();
+        game.stage.scale.refresh();
+    }
+    
     lastTime = 0;
     
 }
 
+function enterIncorrectOrientation() {
+}
+
+function leaveIncorrectOrientation() {
+}
+
 function update() {
-    
-    if (!initialized) {
-        if (!game.device.desktop) {
-            mobile = true;
-            
-            game.stage.fullScreenScaleMode = Phaser.StageScaleMode.EXACT_FIT;
-            game.stage.scale.startFullScreen();
-        }
-        
-        initialized = true;
-    }
     
     currentTime = game.time.now;
     var delta = currentTime - lastTime;
