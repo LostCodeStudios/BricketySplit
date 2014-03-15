@@ -1,14 +1,14 @@
 function MainMenu() {
     
-    var titleX = width / 2;
-    var titleY = height / 5;
+    var titleX = windowWidth / 2;
+    var titleY = windowHeight / 5;
     var titleFont = '32px Arial';
     var titleFill = '#FF0000';
     var title = 'Brickety Split';
     var titleText;
     
-    var msgX = width / 2;
-    var msgY = height / 2;
+    var msgX = windowWidth / 2;
+    var msgY = windowHeight / 2;
     var msgFont = '24px Arial';
     var msgFill = '#FF0000';
     var msg = 'Press SPACE to play.';

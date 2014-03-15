@@ -1,9 +1,9 @@
-var width = 640;
-var height = 480;
+var windowWidth = 640;
+var windowHeight = 480;
 
 var backgroundColor = '#00FFFF';
 
-var game = new Phaser.Game(width, height, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(windowWidth, windowHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
 var currentTime;
 var lastTime;
