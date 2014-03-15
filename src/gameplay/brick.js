@@ -1,6 +1,9 @@
 function Brick(lane, offset) {
-    var brickWidth = 64;
-    var brickHeight = 32;
+    var width = 64;
+    var height = 32;
+    
+    var bodyWidthMargin = 6;
+    var bodyHeightMargin = 0;
     
     var x = width + lane * width;
     
@@ -8,6 +11,11 @@ function Brick(lane, offset) {
         x += width / 2;
     }
     
-    this.sprite = game.add.sprite(x, -height, 'brick');
-    this.sprite.body.gravity = gravity;
+    var y = -height;
+    
+    this.sprite = game.add.sprite(x, y, 'brick');
+    this.sprite.body.setRectangle(width - bodyWidthMargin, height - bodyHeightMargin, bodyWidthMargin / 2, bodyHeightMargin / 2);
+    this.sprite.body.x = x;
+    this.sprite.body.y = y;
+    this.sprite.body.gravity.y = gravity;
 }

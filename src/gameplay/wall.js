@@ -1,5 +1,7 @@
 function Wall(width) {
     
+    this.height = 0;
+    
     //Lane management
     this.lanes = new Array(width);
     
@@ -12,26 +14,46 @@ function Wall(width) {
     }
     
     this.supportingLane = function (lane) {        
-        return isOffset(this.lanes[lane]) ? lane - 1 : lane + 1;
+        return this.isOffset(this.lanes[lane]) ? lane - 1 : lane + 1;
     }
     
     this.addBrick = function (lane) {
-        ++this.lanes[lane];
+        this.lanes[lane]++;
+        
+        if (this.lanes[lane] > this.height) {
+            //height increased
+            this.height++;
+        }
     }
     
     this.canBrickFall = function (lane) {
+        console.log('Checking if brick can spawn in lane ' + lane);
+        
         if (this.lanes[lane] == 0) {
             return true;
         }
         
         var supportingLane = this.supportingLane(lane);
 
+        console.log('    Supporting lane: ' + supportingLane);
+        
         if (supportingLane < 0 || supportingLane == this.lanes.length) {
             return true;
         }
 
+        console.log('    supporting lane height: ' + this.lanes[supportingLane]);
+        console.log('    this lane height: ' + this.lanes[lane]);
+        
         return (this.lanes[supportingLane] >= this.lanes[lane]);
     }
     
-    this.row = 0; //the first row
+    this.nextLane = function () {
+        var lane;
+        
+        do {
+            lane = Math.floor(Math.random() * this.lanes.length);
+        } while (!this.canBrickFall(lane));
+        
+        return lane;
+    }
 }
