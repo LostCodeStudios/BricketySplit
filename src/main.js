@@ -1,4 +1,4 @@
-var windowWidth = 640;
+var windowWidth = 960;
 var windowHeight = 480;
 
 var backgroundColor = '#00FFFF';
@@ -16,6 +16,7 @@ function preload() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('brick', 'assets/brick.png');
     game.load.image('halfbrick', 'assets/halfbrick.png');
+    game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
 }
 
 function create() {

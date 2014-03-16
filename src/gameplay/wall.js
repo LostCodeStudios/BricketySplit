@@ -1,9 +1,12 @@
 function Wall(width) {
     
+    this.width = width;
     this.height = 0;
     
     //Lane management
     this.lanes = new Array(width);
+    
+    this.rightHalfBrickFallen = false;
     
     for (var i = 0; i < width; i++) {
         this.lanes[i] = 0; //each lane starts with height 0
@@ -14,38 +17,46 @@ function Wall(width) {
     }
     
     this.supportingLane = function (lane) {
-        return this.isOffset(lane) ? lane + 1 : lane - 1;
+        return this.isOffset(lane) ? lane - 1 : lane + 1;
     }
     
     this.addBrick = function (lane) {
-        console.log('Dropping brick in lane ' + lane);
-        
-        this.lanes[lane]++;
-        
-        if (this.lanes[lane] > this.height) {
-            //height increased
-            this.height++;
+        if (lane == this.width) {
+            this.rightHalfBrickFallen = true; console.log('The right half brick fell');
+        }
+        else {
+            if (this.rightHalfBrickFallen && lane == this.width - 1 && !this.isOffset(lane)) {
+                this.rightHalfBrickFallen = false; console.log('The right half brick can fall again');
+            }
+            
+            this.lanes[lane]++;
+
+            if (this.lanes[lane] > this.height) {
+                //height increased
+                this.height++;
+            }
         }
     }
     
-    this.canBrickFall = function (lane) {
-        console.log('Checking if brick can spawn in lane ' + lane);
-        console.log('The lane is ' + (this.isOffset(lane) ? 'offset' : 'normal'));
-        
-        if (this.lanes[lane] == 0) {
+    this.canBrickFall = function (lane) {    
+        if (this.lanes[lane] == 0 && lane < this.width) {
             return true;
         }
         
         var supportingLane = this.supportingLane(lane);
 
-        console.log('    Supporting lane: ' + supportingLane);
-        
-        if (supportingLane < 0 || supportingLane == this.lanes.length) {
+        if (supportingLane < 0) {
             return true;
         }
-
-        console.log('    supporting lane height: ' + this.lanes[supportingLane]);
-        console.log('    this lane height: ' + this.lanes[lane]);
+        
+        if (lane == this.width && this.isOffset(lane - 1)) {
+            console.log('Checking if the right half brick should fall');
+            return !this.rightHalfBrickFallen;
+        }
+        
+        if (lane == this.width - 1 && !this.isOffset(lane)) {
+            return this.rightHalfBrickFallen;
+        }
         
         return (this.lanes[supportingLane] >= this.lanes[lane]);
     }
@@ -54,7 +65,7 @@ function Wall(width) {
         var lane;
         
         do {
-            lane = Math.floor(Math.random() * this.lanes.length);
+            lane = Math.floor(Math.random() * (this.width + 1));
         } while (!this.canBrickFall(lane));
         
         return lane;

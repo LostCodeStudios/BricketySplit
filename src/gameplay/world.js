@@ -1,10 +1,13 @@
-var gravity = 400;
+var gravity = 600;
 
 function World() {
     
-    var wallWidth = 8;
+    var wallWidth = 4;
     
     this.ground = makeGround();
+    
+    this.rick = new Rick();
+    
     this.bricks = game.add.group();
     
     this.wall = new Wall(wallWidth);
@@ -14,6 +17,7 @@ function World() {
     this.destroy = function () {
         this.fallingBrick.destroy();
         this.bricks.destroy();
+        this.rick.destroy();
     };
     
     this.update = function (delta) {
@@ -22,12 +26,16 @@ function World() {
         if (this.canBrickFall) {
             var lane = this.wall.nextLane();
             
-            var brick = new Brick(lane, this.wall.isOffset(lane));
+            var brick = new Brick(lane, this.wall.isOffset(lane), this.wall.width);
             this.fallingBrick = brick;
             
             this.wall.addBrick(lane);
             this.canBrickFall = false;
         }
+        
+        game.physics.collide(this.rick.sprite, this.ground);
+        game.physics.collide(this.rick.sprite, this.bricks);
+        game.physics.overlap(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
         
         if (this.fallingBrick) {
             game.physics.collide(this.fallingBrick.sprite, this.bricks, brickCollisionCallback, processBrickCollision, this);
@@ -35,6 +43,8 @@ function World() {
         if (this.fallingBrick) {
             game.physics.collide(this.fallingBrick.sprite, this.ground, brickCollisionCallback, processBrickCollision, this);
         }
+        
+        this.rick.update();
     };
     
 }
@@ -43,10 +53,25 @@ function processBrickCollision() {
     return true;
 }
 
+function rickCollisionCallback(rick, other) {
+    
+    if (other === this.fallingBrick.sprite) {
+        //check if Rick was crushed
+        var rickCenterX = rick.body.x + rick.body.width / 2
+        
+        var forgivingness = 10;
+        
+        if (other.body.y < rick.body.y + forgivingness && rickCenterX > other.body.x && rickCenterX < other.body.x + other.body.width) {
+            rick.destroy();
+        }
+    }
+    
+}
+
 function brickCollisionCallback(brick, other) {
     this.fallingBrick = null;
     this.bricks.add(brick);
-    
+
     brick.body.immovable = true;
     brick.body.gravity.y = 0;
     this.canBrickFall = true; //one brick falling at a time
