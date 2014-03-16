@@ -18,7 +18,6 @@ function Brick(lane, offset, wallWidth) {
         width /= 2;
         
         if (lane == 0) x += width;
-        if (lane == wallWidth) x -= width;
         
         this.sprite = game.add.sprite(x, y, 'halfbrick');
         this.sprite.body.setRectangle(width - bodyWidthMargin, height - bodyHeightMargin, bodyWidthMargin / 2, bodyHeightMargin / 2);

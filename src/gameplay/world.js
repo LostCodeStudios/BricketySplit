@@ -14,14 +14,19 @@ function World() {
     
     this.canBrickFall = true;
     
+    this.heightText = MakeLabel(0, 0, '', '32px Arial', '#ff0000');
+    
     this.destroy = function () {
         this.fallingBrick.destroy();
         this.bricks.destroy();
         this.rick.destroy();
+        this.heightText.destroy();
     };
     
     this.update = function (delta) {
         this.elapsedTime += delta;
+        
+        this.heightText.content = 'Height: ' + this.wall.height + 'm';
         
         if (this.canBrickFall) {
             var lane = this.wall.nextLane();
