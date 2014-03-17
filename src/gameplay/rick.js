@@ -44,12 +44,12 @@ function Rick() {
         
         this.sprite.body.velocity.x = 0;
         
-        if (this.cursors.left.isDown && !this.sprite.body.touching.left && this.sprite.x > 0) {
+        if (this.moveLeft() && !this.sprite.body.touching.left && this.sprite.x > 0) {
             this.sprite.animations.play('walkLeft');
             this.facing = 'left';
             
             this.sprite.body.velocity.x = -moveSpeed;
-        } else if (this.cursors.right.isDown && !this.sprite.body.touching.right && this.sprite.x < windowWidth - width) {
+        } else if (this.moveRight() && !this.sprite.body.touching.right && this.sprite.x < windowWidth - width) {
             this.sprite.animations.play('walkRight');
             this.facing = 'right';
             
@@ -60,7 +60,7 @@ function Rick() {
             this.sprite.animations.play('standRight');
         }
         
-        if (game.input.keyboard.justPressed(Phaser.Keyboard.Z) && this.sprite.body.touching.down)
+        if (this.jump() && this.sprite.body.touching.down)
         {
             this.sprite.body.velocity.y = -jumpSpeed;
         }
@@ -70,4 +70,37 @@ function Rick() {
         }
         
     };
+    
+    var moveLeftLeftBound = 0;
+    var moveLeftRightBound = windowWidth / 8;
+    var moveRightLeftBound = windowWidth / 8;
+    var moveRightRightBound = windowWidth / 4;
+    var jumpLeftBound = windowWidth / 4;
+    var jumpRightBound = windowWidth;
+    this.moveLeft = function () {
+        if (mobile) {
+            return game.input.x > moveLeftLeftBound && game.input.x < moveLeftRightBound;
+        }
+        else {
+            return this.cursors.left.isDown;
+        }
+    }
+    
+    this.moveRight = function() {
+        if (mobile) {
+            return game.input.x > moveRightLeftBound && game.input.x < moveRightRightBound;
+        }
+        else {
+            return this.cursors.right.isDown;
+        }
+    }
+    
+    this.jump = function() {
+        if (mobile) {
+            return game.input.x > jumpLeftBound && game.input.x < jumpRightBound;
+        }
+        else {
+            return game.input.keyboard.isDown(Phaser.Keyboard.Z)
+        }
+    }
 }

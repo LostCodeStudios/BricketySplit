@@ -57,16 +57,17 @@ function create() {
             game.stage.scale.setShowAll();
             game.stage.scale.refresh();
         }
+        
+        game.input.onUp.add(onInputUp, this);
     }
     
     lastTime = 0;
     
 }
 
-function enterIncorrectOrientation() {
-}
-
-function leaveIncorrectOrientation() {
+function onInputUp() {
+    game.input.x = -1;
+    game.input.y = -1;
 }
 
 function update() {

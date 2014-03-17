@@ -1,3 +1,5 @@
+//TODO the Main menu is 100% temporary
+
 function MainMenu() {
     
     var titleX = windowWidth / 2;
@@ -23,6 +25,8 @@ function MainMenu() {
         game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
         this.playKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.playKey.onDown.add(playKeyPressed, this);
+        
+        game.input.onDown.add(playKeyPressed, this);
     };
     
     this.hide = function (newState) {
