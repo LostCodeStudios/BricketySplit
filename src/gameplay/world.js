@@ -1,8 +1,9 @@
 var gravity = 600;
+var cameraSpeed = 32;
 
 function World() {
     
-    var wallWidth = 4;
+    var wallWidth = 5;
     
     this.ground = makeGround();
     
@@ -15,6 +16,8 @@ function World() {
     this.canBrickFall = true;
     
     this.heightText = MakeLabel(0, 0, '', '32px Arial', '#ff0000');
+    
+    this.boundsToPush = 0;
     
     this.destroy = function () {
         this.fallingBrick.destroy();
@@ -49,6 +52,18 @@ function World() {
             game.physics.collide(this.fallingBrick.sprite, this.ground, brickCollisionCallback, processBrickCollision, this);
         }
         
+        //after the first two rows are finished, start pushing the camera up
+        if (this.wall.rowCompleted() && this.wall.currentRow > 2) {
+            this.boundsToPush += 32;
+        }
+        
+        if (this.boundsToPush > 0) {
+            var sec = delta / 1000;
+            
+            pushWorldBoundsUp(sec * cameraSpeed);
+            this.boundsToPush -= sec * cameraSpeed;
+        }
+        
         this.rick.update();
     };
     
@@ -66,8 +81,16 @@ function rickCollisionCallback(rick, other) {
         
         var forgivingness = 10;
         
-        if (other.body.y < rick.body.y + forgivingness && rickCenterX > other.body.x && rickCenterX < other.body.x + other.body.width) {
-            rick.destroy();
+        if (other.body.y < rick.body.y + forgivingness && 
+                rickCenterX > other.body.x && 
+                rickCenterX < other.body.x + other.body.width) {
+            if (rick.body.touching.down) {
+                this.rick.die();
+            } else
+            {
+                rick.body.velocity.x = 0;
+                rick.body.velocity.y = other.body.velocity.y;
+            }
         }
     }
     

@@ -20,7 +20,7 @@ function Rick() {
     
     this.sprite.body.bounce.y = 0.00000000001;
     this.sprite.body.gravity.y = gravity;
-    this.sprite.body.collideWorldBounds = true;
+    //this.sprite.body.collideWorldBounds = true;
     
     //input
     this.cursors = game.input.keyboard.createCursorKeys();
@@ -34,16 +34,22 @@ function Rick() {
         this.sprite.destroy();
     };
     
+    this.die = function () {
+        console.log('Rick died :(');
+        this.dead = true;
+        this.sprite.destroy();
+    }
+    
     this.update = function () {
         
         this.sprite.body.velocity.x = 0;
         
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left.isDown && !this.sprite.body.touching.left && this.sprite.x > 0) {
             this.sprite.animations.play('walkLeft');
             this.facing = 'left';
             
             this.sprite.body.velocity.x = -moveSpeed;
-        } else if (this.cursors.right.isDown) {
+        } else if (this.cursors.right.isDown && !this.sprite.body.touching.right && this.sprite.x < windowWidth - width) {
             this.sprite.animations.play('walkRight');
             this.facing = 'right';
             
@@ -57,6 +63,10 @@ function Rick() {
         if (game.input.keyboard.justPressed(Phaser.Keyboard.Z) && this.sprite.body.touching.down)
         {
             this.sprite.body.velocity.y = -jumpSpeed;
+        }
+        
+        if (this.sprite.body.y > bottomBounds) {
+            this.die();
         }
         
     };

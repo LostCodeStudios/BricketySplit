@@ -11,7 +11,7 @@ function Brick(lane, offset, wallWidth) {
         x -= width / 2;
     }
     
-    var y = -height;
+    var y = topBounds - height;
     
     if (offset && lane == 0 || lane == wallWidth) {
         //half brick
@@ -21,14 +21,12 @@ function Brick(lane, offset, wallWidth) {
         
         this.sprite = game.add.sprite(x, y, 'halfbrick');
         this.sprite.body.setRectangle(width - bodyWidthMargin, height - bodyHeightMargin, bodyWidthMargin / 2, bodyHeightMargin / 2);
-        this.sprite.body.x = x;
-        this.sprite.body.y = y;
-        this.sprite.body.gravity.y = gravity;
     } else {
         this.sprite = game.add.sprite(x, y, 'brick');
         this.sprite.body.setRectangle(width - bodyWidthMargin, height - bodyHeightMargin, bodyWidthMargin / 2, bodyHeightMargin / 2);
-        this.sprite.body.x = x;
+    }
+    
+    this.sprite.body.x = x;
         this.sprite.body.y = y;
         this.sprite.body.gravity.y = gravity;
-    }
 }

@@ -2,6 +2,7 @@ function Wall(width) {
     
     this.width = width;
     this.height = 0;
+    this.currentRow = 1;
     
     //Lane management
     this.lanes = new Array(width);
@@ -27,11 +28,31 @@ function Wall(width) {
             this.lanes[this.width]++; console.log('increasing the edge lane height');//increment right edge lane
         }
         
+        var rowComplete = true;
+        for (var i = 0; i <= this.width; i++) {
+            if (this.lanes[i] < this.currentRow) {
+                rowComplete = false;
+            }
+        }
+        if (rowComplete) {
+            this.isRowComplete = true; console.log('A row was completed');
+            this.currentRow++;
+        }
+        
         if (this.lanes[lane] > this.height) {
             //height increased
             this.height++;
         }
     };
+    
+    this.rowCompleted = function () {
+        if (this.isRowComplete) {
+            this.isRowComplete = false;
+            return true;
+        }
+        
+        return false;
+    }
     
     this.canBrickFall = function (lane) {    
         if (this.lanes[lane] == 0 && lane < this.width) {

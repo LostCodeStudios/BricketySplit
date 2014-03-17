@@ -1,4 +1,4 @@
-var windowWidth = 960;
+var windowWidth = 640;
 var windowHeight = 480;
 
 var backgroundColor = '#00FFFF';
@@ -12,6 +12,9 @@ var state;
 
 var mobile = false;
 
+var topBounds = 0;
+var bottomBounds = windowHeight;
+
 function preload() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('brick', 'assets/brick.png');
@@ -19,23 +22,41 @@ function preload() {
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
 }
 
+function updateWorldBounds () {
+    game.world.setBounds(0, topBounds, windowWidth, windowHeight);
+}
+
+function pushWorldBoundsUp (amount) {
+    topBounds -= amount;
+    bottomBounds -= amount;
+    updateWorldBounds();
+}
+
 function create() {
     
     game.stage.backgroundColor = backgroundColor;
+    
+    updateWorldBounds();
     
     setState(new MainMenu());
     
     if (!game.device.desktop) {
         mobile = true;
         
-        game.stage.fullScreenScaleMode = Phaser.StageScaleMode.EXACT_FIT;        
-        game.stage.scale.forceOrientation(true, false);
-        game.stage.scale.enterIncorrectOrientation.add(enterIncorrectOrientation, this);
-        game.stage.scale.leaveIncorrectOrientation.add(leaveIncorrectOrientation, this);
-        game.stage.scale.startFullScreen();
-        
+        game.stage.fullScreenScaleMode = Phaser.StageScaleMode.SHOW_ALL;
         game.stage.scale.setShowAll();
+        game.stage.scale.pageAlignHorizontally = true;
+        game.stage.scale.pageAlignVeritcally = true;
         game.stage.scale.refresh();
+        
+        window.addEventListener('resize', function(event) {
+            resizeGame();
+        });
+        
+        var resizeGame = function () {
+            game.stage.scale.setShowAll();
+            game.stage.scale.refresh();
+        }
     }
     
     lastTime = 0;
