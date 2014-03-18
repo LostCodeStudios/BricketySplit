@@ -18,6 +18,8 @@ function Rick() {
     this.sprite.animations.add('walkRight', [3, 2], fps, true);
     this.sprite.animations.add('standRight', [2], fps, true);
     
+    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+    
     this.sprite.body.bounce.y = 0.00000000001;
     this.sprite.body.gravity.y = gravity;
     //this.sprite.body.collideWorldBounds = true;
@@ -37,19 +39,22 @@ function Rick() {
     this.die = function () {
         console.log('Rick died :(');
         this.dead = true;
+        this.sprite.body = null;
         this.sprite.destroy();
     }
     
     this.update = function () {
         
+        if (this.dead) return;
+        
         this.sprite.body.velocity.x = 0;
         
-        if (this.moveLeft() && !this.sprite.body.touching.left && this.sprite.x > 0) {
+        if (this.moveLeft() && this.sprite.x > 0) {
             this.sprite.animations.play('walkLeft');
             this.facing = 'left';
             
             this.sprite.body.velocity.x = -moveSpeed;
-        } else if (this.moveRight() && !this.sprite.body.touching.right && this.sprite.x < windowWidth - width) {
+        } else if (this.moveRight() && this.sprite.x < windowWidth - width) {
             this.sprite.animations.play('walkRight');
             this.facing = 'right';
             

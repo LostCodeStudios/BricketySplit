@@ -35,6 +35,7 @@ function pushWorldBoundsUp (amount) {
 function create() {
     
     game.stage.backgroundColor = backgroundColor;
+    game.physics.startSystem(Phaser.Physics.ARCADE);
     
     updateWorldBounds();
     
@@ -43,19 +44,19 @@ function create() {
     if (!game.device.desktop) {
         mobile = true;
         
-        game.stage.fullScreenScaleMode = Phaser.StageScaleMode.SHOW_ALL;
-        game.stage.scale.setShowAll();
-        game.stage.scale.pageAlignHorizontally = true;
-        game.stage.scale.pageAlignVeritcally = true;
-        game.stage.scale.refresh();
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+        game.scale.setShowAll();
+        game.scale.pageAlignHorizontally = true;
+        game.scale.pageAlignVeritcally = true;
+        game.scale.refresh();
         
         window.addEventListener('resize', function(event) {
             resizeGame();
         });
         
         var resizeGame = function () {
-            game.stage.scale.setShowAll();
-            game.stage.scale.refresh();
+            game.scale.setShowAll();
+            game.scale.refresh();
         }
         
         game.input.onUp.add(onInputUp, this);

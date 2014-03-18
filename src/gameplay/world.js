@@ -29,7 +29,7 @@ function World() {
     this.update = function (delta) {
         this.elapsedTime += delta;
         
-        this.heightText.content = 'Height: ' + this.wall.height + 'm';
+        this.heightText.text = 'Height: ' + this.wall.height + 'm';
         
         if (this.canBrickFall) {
             var lane = this.wall.nextLane();
@@ -41,15 +41,15 @@ function World() {
             this.canBrickFall = false;
         }
         
-        game.physics.collide(this.rick.sprite, this.ground);
-        game.physics.collide(this.rick.sprite, this.bricks);
-        game.physics.overlap(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
+        game.physics.arcade.collide(this.rick.sprite, this.ground);
+        game.physics.arcade.collide(this.rick.sprite, this.bricks);
+        game.physics.arcade.overlap(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
         
         if (this.fallingBrick) {
-            game.physics.collide(this.fallingBrick.sprite, this.bricks, brickCollisionCallback, processBrickCollision, this);
+            game.physics.arcade.collide(this.fallingBrick.sprite, this.bricks, this.brickCollisionCallback, processBrickCollision, this);
         }
         if (this.fallingBrick) {
-            game.physics.collide(this.fallingBrick.sprite, this.ground, brickCollisionCallback, processBrickCollision, this);
+            game.physics.arcade.collide(this.fallingBrick.sprite, this.ground, this.brickCollisionCallback, processBrickCollision, this);
         }
         
         //after the first two rows are finished, start pushing the camera up
@@ -66,6 +66,17 @@ function World() {
         
         this.rick.update();
     };
+    
+    this.brickCollisionCallback = function (brick, other) {        
+        this.fallingBrick = null;
+        this.bricks.add(brick);
+
+        brick.body.x -= brickWidthMargin;
+        brick.body.width += brickWidthMargin * 2;
+        brick.body.immovable = true;
+        brick.body.gravity.y = 0;
+        this.canBrickFall = true; //one brick falling at a time
+    }
     
 }
 
@@ -86,23 +97,13 @@ function rickCollisionCallback(rick, other) {
                 rickCenterX < other.body.x + other.body.width) {
             if (rick.body.touching.down) {
                 this.rick.die();
-            } else
-            {
+            } else {
                 rick.body.velocity.x = 0;
                 rick.body.velocity.y = other.body.velocity.y;
             }
         }
     }
     
-}
-
-function brickCollisionCallback(brick, other) {
-    this.fallingBrick = null;
-    this.bricks.add(brick);
-
-    brick.body.immovable = true;
-    brick.body.gravity.y = 0;
-    this.canBrickFall = true; //one brick falling at a time
 }
 
 function makeGround() {
@@ -113,6 +114,7 @@ function makeGround() {
     var y = windowHeight - groundHeight;
     
     var ground = game.add.sprite(x, y, 'ground');
+    game.physics.enable(ground, Phaser.Physics.ARCADE);
     ground.body.immovable = true;
     
     return ground;
