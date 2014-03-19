@@ -33,6 +33,7 @@ function MainMenu() {
         this.titleText.destroy();
         this.msgText.destroy();
         
+        game.input.onDown.remove(playKeyPressed, this);
         game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
         game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
     };

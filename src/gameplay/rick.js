@@ -20,12 +20,50 @@ function Rick() {
     
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     
-    this.sprite.body.bounce.y = 0.00000000001;
+    //this.sprite.body.bounce.y = 0.00000000001;
     this.sprite.body.gravity.y = gravity;
     //this.sprite.body.collideWorldBounds = true;
     
     //input
     this.cursors = game.input.keyboard.createCursorKeys();
+    
+    var sideFraction = 1 / 4;
+    this.touchDownEvent = function () {
+        if (game.input.activePointer.screenX < windowWidth * sideFraction) {
+            if (!this.movingLeft) {
+                this.movingLeft = true;
+            } else {
+                this.jumping = true;
+            }
+        } else if (game.input.activePointer.screenX > 3 * windowWidth * sideFraction) {
+            if (!this.movingRight) {
+                this.movingRight = true;
+            } else {
+                this.jumping = true;
+            }
+        }
+    };
+    
+    this.touchUpEvent = function () {
+        if (game.input.activePointer.screenX < windowWidth * sideFraction) {
+            if (this.movingLeft) {
+                this.movingLeft = false;
+            } else {
+                this.jumping = false;
+            }
+        } else if (game.input.activePointer.screenX > 3 * windowWidth * sideFraction) {
+            if (this.movingRight) {
+                this.movingRight = false;
+            } else {
+                this.jumping = false;
+            }
+        }
+    };
+    
+//    if (mobile) {
+        game.input.onDown.add(this.touchDownEvent, this);
+        game.input.onUp.add(this.touchUpEvent, this);
+//    }
     
     this.facing = 'left';
     
@@ -34,6 +72,8 @@ function Rick() {
     
     this.destroy = function () {
         this.sprite.destroy();
+        game.input.onDown.remove(this.touchDownEvent, this);
+        game.input.onUp.remove(this.touchUpEvent, this);
     };
     
     this.die = function () {
@@ -41,7 +81,7 @@ function Rick() {
         this.dead = true;
         this.sprite.body = null;
         this.sprite.destroy();
-    }
+    };
     
     this.update = function () {
         
@@ -76,36 +116,31 @@ function Rick() {
         
     };
     
-    var moveLeftLeftBound = 0;
-    var moveLeftRightBound = windowWidth / 8;
-    var moveRightLeftBound = windowWidth / 8;
-    var moveRightRightBound = windowWidth / 4;
-    var jumpLeftBound = windowWidth / 4;
-    var jumpRightBound = windowWidth;
     this.moveLeft = function () {
+        return this.movingLeft;
+        
         if (mobile) {
-            return game.input.x > moveLeftLeftBound && game.input.x < moveLeftRightBound;
-        }
-        else {
+            return this.movingLeft;
+        } else {
             return this.cursors.left.isDown;
         }
-    }
+    };
     
-    this.moveRight = function() {
+    this.moveRight = function () {
+        return this.movingRight;
+        
         if (mobile) {
-            return game.input.x > moveRightLeftBound && game.input.x < moveRightRightBound;
-        }
-        else {
+            return this.movingRight;
+        } else {
             return this.cursors.right.isDown;
         }
-    }
+    };
     
-    this.jump = function() {
+    this.jump = function () {
         if (mobile) {
-            return game.input.x > jumpLeftBound && game.input.x < jumpRightBound;
+            return this.jumping;
+        } else {
+            return game.input.keyboard.isDown(Phaser.Keyboard.Z);
         }
-        else {
-            return game.input.keyboard.isDown(Phaser.Keyboard.Z)
-        }
-    }
+    };
 }

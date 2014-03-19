@@ -19,6 +19,7 @@ function preload() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('brick', 'assets/brick.png');
     game.load.image('halfbrick', 'assets/halfbrick.png');
+    game.load.image('enemy', 'assets/enemy.png');
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
 }
 

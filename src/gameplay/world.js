@@ -19,6 +19,8 @@ function World() {
     
     this.boundsToPush = 0;
     
+    this.enemies = new Array();
+    
     this.destroy = function () {
         this.fallingBrick.destroy();
         this.bricks.destroy();
@@ -44,6 +46,10 @@ function World() {
         game.physics.arcade.collide(this.rick.sprite, this.ground);
         game.physics.arcade.collide(this.rick.sprite, this.bricks);
         game.physics.arcade.overlap(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
+        for (var i = 0; i < this.enemies.length; i++) {
+            var enemy = this.enemies[i];
+            game.physics.arcade.overlap(enemy.sprite, this.bricks, enemy.brickOverlapCallback, null, this);
+        }
         
         if (this.fallingBrick) {
             game.physics.arcade.collide(this.fallingBrick.sprite, this.bricks, this.brickCollisionCallback, processBrickCollision, this);
@@ -55,6 +61,8 @@ function World() {
         //after the first two rows are finished, start pushing the camera up
         if (this.wall.rowCompleted() && this.wall.currentRow > 2) {
             this.boundsToPush += 32;
+            
+            this.enemies[this.wall.currentRow - 3] = new Enemy(this);
         }
         
         if (this.boundsToPush > 0) {
@@ -62,6 +70,10 @@ function World() {
             
             pushWorldBoundsUp(sec * cameraSpeed);
             this.boundsToPush -= sec * cameraSpeed;
+        }
+        
+        for (var i = 0; i < this.enemies.length; i++) {
+            this.enemies[i].update();
         }
         
         this.rick.update();
@@ -84,6 +96,10 @@ function processBrickCollision() {
     return true;
 }
 
+function enemyOverlapCallback(enemy, other) {
+    
+}
+
 function rickCollisionCallback(rick, other) {
     
     if (other === this.fallingBrick.sprite) {
@@ -103,7 +119,6 @@ function rickCollisionCallback(rick, other) {
             }
         }
     }
-    
 }
 
 function makeGround() {

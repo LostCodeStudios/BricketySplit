@@ -25,7 +25,7 @@ function Wall(width) {
         this.lanes[lane]++;
 
         if (lane == this.width - 1 && this.isOffset(lane)) {
-            this.lanes[this.width]++; console.log('increasing the edge lane height');//increment right edge lane
+            this.lanes[this.width]++;
         }
         
         var rowComplete = true;
@@ -35,7 +35,7 @@ function Wall(width) {
             }
         }
         if (rowComplete) {
-            this.isRowComplete = true; console.log('A row was completed');
+            this.isRowComplete = true;
             this.currentRow++;
         }
         
@@ -56,14 +56,12 @@ function Wall(width) {
     
     this.canBrickFall = function (lane) {    
         if (this.lanes[lane] == 0 && lane < this.width) {
-            console.log('Dropping brick in lane ' + lane + ' because it will fall on the ground');
             return true;
         }
         
         var supportingLane = this.supportingLane(lane);
 
         if (supportingLane < 0) {
-            console.log('Dropping brick in lane ' + lane + ' because it is in the first lane');
             return true;
         }
         
@@ -75,7 +73,6 @@ function Wall(width) {
         
         do {
             lane = Math.floor(Math.random() * (this.width + 1));
-            console.log('Checking lane ' + lane);
         } while (!this.canBrickFall(lane));
         
         return lane;

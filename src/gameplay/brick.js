@@ -1,5 +1,13 @@
 var brickWidthMargin = 1;
-    
+
+function brickWidth() {
+    return game.cache.getImage('brick').width;
+}
+
+function brickHeight() {
+    return game.cache.getImage('brick').height;
+}
+
 function Brick(lane, offset, wallWidth) {
     var width = game.cache.getImage('brick').width;
     var height = game.cache.getImage('brick').height;
@@ -18,11 +26,9 @@ function Brick(lane, offset, wallWidth) {
         
         if (lane == 0) x += width;
         
-        console.log('Sprite position (' + x + ', ' + y + ')');
         this.sprite = game.add.sprite(x, y, 'halfbrick');
         game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     } else {
-        console.log('Sprite position (' + x + ', ' + y + ')');
         this.sprite = game.add.sprite(x, y, 'brick');
         game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     }
@@ -30,7 +36,4 @@ function Brick(lane, offset, wallWidth) {
     this.sprite.body.x += brickWidthMargin;
     this.sprite.body.width -= brickWidthMargin * 2;
     this.sprite.body.gravity.y = gravity;
-    
-    console.log('Sprite position: ' + this.sprite.position.x);
-    console.log('Body position: ' + this.sprite.body.x);
 }
