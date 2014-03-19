@@ -51,7 +51,7 @@ function Rick() {
             } else {
                 this.jumping = false;
             }
-        } else if (game.input.activePointer.screenX > 3 * windowWidth * sideFraction) {
+        } else if (game.input.activePointer.screenX > windowWidth - windowWidth * sideFraction) {
             if (this.movingRight) {
                 this.movingRight = false;
             } else {
@@ -60,10 +60,10 @@ function Rick() {
         }
     };
     
-//    if (mobile) {
+    if (mobile) {
         game.input.onDown.add(this.touchDownEvent, this);
         game.input.onUp.add(this.touchUpEvent, this);
-//    }
+    }
     
     this.facing = 'left';
     
@@ -117,8 +117,6 @@ function Rick() {
     };
     
     this.moveLeft = function () {
-        return this.movingLeft;
-        
         if (mobile) {
             return this.movingLeft;
         } else {
@@ -127,8 +125,6 @@ function Rick() {
     };
     
     this.moveRight = function () {
-        return this.movingRight;
-        
         if (mobile) {
             return this.movingRight;
         } else {
