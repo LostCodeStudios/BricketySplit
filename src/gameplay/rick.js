@@ -87,6 +87,16 @@ function Rick() {
         
         if (this.dead) return;
         
+        if (this.sprite.body.touching.left) {
+            this.sprite.body.y -= 1;
+            console.log('Touching left');
+        }
+        
+        if (this.sprite.body.touching.right) {
+            this.sprite.body.y -= 1;
+            console.log('Touching right');
+        }
+        
         this.sprite.body.velocity.x = 0;
         
         if (this.moveLeft() && this.sprite.x > 0) {

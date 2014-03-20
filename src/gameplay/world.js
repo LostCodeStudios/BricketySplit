@@ -108,9 +108,7 @@ function rickCollisionCallback(rick, other) {
         
         var forgivingness = 10;
         
-        if (other.body.y < rick.body.y + forgivingness && 
-                rickCenterX > other.body.x && 
-                rickCenterX < other.body.x + other.body.width) {
+        if (other.body.y < rick.body.y + forgivingness) {
             if (rick.body.touching.down) {
                 this.rick.die();
             } else {
