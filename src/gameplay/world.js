@@ -43,6 +43,8 @@ function World() {
             this.canBrickFall = false;
         }
         
+        game.physics.arcade.collide(this.enemies, this.bricks);
+        
         game.physics.arcade.collide(this.rick.sprite, this.ground);
         game.physics.arcade.collide(this.rick.sprite, this.bricks);
         game.physics.arcade.overlap(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
