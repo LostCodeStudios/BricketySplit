@@ -52,7 +52,27 @@ function Wall(width) {
         }
         
         return false;
-    }
+    };
+    
+    this.rowFinishedCurrent = function(row) {
+        for (var i = 0; i <= this.width; i++) {
+            if (!(this.lanes[i] == row)) return false;
+        }
+        
+        return true;
+    };
+    
+    this.lowestLane = function() {
+        var lowest = 0;
+        
+        for (var i = 0; i <= this.width; i++) {
+            if (this.lanes[i] < lowest) {
+                lowest = this.lanes[i];
+            }
+        }
+        
+        return lowest;
+    };
     
     this.canBrickFall = function (lane) {    
         if (this.lanes[lane] == 0 && lane < this.width) {

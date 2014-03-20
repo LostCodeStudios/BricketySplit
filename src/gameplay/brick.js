@@ -8,7 +8,9 @@ function brickHeight() {
     return game.cache.getImage('brick').height;
 }
 
-function Brick(lane, offset, wallWidth) {
+function Brick(lane, offset, wallWidth, special) {
+    this.special = special;
+    
     var width = game.cache.getImage('brick').width;
     var height = game.cache.getImage('brick').height;
     
@@ -36,4 +38,8 @@ function Brick(lane, offset, wallWidth) {
     this.sprite.body.x += brickWidthMargin;
     this.sprite.body.width -= brickWidthMargin * 2;
     this.sprite.body.gravity.y = gravity;
+    
+    console.log('Giving sprite my reference');
+    this.sprite.brick = this;
+    this.sprite.special = special;
 }
