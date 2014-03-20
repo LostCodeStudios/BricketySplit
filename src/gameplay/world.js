@@ -11,8 +11,6 @@ function World() {
     this.rick = new Rick();
     
     this.bricks = game.add.group();
-    this.fallingBricks = game.add.group();
-    this.specialBricksShifted = false;
     
     this.wall = new Wall(wallWidth);
     
@@ -32,7 +30,7 @@ function World() {
     };
     
     this.gameOver = function () {
-        return this.rick.dead && this.wall.rowFinishedCurrent(this.wall.height);
+        return this.rick.dead;
     };
     
     this.update = function (delta) {
@@ -47,28 +45,15 @@ function World() {
         if (this.canBrickFall && !this.rick.dead) {
             var lane = this.wall.nextLane();
             
-            var brick = new Brick(lane, this.wall.isOffset(lane), this.wall.width, false);
+            var brick = new Brick(lane, this.wall.isOffset(lane), this.wall);
             this.fallingBrick = brick;
             
             this.wall.addBrick(lane);
             this.canBrickFall = false;
         }
         
-        if (this.rick.dead && !this.gameOver()) {
-            //finish the wall and drop "GAME OVER"
-            var height = this.wall.height;
-            while (!this.wall.rowFinishedCurrent(height)) {
-                var lane = this.wall.nextLane();
-                if (this.wall.lanes[lane] == height) continue;
-            
-                var brick = new Brick(lane, this.wall.isOffset(lane), this.wall.width, true);
-                
-                brick.sprite.body.y -= brickHeight() * (height - this.wall.lowestLane());
-                brick.sprite.body.y += brickHeight() * (height - this.wall.lanes[lane]);
-                
-                this.fallingBricks.add(brick.sprite);
-                this.wall.addBrick(lane);
-            }
+        if (this.gameOver()) {
+            //Handle game over
         }
         
         game.physics.arcade.collide(this.enemies, this.bricks);
@@ -85,24 +70,6 @@ function World() {
         }
         if (this.fallingBrick) { //there is a reason for this
             game.physics.arcade.collide(this.fallingBrick.sprite, this.ground, this.brickCollisionCallback, processBrickCollision, this);
-        }
-        
-        if (!this.specialBricksShifted) {
-            for (var i = this.fallingBricks.length - 1; i >= 0; i--) {
-                var fallingBrick = this.fallingBricks.getAt(i);
-                
-                if (!fallingBrick) {
-                    console.log('REMOVED AN UNDEFINED BRICK');
-                    this.fallingBricks.remove(fallingBrick);
-                }
-            }
-            
-            game.physics.arcade.collide(this.fallingBricks, this.bricks, this.brickCollisionCallback, processBrickCollision, this);
-            game.physics.arcade.collide(this.fallingBricks, this.ground, this.brickCollisionCallback, processBrickCollision, this);
-            
-            console.log('THIS NEXT THING HAPPENS');
-        } else {
-            console.log('THE SPECIAL BRICKS ARE ACTUALLY SHIFTED');
         }
         
         //after the first two rows are finished, start pushing the camera up
@@ -131,44 +98,12 @@ function World() {
         this.fallingBrick = null;
         this.bricks.add(brick);
 
-        
-        if (!brick.special) {
-            brick.body.x -= brickWidthMargin;
-            brick.body.width += brickWidthMargin * 2;
-        } else {
-            console.log('A SPECIAL BRICK');
-            if (!this.specialBricksShifted) {
-                for (var i = 0; i < this.bricks.length; i++) {
-                    var specialBrick = this.bricks.getAt(i);
-                    
-                    if (!specialBrick.special) {
-                        continue;
-                    }
-                    
-                    if (specialBrick) {
-                        specialBrick.body.x -= brickWidthMargin;
-                        specialBrick.body.width += brickWidthMargin * 2;
-                    }
-                }
-                
-//                for (var i = 0; i < this.specialBricks.length; i++) {
-//                    var specialBrick = this.specialBricks[i];
-//                    if (specialBrick) {
-//                       
-//                    }
-//                }
-            
-                this.specialBricksShifted = true;
-            }
-            
-            //this.fallingBricks.remove(brick);
-        }
-        
+        brick.body.x -= brickWidthMargin;
+        brick.body.width += brickWidthMargin * 2;
         brick.body.immovable = true;
         brick.body.gravity.y = 0;
         this.canBrickFall = true; //one brick falling at a time
         
-        console.log('THIS HAPPENS');
     };
     
 }
