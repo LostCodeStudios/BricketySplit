@@ -1,6 +1,6 @@
-function Rick() {
+function Rick(world) {
     
-    console.log('Making Rick!');
+    this.world = world;
     
     var width = 16;
     var height = 24;
@@ -29,13 +29,15 @@ function Rick() {
     
     var sideFraction = 1 / 4;
     this.touchDownEvent = function () {
-        if (game.input.activePointer.screenX < windowWidth * sideFraction) {
+        this.world.spawnEnemy(game.input.x, game.input.y);
+        
+        if (game.input.x < windowWidth * sideFraction) {
             if (!this.movingLeft) {
                 this.movingLeft = true;
             } else {
                 this.jumping = true;
             }
-        } else if (game.input.activePointer.screenX > 3 * windowWidth * sideFraction) {
+        } else if (game.input.x > 3 * windowWidth * sideFraction) {
             if (!this.movingRight) {
                 this.movingRight = true;
             } else {
@@ -60,10 +62,10 @@ function Rick() {
         }
     };
     
-    if (mobile) {
+//    if (mobile) {
         game.input.onDown.add(this.touchDownEvent, this);
         game.input.onUp.add(this.touchUpEvent, this);
-    }
+//    }
     
     this.facing = 'left';
     

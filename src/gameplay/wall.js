@@ -3,6 +3,7 @@ function Wall(width) {
     this.width = width;
     this.height = 0;
     this.currentRow = 1;
+    this.bottomShowingRow = 1;
     
     //Lane management
     this.lanes = new Array(width);
@@ -12,6 +13,10 @@ function Wall(width) {
     for (var i = 0; i <= width; i++) {
         this.lanes[i] = 0; //each lane starts with height 0
     }
+    
+    this.isRowOffset = function (row) {
+        return row % 2 == 1;
+    };
     
     this.isOffset = function (lane) {
         return this.lanes[lane] % 2 == 1;

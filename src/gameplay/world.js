@@ -8,9 +8,11 @@ function World() {
     
     this.ground = makeGround();
     
-    this.rick = new Rick();
+    this.rick = new Rick(this);
     
     this.bricks = game.add.group();
+    
+    this.enemies = game.add.group();
     
     this.wall = new Wall(wallWidth);
     
@@ -19,8 +21,7 @@ function World() {
     this.heightText = MakeLabel(0, 0, '', '32px Arial', '#ff0000');
     
     this.boundsToPush = 0;
-    
-    this.enemies = new Array();
+    this.rowsScrolled = 0;
     
     this.destroy = function () {
         this.fallingBrick.destroy();
@@ -56,8 +57,6 @@ function World() {
             //Handle game over
         }
         
-        game.physics.arcade.collide(this.enemies, this.bricks);
-        
         game.physics.arcade.collide(this.rick.sprite, this.ground);
         game.physics.arcade.collide(this.rick.sprite, this.bricks);
         
@@ -75,9 +74,16 @@ function World() {
         //after the first two rows are finished, start pushing the camera up
         if (this.wall.rowCompleted() && this.wall.currentRow > 2 && !this.rick.dead) {
             this.boundsToPush += brickHeight();
+            this.rowsScrolled++;
+            if (this.rowsScrolled > 1) {
+                this.wall.bottomShowingRow++;
+            }
             
-            console.log('Making an enemy!');
-            this.enemies[this.wall.currentRow - 3] = new Enemy(this);
+            if (this.wall.currentRow > 2) {
+                var enemy = new Enemy(this.wall, nextEnemyLane(this.wall));
+                
+                this.enemies.add(enemy.sprite);
+            }
         }
         
         if (this.boundsToPush > 0) {
@@ -88,7 +94,7 @@ function World() {
         }
         
         for (var i = 0; i < this.enemies.length; i++) {
-            this.enemies[i].update();
+            this.enemies.getAt(i).enemy.update();
         }
         
         this.rick.update();
@@ -110,10 +116,6 @@ function World() {
 
 function processBrickCollision() {
     return true;
-}
-
-function enemyOverlapCallback(enemy, other) {
-    
 }
 
 function rickCollisionCallback(rick, other) {

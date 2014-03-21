@@ -21,6 +21,11 @@ function preload() {
     game.load.image('halfbrick', 'assets/halfbrick.png');
     game.load.image('enemy', 'assets/enemy.png');
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
+    
+    if (!localStorage.getItem('Scores')) {
+        var scores = [ 25, 20, 15, 10, 5 ];
+        var names = [ 'Rick', 'Rick', 'Rick', 'Rick', 'Rick' ];
+    }
 }
 
 function updateWorldBounds () {
