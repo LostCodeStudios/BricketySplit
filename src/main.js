@@ -22,6 +22,10 @@ function preload() {
     game.load.image('brick', 'assets/brick.png');
     game.load.image('halfbrick', 'assets/halfbrick.png');
     game.load.image('enemy', 'assets/enemy.png');
+    game.load.image('scoreline', 'assets/scoreline.png');
+    game.load.image('rowdivider', 'assets/rowdivider.png');
+    game.load.image('normalrow', 'assets/normalrow.png');
+    game.load.image('offsetrow', 'assets/offsetrow.png');
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
     
     if (!localStorage.getItem('Scores') || resetScores) {
@@ -38,6 +42,12 @@ function updateWorldBounds () {
 function pushWorldBoundsUp (amount) {
     topBounds -= amount;
     bottomBounds -= amount;
+    updateWorldBounds();
+}
+
+function resetWorldBounds () {
+    topBounds = 0;
+    bottomBounds = windowHeight;
     updateWorldBounds();
 }
 
@@ -102,6 +112,7 @@ function setState(newState) {
         state.hide(newState);
     }
     
+    resetWorldBounds();
     state = newState;
     state.show();
 }

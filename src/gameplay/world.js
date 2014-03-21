@@ -23,6 +23,15 @@ function World() {
     this.boundsToPush = 0;
     this.rowsScrolled = 0;
     
+    var scores = JSON.parse(localStorage.getItem('Scores'));
+    for (var i = 0; i < scores.length; i++) {
+        var score = scores[i];
+        var y = windowHeight - brickHeight() - score * brickHeight();
+        game.add.sprite(0, y, 'scoreline');
+        
+        MakeLabel(0, y - 24, '' + (i + 1) + '. ' + score + 'm', '24px Arial', '#000000', false);
+    }
+    
     this.destroy = function () {
         game.world.removeAll();
     };
@@ -57,7 +66,9 @@ function World() {
         game.physics.arcade.collide(this.rick.sprite, this.ground);
         game.physics.arcade.collide(this.rick.sprite, this.bricks);
         
-        game.physics.arcade.overlap(this.rick.sprite, this.enemies, this.enemyRickCollision, null, this);
+        if (!this.rick.dead) {
+            game.physics.arcade.overlap(this.rick.sprite, this.enemies, this.enemyRickCollision, null, this);
+        }
        
         if (this.fallingBrick) { //there is a reason for this
             game.physics.arcade.overlap(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
