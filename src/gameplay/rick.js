@@ -1,14 +1,22 @@
+function rickWidth() {
+    return 16;
+}
+
+function rickHeight() {
+    return 24;
+}
+
 function Rick(world) {
     
     this.world = world;
     
-    var width = 16;
-    var height = 24;
+    var width = rickWidth();
+    var height = rickHeight();
     
     var groundHeight = 32;
     
     var x = windowWidth / 2 - width / 2;
-    var y = windowHeight - height - groundHeight;
+    var y = bottomBounds - height - groundHeight;
     
     var fps = 3;
     
@@ -60,10 +68,10 @@ function Rick(world) {
         }
     };
     
-//    if (mobile) {
+    if (mobile) {
         game.input.onDown.add(this.touchDownEvent, this);
         game.input.onUp.add(this.touchUpEvent, this);
-//    }
+    }
     
     this.facing = 'left';
     
@@ -77,7 +85,6 @@ function Rick(world) {
     };
     
     this.die = function () {
-        console.log('Rick died :(');
         this.dead = true;
         this.sprite.body = null;
         this.sprite.destroy();
@@ -89,12 +96,10 @@ function Rick(world) {
         
         if (this.sprite.body.touching.left) {
             this.sprite.body.y -= 1;
-            console.log('Touching left');
         }
         
         if (this.sprite.body.touching.right) {
             this.sprite.body.y -= 1;
-            console.log('Touching right');
         }
         
         this.sprite.body.velocity.x = 0;

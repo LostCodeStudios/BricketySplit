@@ -22,14 +22,14 @@ function preload() {
     game.load.image('brick', 'assets/brick.png');
     game.load.image('halfbrick', 'assets/halfbrick.png');
     game.load.image('enemy', 'assets/enemy.png');
-    game.load.image('scoreline', 'assets/scoreline.png');
-    game.load.image('rowdivider', 'assets/rowdivider.png');
+    game.load.image('scoreline', 'assets/scoreline2.png');
+    game.load.image('rowdivider', 'assets/rowdivider2.png');
     game.load.image('normalrow', 'assets/normalrow.png');
     game.load.image('offsetrow', 'assets/offsetrow.png');
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
     
     if (!localStorage.getItem('Scores') || resetScores) {
-        var scores = [ 25, 20, 15, 10, 5 ];
+        var scores = [ 100, 50, 4 ]; //100 50 20                                TODO it would be way bad to leave this here
         
         localStorage.setItem('Scores', JSON.stringify(scores));
     }

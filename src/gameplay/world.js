@@ -29,7 +29,7 @@ function World() {
         var y = windowHeight - brickHeight() - score * brickHeight();
         game.add.sprite(0, y, 'scoreline');
         
-        MakeLabel(0, y - 24, '' + (i + 1) + '. ' + score + 'm', '24px Arial', '#000000', false);
+        MakeLabel(0, y - 24, '  ' + score + 'm', '24px Arial', '#000000', false);
     }
     
     this.destroy = function () {
@@ -41,13 +41,7 @@ function World() {
     };
     
     this.update = function (delta) {
-        if (!this.bricks) {
-            console.log('Bricks group: ' + this.bricks);
-        }
-        
         this.elapsedTime += delta;
-        
-        this.heightText.text = 'Height: ' + this.wall.height + 'm';    
         
         if (this.canBrickFall && !this.rick.dead) {
             var lane = this.wall.nextLane();
