@@ -24,10 +24,7 @@ function World() {
     this.rowsScrolled = 0;
     
     this.destroy = function () {
-        this.fallingBrick.destroy();
-        this.bricks.destroy();
-        this.rick.destroy();
-        this.heightText.destroy();
+        game.world.removeAll();
     };
     
     this.gameOver = function () {
@@ -60,6 +57,7 @@ function World() {
         game.physics.arcade.collide(this.rick.sprite, this.ground);
         game.physics.arcade.collide(this.rick.sprite, this.bricks);
         
+        game.physics.arcade.overlap(this.rick.sprite, this.enemies, this.enemyRickCollision, null, this);
        
         if (this.fallingBrick) { //there is a reason for this
             game.physics.arcade.overlap(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
@@ -110,6 +108,10 @@ function World() {
         brick.body.gravity.y = 0;
         this.canBrickFall = true; //one brick falling at a time
         
+    };
+    
+    this.enemyRickCollision = function (rick, enemy) {
+        this.rick.die();
     };
     
 }

@@ -45,14 +45,14 @@ function Enemy(wall, lane) {
     this.direction = ENEMY_UP;
     
     this.update = function () {
-        console.log('Starting logic');
+        //console.log('Starting logic');
         switch (this.direction) {
             case ENEMY_LEFT:
                 if (this.sprite.body.x <= this.dest.x) {
                     //made it
                     this.sprite.body.x = this.dest.x;
                     
-                    console.log('Moving up a row');
+                    //console.log('Moving up a row');
                     this.dest.y -= brickHeight();
                     break;
                 } else {
@@ -68,7 +68,7 @@ function Enemy(wall, lane) {
                     if (bottomBounds - this.sprite.body.y >= brickHeight() + this.wall.lanes[laneAbove] * brickHeight()) {
                         this.direction = ENEMY_UP;
                         this.dest.y = topBounds - height * 20; //go far up in case the camera catches it
-                        console.log('GIVING UP');
+                        //console.log('GIVING UP');
                     } else {
                         this.sprite.body.y = this.dest.y;
 
@@ -85,7 +85,7 @@ function Enemy(wall, lane) {
                     //made it
                     this.sprite.body.x = this.dest.x;
                     
-                    console.log('Moving up a row');
+                    //console.log('Moving up a row');
                     this.dest.y -= brickHeight();
                     break;
                 } else {

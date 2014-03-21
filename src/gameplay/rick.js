@@ -29,8 +29,6 @@ function Rick(world) {
     
     var sideFraction = 1 / 4;
     this.touchDownEvent = function () {
-        this.world.spawnEnemy(game.input.x, game.input.y);
-        
         if (game.input.x < windowWidth * sideFraction) {
             if (!this.movingLeft) {
                 this.movingLeft = true;

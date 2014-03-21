@@ -15,6 +15,8 @@ var mobile = false;
 var topBounds = 0;
 var bottomBounds = windowHeight;
 
+var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS HERE
+
 function preload() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('brick', 'assets/brick.png');
@@ -22,9 +24,10 @@ function preload() {
     game.load.image('enemy', 'assets/enemy.png');
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
     
-    if (!localStorage.getItem('Scores')) {
+    if (!localStorage.getItem('Scores') || resetScores) {
         var scores = [ 25, 20, 15, 10, 5 ];
-        var names = [ 'Rick', 'Rick', 'Rick', 'Rick', 'Rick' ];
+        
+        localStorage.setItem('Scores', JSON.stringify(scores));
     }
 }
 
