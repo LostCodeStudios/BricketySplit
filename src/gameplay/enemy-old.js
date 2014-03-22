@@ -16,12 +16,12 @@ function Enemy(world) {
     var x, y;
     
     if (side === 0) {
-        x = brickWidth() - width;
+        x = brickWidth - width;
         y = bottomBounds + height;
     }
     
     if (side === 1) {
-        x = brickWidth() + wallWidth * brickWidth();
+        x = brickWidth + wallWidth * brickWidth;
         y = bottomBounds + height;
     }
     

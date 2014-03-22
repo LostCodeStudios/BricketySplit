@@ -1,32 +1,22 @@
-var gravity = 1600;
-var cameraSpeed = 32;
-
 
 function World() {
     
-    var wallWidth = 5;
-    
     this.ground = makeGround();
-    
     this.rick = new Rick(this);
-    
     this.bricks = game.add.group();
-    
     this.enemies = game.add.group();
-    
     this.wall = new Wall(wallWidth);
-    
     this.canBrickFall = true;
-    
     this.heightText = MakeLabel(0, 0, '', '32px Arial', '#ff0000');
-    
     this.boundsToPush = 0;
     this.rowsScrolled = 0;
+    
+    this.difficulty = 0;
     
     var scores = JSON.parse(localStorage.getItem('Scores'));
     for (var i = 0; i < scores.length; i++) {
         var score = scores[i];
-        var y = windowHeight - brickHeight() - score * brickHeight();
+        var y = windowHeight - brickHeight - score * brickHeight;
         game.add.sprite(0, y, 'scoreline');
         
         MakeLabel(0, y - 24, '  ' + score + 'm', '24px Arial', '#000000', false);
@@ -42,6 +32,9 @@ function World() {
     
     this.update = function (delta) {
         this.elapsedTime += delta;
+        
+        this.difficulty += delta / fullDifficultyTime;
+        this.difficulty = Math.min(this.difficulty, 1);
         
         if (this.canBrickFall && !this.rick.dead) {
             var lane = this.wall.nextLane();
@@ -75,15 +68,16 @@ function World() {
         }
         
         //after the first two rows are finished, start pushing the camera up
-        if (this.wall.rowCompleted() && this.wall.currentRow > 2 && !this.rick.dead) {
-            this.boundsToPush += brickHeight();
+        if (this.wall.rowCompleted() && this.wall.currentRow > scrollStartRows && !this.rick.dead) {
+            this.boundsToPush += brickHeight;
             this.rowsScrolled++;
             if (this.rowsScrolled > 1) {
                 this.wall.bottomShowingRow++;
             }
             
-            if (this.wall.currentRow > 2) {
-                var enemy = new Enemy(this.wall, nextEnemyLane(this.wall));
+            if (this.wall.currentRow > scrollStartRows) {
+                //spawn new enemy
+                var enemy = new Enemy(randEnemySource(), this.difficulty);
                 
                 this.enemies.add(enemy.sprite);
             }
@@ -94,10 +88,6 @@ function World() {
             
             pushWorldBoundsUp(sec * cameraSpeed);
             this.boundsToPush -= sec * cameraSpeed;
-        }
-        
-        for (var i = 0; i < this.enemies.length; i++) {
-            this.enemies.getAt(i).enemy.update();
         }
         
         this.rick.update();

@@ -1,149 +1,73 @@
-var ENEMY_LEFT = 0;
-var ENEMY_UP = 1;
-var ENEMY_RIGHT = 2;
+var ENEMY_TOTAL_SOURCES = 4; //for randomization
 
-function nextEnemyLane(wall) {
-    var min, max;
-    min = 1;
-    
-    max = wall.isOffset(wall.bottomShowingRow) ? wall.width :  wall.width - 1;
-    
-    return min + Math.floor(Math.random() * (max + 1));
+//spawning bounds in terms of world bounds
+
+var enemySideMinY = windowHeight * 0.5;
+var enemySideMaxY = windowHeight * 0.6 - brickHeight;
+
+var enemyBottomMinX = windowWidth * 0.2;
+var enemyBottomMaxX = windowWidth - enemyBottomMinX;
+
+function randEnemySource() {
+    var rand = Math.floor(Math.random() * ENEMY_TOTAL_SOURCES);
+    return rand === 3 ? rand - 1: rand; //make vertical as likely as horizontal
 }
 
-function Enemy(wall, lane) {
+function randPos(min, max) {
+    var dif = max - min;
+    
+    return min + Math.random() * dif;
+}
+
+function lerp(min, max, progress) {
+    var dif = max - min;
+    
+    console.log('LERPING');
+    console.log('Min: ' + min + ', Max: ' + max + ', Progress: ' + progress);
+    
+    console.log('Result: ' + (min + progress * dif));
+    return min + progress * dif;
+}
+
+//difficulty from 0 to 1, ramps up enemy speed
+function Enemy(source, difficulty) {
     var width = game.cache.getImage('enemy').width;
     var height = game.cache.getImage('enemy').height;
+    console.log('Width: ' + width);
+    console.log('Height: ' + height);
     
-    var speed = 128;
+    console.log('Enemy max y: ' + enemySideMaxY);
     
-    var lane = 1 + Math.floor(Math.random() * (wall.width - 1));
+    var x, y;
+    var velX, velY;
     
-    this.wall = wall;
-    this.lane = lane;
-    
-    var x = brickWidth() + brickWidth() * lane;
-    if (wall.isOffset(lane)) {
-        x -= brickWidth() / 2;
-        this.offset = true;
-    } else {
-        this.offset = false;
+    switch (source) {
+        case ENEMY_LEFT:
+            x = -width;
+            y = randPos(enemySideMinY, enemySideMaxY);
+            velX = lerp(enemyMinSpeed, enemyMaxSpeed, difficulty);
+            velY = 0;
+            break;
+        case ENEMY_RIGHT:
+            x = windowWidth;
+            y = randPos(enemySideMinY, enemySideMaxY);
+            velX = lerp(enemyMinSpeed, enemyMaxSpeed, difficulty) * -1;
+            velY = 0;
+            break;
+        case ENEMY_BOTTOM:
+            x = randPos(enemyBottomMinX, enemyBottomMaxX);
+            y = bottomBounds;
+            velX = 0;
+            velY = lerp(enemyMinSpeed, enemyMaxSpeed, difficulty) * -1;
+            break;
     }
     
-    this.wallWidth = wall.width;
-    
-    x -= width / 2; //center it
-    var y = bottomBounds + height;
-    
     this.sprite = game.add.sprite(x, y, 'enemy');
-    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+    game.physics.arcade.enable(this.sprite);
+    this.sprite.body.velocity.x = velX;
+    this.sprite.body.velocity.y = velY;
     
-    this.destroy = function () {
-        this.sprite.destroy();
-    };
-    
-    this.direction = ENEMY_UP;
-    
-    this.update = function () {
-        //console.log('Starting logic');
-        switch (this.direction) {
-            case ENEMY_LEFT:
-                if (this.sprite.body.x <= this.dest.x) {
-                    //made it
-                    this.sprite.body.x = this.dest.x;
-                    
-                    //console.log('Moving up a row');
-                    this.dest.y -= brickHeight();
-                    break;
-                } else {
-                    this.sprite.body.velocity.x = -speed;
-                    this.sprite.body.velocity.y = 0;
-                }
-                break;
-            case ENEMY_UP:
-                if (this.sprite.body.y <= this.dest.y) {
-                    //made it
-                    
-                    var laneAbove = this.offset ? this.lane - 1 : this.lane;
-                    if (bottomBounds - this.sprite.body.y >= brickHeight() + this.wall.lanes[laneAbove] * brickHeight()) {
-                        this.direction = ENEMY_UP;
-                        this.dest.y = topBounds - height * 20; //go far up in case the camera catches it
-                        //console.log('GIVING UP');
-                    } else {
-                        this.sprite.body.y = this.dest.y;
-
-                        this.dest.x = this.pickXDest();
-                    }
-                    break;
-                } else {
-                    this.sprite.body.velocity.x = 0;
-                    this.sprite.body.velocity.y = -speed;
-                }
-                break;
-            case ENEMY_RIGHT:
-                if (this.sprite.body.x > this.dest.x) {
-                    //made it
-                    this.sprite.body.x = this.dest.x;
-                    
-                    //console.log('Moving up a row');
-                    this.dest.y -= brickHeight();
-                    break;
-                } else {
-                    this.sprite.body.velocity.x = speed;
-                    this.sprite.body.velocity.y = 0;
-                }
-                break;
-        }
-        
-        if (this.sprite.body.x < this.dest.x) { //right
-            this.direction = ENEMY_RIGHT;
-        }
-        if (this.sprite.body.y > this.dest.y) { //up
-            this.direction = ENEMY_UP;
-            this.offset = !this.offset;
-        }
-        if (this.sprite.body.x > this.dest.x) { //left
-            this.direction = ENEMY_LEFT;
-        }
-    };
-    
-    this.pickXDest = function () {
-        var min = 0;
-        var max = this.wallWidth;
-        
-        if (this.offset) {
-            min++;
-            max++;
-        }
-        
-        if (this.lane > min && this.lane < max) {
-            //could go either way
-            var dir = Math.floor(Math.random() * 2);
-            if (dir == 0) {
-                if (this.offset) {
-                    this.lane--;
-                }
-                return this.sprite.body.x - brickWidth() / 2;
-            } else {
-                if (!this.offset) {
-                    this.lane++;
-                }
-                return this.sprite.body.x + brickWidth() / 2;
-            }
-        } else if (this.lane == min) {
-            if (!this.offset) {
-                this.lane++;
-            }
-            return this.sprite.body.x + brickWidth() / 2;
-        } else if (this.lane == max) {
-            if (this.offset) {
-                this.lane--;
-            }
-            return this.sprite.body.x - brickWidth() / 2;
-        }
-    };
-    
-    this.dest = { x: x, y: y - height / 2 };
-    this.sprite.enemy = this;
-    
+    console.log('Spawned an enemy.');
+    console.log('Enemy pos: (' + this.sprite.x + ', ' + this.sprite.y + ')');
+    console.log('Enemy velocity: (' + velX + ', ' + velY + ')');
 }

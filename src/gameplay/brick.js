@@ -1,13 +1,5 @@
 var brickWidthMargin = 1;
 
-function brickWidth() {
-    return game.cache.getImage('brick').width;
-}
-
-function brickHeight() {
-    return game.cache.getImage('brick').height;
-}
-
 function Brick(lane, offset, wall) {
     var width = game.cache.getImage('brick').width;
     var height = game.cache.getImage('brick').height;

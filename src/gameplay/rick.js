@@ -1,17 +1,9 @@
-function rickWidth() {
-    return 16;
-}
-
-function rickHeight() {
-    return 24;
-}
-
 function Rick(world) {
     
     this.world = world;
     
-    var width = rickWidth();
-    var height = rickHeight();
+    var width = rickWidth;
+    var height = rickHeight;
     
     var groundHeight = 32;
     

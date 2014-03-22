@@ -45,7 +45,7 @@ function HighScoreScreen(newRecord) {
         game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
     };
     
-    this.fallDist = windowHeight - brickHeight();
+    this.fallDist = windowHeight - brickHeight;
     
     this.update = function (delta) {
         for (var i = 0; i < this.wallSprites.length; i++) {
@@ -64,7 +64,7 @@ function HighScoreScreen(newRecord) {
                     var heightText = '' + sprite.wallHeight + 'm';
                     
                     //when you change this: Also change 24 magic number                                                 TO MATCH THIS
-                    MakeLabel(sprite.body.x, bottomBounds - (brickHeight() + 1 + sprite.wallHeight * 3) - 24 * 2, heightText, '24px Arial', '#000000', false);
+                    MakeLabel(sprite.body.x, bottomBounds - (brickHeight + 1 + sprite.wallHeight * 3) - 24 * 2, heightText, '24px Arial', '#000000', false);
                     
                     this.nextMiniWall = sprite.lane - 1;
                     
@@ -124,9 +124,9 @@ function HighScoreScreen(newRecord) {
             var miniWallWidth = game.cache.getImage('rowdivider').width;
             
             y += 2; //tie up the loop's loose end
-            y -= rickHeight();
+            y -= rickHeight;
             x += miniWallWidth / 2;
-            x -= rickWidth() / 2;
+            x -= rickWidth / 2;
             var rick = game.add.sprite(x, y, 'rick');
             game.physics.arcade.enable(rick);
             rick.frame = 0; //stand left
