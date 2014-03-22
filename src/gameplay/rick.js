@@ -5,10 +5,8 @@ function Rick(world) {
     var width = rickWidth;
     var height = rickHeight;
     
-    var groundHeight = 32;
-    
     var x = windowWidth / 2 - width / 2;
-    var y = bottomBounds - height - groundHeight;
+    var y = topBounds - rickHeight; //fall from the top!
     
     var fps = 3;
     
@@ -22,9 +20,7 @@ function Rick(world) {
     
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     
-    //this.sprite.body.bounce.y = 0.00000000001;
     this.sprite.body.gravity.y = gravity;
-    //this.sprite.body.collideWorldBounds = true;
     
     //input
     this.cursors = game.input.keyboard.createCursorKeys();

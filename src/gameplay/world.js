@@ -11,6 +11,7 @@ function World() {
     this.boundsToPush = 0;
     this.rowsScrolled = 0;
     
+    this.elapsedTime = 0;
     this.difficulty = 0;
     
     var scores = JSON.parse(localStorage.getItem('Scores'));
@@ -36,7 +37,7 @@ function World() {
         this.difficulty += delta / fullDifficultyTime;
         this.difficulty = Math.min(this.difficulty, 1);
         
-        if (this.canBrickFall && !this.rick.dead) {
+        if (this.elapsedTime >= brickFallDelay && this.canBrickFall && !this.rick.dead) {
             var lane = this.wall.nextLane();
             
             var brick = new Brick(lane, this.wall.isOffset(lane), this.wall);

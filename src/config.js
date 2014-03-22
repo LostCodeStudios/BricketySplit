@@ -21,3 +21,7 @@ var ENEMY_BOTTOM = 2;
 
 var enemyMinSpeed = 64;
 var enemyMaxSpeed = 256;
+
+var groundHeight = 32;
+
+var brickFallDelay = 2500; //2.5 seconds before sh*t gets real
