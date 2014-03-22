@@ -1,4 +1,4 @@
-var gravity = 600;
+var gravity = 800;
 var cameraSpeed = 32;
 
 
