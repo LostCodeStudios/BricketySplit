@@ -1,4 +1,4 @@
-var gravity = 800;
+var gravity = 1600;
 var cameraSpeed = 32;
 
 
@@ -112,6 +112,8 @@ function World() {
         brick.body.immovable = true;
         brick.body.gravity.y = 0;
         this.canBrickFall = true; //one brick falling at a time
+        
+        brick.fallSound.play();
         
     };
     

@@ -1,6 +1,6 @@
 This is Rick!
 Rick can jump! [Z]
-He can move, too. [<>]
+He can run, too. He's pretty fast! [<>]
 
 Rick builds walls, but the bricks fall by themselves.
 It's the easiest job in the world! He just has to watch his head.

@@ -26,6 +26,8 @@ function Rick(world) {
     this.sprite.animations.add('walkRight', [3, 2], fps, true);
     this.sprite.animations.add('standRight', [2], fps, true);
     
+    this.jumpSound = game.add.audio('jump');
+    
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     
     //this.sprite.body.bounce.y = 0.00000000001;
@@ -73,10 +75,11 @@ function Rick(world) {
         game.input.onUp.add(this.touchUpEvent, this);
     }
     
+    this.deathSound = game.add.audio('squish');
     this.facing = 'left';
     
-    var moveSpeed = 200;
-    var jumpSpeed = 250;
+    var moveSpeed = 300;
+    var jumpSpeed = 375;
     
     this.destroy = function () {
         this.sprite.destroy();
@@ -88,18 +91,20 @@ function Rick(world) {
         this.dead = true;
         this.sprite.body = null;
         this.sprite.destroy();
+        this.deathSound.play();
     };
     
     this.update = function () {
         
         if (this.dead) return;
         
+        var bounceDist = gravity / 1500;
         if (this.sprite.body.touching.left) {
-            this.sprite.body.y -= 1;
+            this.sprite.body.y -= bounceDist;
         }
         
         if (this.sprite.body.touching.right) {
-            this.sprite.body.y -= 1;
+            this.sprite.body.y -= bounceDist;
         }
         
         this.sprite.body.velocity.x = 0;
@@ -123,6 +128,7 @@ function Rick(world) {
         if (this.jump() && this.sprite.body.touching.down)
         {
             this.sprite.body.velocity.y = -jumpSpeed;
+            this.jumpSound.play();
         }
         
         if (this.sprite.body.y > bottomBounds) {

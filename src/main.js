@@ -28,6 +28,10 @@ function preload() {
     game.load.image('offsetrow', 'assets/offsetrow.png');
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
     
+    game.load.audio('jump', 'assets/Jump56.wav', true);
+    game.load.audio('brickfall', 'assets/Hit_Hurt135.wav', true);
+    game.load.audio('squish', 'assets/Randomize167.wav', true);
+    
     if (!localStorage.getItem('Scores') || resetScores) {
         var scores = [ 100, 50, 4 ]; //100 50 20                                TODO it would be way bad to leave this here
         

@@ -12,6 +12,7 @@ function HighScoreScreen(newRecord) {
             text = 'New record!';
         }
         this.titleText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.1, text, '32px Arial', '#FF0000');
+        this.brickFallSound = game.add.audio('brickfall');
         
         var scores = JSON.parse(localStorage.getItem('Scores'));
         
@@ -61,11 +62,13 @@ function HighScoreScreen(newRecord) {
                     
                     //show height number
                     var heightText = '' + sprite.wallHeight + 'm';
-                    //to change this: Also change 24 magic number
+                    
+                    //when you change this: Also change 24 magic number                                                 TO MATCH THIS
                     MakeLabel(sprite.body.x, bottomBounds - (brickHeight() + 1 + sprite.wallHeight * 3) - 24 * 2, heightText, '24px Arial', '#000000', false);
                     
                     this.nextMiniWall = sprite.lane - 1;
                     
+                    this.brickFallSound.play();
                     sprite.handleFallEvent = false; //don't do this repeatedly, please
                 }
             }
