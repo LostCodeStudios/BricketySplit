@@ -5,6 +5,10 @@ function World() {
     this.rick = new Rick(this);
     this.bricks = game.add.group();
     this.enemies = game.add.group();
+    
+    this.ufos = new Array();
+    this.lasers = game.add.group();
+    
     this.wall = new Wall(wallWidth);
     this.canBrickFall = true;
     this.heightText = MakeLabel(0, 0, '', '32px Arial', '#ff0000');
@@ -15,6 +19,8 @@ function World() {
     
     this.elapsedTime = 0;
     this.difficulty = 0;
+    
+    this.laserSound = game.add.audio('laser');
     
     var scores = JSON.parse(localStorage.getItem('Scores'));
     for (var i = 0; i < scores.length; i++) {
@@ -36,10 +42,12 @@ function World() {
     this.update = function (delta) {
         this.elapsedTime += delta;
         
-        this.difficulty += delta / fullDifficultyTime;
-        this.difficulty = Math.min(this.difficulty, 1);
-        
         var brickDelay = (tutorial ? tutorialBrickFallDelay : brickFallDelay);
+        
+        if (this.elapsedTime >= brickDelay) {
+            this.difficulty += delta / fullDifficultyTime;
+            this.difficulty = Math.min(this.difficulty, 1);     //update difficulty after bricks start falling
+        }
         
         if (this.elapsedTime >= brickDelay && this.canBrickFall && !this.rick.dead) {
             var lane = this.wall.nextLane();
@@ -57,15 +65,20 @@ function World() {
             this.currentPhase = -1;
         }
         
-        game.physics.arcade.collide(this.rick.sprite, this.ground);
-        game.physics.arcade.collide(this.rick.sprite, this.bricks);
-        
         if (!this.rick.dead) {
+            game.physics.arcade.collide(this.rick.sprite, this.ground);
+            game.physics.arcade.collide(this.rick.sprite, this.bricks);
             game.physics.arcade.overlap(this.rick.sprite, this.enemies, this.enemyRickCollision, null, this);
         }
+        
+        if (!this.rick.dead) {
+            game.physics.arcade.overlap(this.lasers, this.rick.sprite, this.laserCollision, null, this);
+        }
        
-        if (this.fallingBrick) { //there is a reason for this
-            game.physics.arcade.overlap(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
+        if (!this.rick.dead && this.fallingBrick) { //there is a reason for this
+            this.fallingBrick.sprite.body.immovable = true;
+            game.physics.arcade.collide(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
+            this.fallingBrick.sprite.body.immovable = false;
         }
         if (this.fallingBrick) { //there is a reason for this
             game.physics.arcade.collide(this.fallingBrick.sprite, this.bricks, this.brickCollisionCallback, processBrickCollision, this);
@@ -97,7 +110,7 @@ function World() {
                     this.currentPhase++;
                     this.startPhase(this.currentPhase);
                 } else {
-                    enemy = new Enemy(randEnemySource(), this.difficulty);
+                    enemy = this.spawnEnemy();
                 }
                 
                 this.enemies.add(enemy.sprite);
@@ -113,8 +126,55 @@ function World() {
         
         this.rick.update();
         
+        for (var i = 0; i < this.ufos.length; i++) {
+            this.ufos[i].update(delta);
+        }
+        
+        for (var i = this.ufos.length - 1; i >= 0; i--) {
+            if (this.outOfBounds(this.ufos[i].sprite)) {
+                this.ufos[i].sprite.body = null;
+                this.ufos[i].sprite.destroy();
+                this.ufos.splice(i, 1);
+                console.log('REMOVED A UFO');
+            }
+        }
+        
+        for (var i = this.enemies.length - 1; i >= 0; i--) {
+            if (this.outOfBounds(this.enemies.getAt(i))) {
+                this.enemies.remove(this.enemies.getAt(i));
+                console.log('REMOVED A FRIEND');
+            }
+        }
+        
+        for (var i = this.lasers.length - 1; i >= 0; i--) {
+            if (this.outOfBounds(this.lasers.getAt(i))) {
+                this.lasers.remove(this.lasers.getAt(i));
+                console.log('REMOVED A LASER');
+            }
+        }
+        
         if (tutorial) {
             this.updateTutorial();
+        }
+    };
+    
+    this.outOfBounds = function (sprite) {
+        return sprite.x + sprite.width < 0 || sprite.x > windowWidth || sprite.y + sprite.height < topBounds || sprite.y > windowHeight;
+    };
+    
+    this.spawnEnemy = function () {
+        if (this.difficulty < minUFODifficulty) {
+            return new Enemy(randEnemySource(), this.difficulty)
+        } else {
+            if (percent(ufoChance) && !(this.ufos.length >= maxUFOs)) {
+                //spawn a UFO sometimes, as long as we don't have too many
+                var ufo = new UFO(this, this.difficulty)
+                this.ufos[this.ufos.length] = ufo;                          //TODO remove these when you're done with them
+                return ufo;
+            } else {
+                //spawn a "friend" others
+                return new Enemy(randEnemySource(), this.difficulty);
+            }
         }
     };
     
@@ -133,6 +193,10 @@ function World() {
     };
     
     this.enemyRickCollision = function (rick, enemy) {
+        this.rick.die();
+    };
+    
+    this.laserCollision = function (laser, other) {
         this.rick.die();
     };
     
@@ -230,6 +294,18 @@ function World() {
         }
     };
     
+    this.spawnLaser = function(x, y) {
+        var laser = game.add.sprite(x, y, 'laser');
+        laser.anchor.set(0.5, 0);
+        
+        game.physics.arcade.enable(laser);
+        laser.body.velocity.y = laserSpeed;
+        
+        this.laserSound.play();
+        
+        this.lasers.add(laser);
+    };
+    
 }
 
 function processBrickCollision() {
@@ -240,16 +316,12 @@ function rickCollisionCallback(rick, other) {
     
     if (other === this.fallingBrick.sprite) {
         //check if Rick was crushed
-        var rickCenterX = rick.body.x + rick.body.width / 2
-        
+    
         var forgivingness = 10;
         
         if (other.body.y < rick.body.y + forgivingness) {
             if (rick.body.touching.down) {
                 this.rick.die();
-            } else {
-                rick.body.velocity.x = 0;
-                rick.body.velocity.y = other.body.velocity.y;
             }
         }
     }

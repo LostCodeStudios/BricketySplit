@@ -28,3 +28,5 @@ var groundHeight = 32;
 var brickFallDelay = 2500; //2.5 seconds till bricks start falling
 
 var arrowDownHeight = 48;
+
+var laserSpeed = 800;

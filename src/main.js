@@ -12,7 +12,7 @@ var mobile = false;
 var topBounds = 0;
 var bottomBounds = windowHeight;
 
-var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS HERE
+var resetScores = false; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
 
 var tutorial;
 
@@ -28,14 +28,17 @@ function preload() {
     game.load.image('arrowdown', 'assets/arrowdown.png');
     game.load.image('zbutton', 'assets/zbutton.png');
     game.load.image('arrowbuttons', 'assets/arrowbuttons.png');
+    game.load.image('ufo', 'assets/ufo.png');
+    game.load.image('laser', 'assets/laser.png');
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
     
     game.load.audio('jump', 'assets/Jump56.wav', true);
     game.load.audio('brickfall', 'assets/Hit_Hurt135.wav', true);
     game.load.audio('squish', 'assets/Randomize167.wav', true);
+    game.load.audio('laser', 'assets/Laser_Shoot66.wav', true);
     
     if (!localStorage.getItem('Scores') || resetScores) {
-        var scores = [ 100, 50, 15 ]; //100 50 20                                TODO it would be way bad to leave this here
+        var scores = [ 100, 50, 15 ]; //100 50 20                                TODO finalize these & disable resetScores
         
         localStorage.setItem('Scores', JSON.stringify(scores));
     }
@@ -62,7 +65,6 @@ function resetWorldBounds () {
 }
 
 function create() {
-    
     game.stage.backgroundColor = backgroundColor;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     

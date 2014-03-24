@@ -22,6 +22,8 @@ function Rick(world) {
     
     this.sprite.body.gravity.y = gravity;
     
+    this.sprite.isRick = true;
+    
     //input
     this.cursors = game.input.keyboard.createCursorKeys();
     
@@ -86,7 +88,7 @@ function Rick(world) {
         
         if (this.dead) return;
         
-        var bounceDist = gravity / 1500;
+        var bounceDist = gravity / 3000;
         if (this.sprite.body.touching.left) {
             this.sprite.body.y -= bounceDist;
         }

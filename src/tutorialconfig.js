@@ -20,7 +20,7 @@ var tutorialText = [
 
 var tutorialTimes = [
     750,
-    4000,
+    2500,
     5000,
     5000,
     
@@ -28,7 +28,7 @@ var tutorialTimes = [
     5000,
     Infinity,       //this one ends when the first enemy spawns
     5000,
-    4000,
+    5500,
     
     5000,
     5000,

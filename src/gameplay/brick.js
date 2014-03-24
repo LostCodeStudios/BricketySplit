@@ -32,4 +32,5 @@ function Brick(lane, offset, wall) {
     
         
     this.sprite.fallSound = game.add.audio('brickfall');
+    this.sprite.isBrick = true;
 }
