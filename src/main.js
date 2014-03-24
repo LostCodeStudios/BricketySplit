@@ -35,7 +35,7 @@ function preload() {
     game.load.audio('squish', 'assets/Randomize167.wav', true);
     
     if (!localStorage.getItem('Scores') || resetScores) {
-        var scores = [ 100, 50, 4 ]; //100 50 20                                TODO it would be way bad to leave this here
+        var scores = [ 100, 50, 15 ]; //100 50 20                                TODO it would be way bad to leave this here
         
         localStorage.setItem('Scores', JSON.stringify(scores));
     }

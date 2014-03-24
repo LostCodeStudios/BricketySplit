@@ -44,13 +44,13 @@ function Enemy(source, difficulty) {
     switch (source) {
         case ENEMY_LEFT:
             x = -width;
-            y = randPos(enemySideMinY, enemySideMaxY);
+            y = topBounds + randPos(enemySideMinY, enemySideMaxY);
             velX = lerp(enemyMinSpeed, enemyMaxSpeed, difficulty);
             velY = 0;
             break;
         case ENEMY_RIGHT:
             x = windowWidth;
-            y = randPos(enemySideMinY, enemySideMaxY);
+            y = topBounds + randPos(enemySideMinY, enemySideMaxY);
             velX = lerp(enemyMinSpeed, enemyMaxSpeed, difficulty) * -1;
             velY = 0;
             break;
