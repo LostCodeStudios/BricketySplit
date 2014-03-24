@@ -14,6 +14,8 @@ var bottomBounds = windowHeight;
 
 var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS HERE
 
+var tutorial;
+
 function preload() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('brick', 'assets/brick.png');
@@ -23,6 +25,9 @@ function preload() {
     game.load.image('rowdivider', 'assets/rowdivider2.png');
     game.load.image('normalrow', 'assets/normalrow.png');
     game.load.image('offsetrow', 'assets/offsetrow.png');
+    game.load.image('arrowdown', 'assets/arrowdown.png');
+    game.load.image('zbutton', 'assets/zbutton.png');
+    game.load.image('arrowbuttons', 'assets/arrowbuttons.png');
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
     
     game.load.audio('jump', 'assets/Jump56.wav', true);
@@ -34,6 +39,10 @@ function preload() {
         
         localStorage.setItem('Scores', JSON.stringify(scores));
     }
+    
+    tutorial = !localStorage.getItem('TutorialComplete');
+    
+    if (resetScores) tutorial = true;
 }
 
 function updateWorldBounds () {

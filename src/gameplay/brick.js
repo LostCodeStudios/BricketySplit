@@ -28,7 +28,7 @@ function Brick(lane, offset, wall) {
     
     this.sprite.body.x += brickWidthMargin;
     this.sprite.body.width -= brickWidthMargin * 2;
-    this.sprite.body.gravity.y = gravity;
+    this.sprite.body.gravity.y = brickGravity;
     
         
     this.sprite.fallSound = game.add.audio('brickfall');
