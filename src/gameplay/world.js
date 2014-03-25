@@ -7,6 +7,7 @@ function World() {
     this.enemies = game.add.group();
     
     this.ufos = new Array();
+    this.wavers = new Array();
     this.lasers = game.add.group();
     
     this.wall = new Wall(wallWidth);
@@ -68,13 +69,33 @@ function World() {
         if (!this.rick.dead) {
             game.physics.arcade.collide(this.rick.sprite, this.ground);
             game.physics.arcade.collide(this.rick.sprite, this.bricks);
-            game.physics.arcade.overlap(this.rick.sprite, this.enemies, this.enemyRickCollision, null, this);
+        }
+        
+        for (var i = 0; i < this.enemies.length && !this.rick.dead; i++) {
+            var enemy = this.enemies.getAt(i);
+            game.physics.arcade.overlap(this.rick.sprite, enemy, this.enemyRickCollision, null, this);
         }
         
         if (!this.rick.dead) {
             game.physics.arcade.overlap(this.lasers, this.rick.sprite, this.laserCollision, null, this);
         }
-       
+        
+        if (!this.rick.dead) {
+            for (var i = 0; i < this.ufos.length; i++) {
+                var ufo = this.ufos[i];
+                
+                game.physics.arcade.overlap(this.rick.sprite, ufo.sprite, this.enemyRickCollision, null, this);
+            }
+        }
+        
+        if (!this.rick.dead) {
+            for (var i = 0; i < this.wavers.length; i++) {
+                var waver = this.wavers[i];
+                
+                game.physics.arcade.overlap(this.rick.sprite, waver.sprite, this.enemyRickCollision, null, this);
+            }
+        }
+        
         if (!this.rick.dead && this.fallingBrick) { //there is a reason for this
             this.fallingBrick.sprite.body.immovable = true;
             game.physics.arcade.collide(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
@@ -113,7 +134,9 @@ function World() {
                     enemy = this.spawnEnemy();
                 }
                 
-                this.enemies.add(enemy.sprite);
+                if (!enemy.isUFO && !enemy.isWaver) {
+                    this.enemies.add(enemy.sprite);
+                }
             }
         }
         
@@ -130,12 +153,33 @@ function World() {
             this.ufos[i].update(delta);
         }
         
+        for (var i = 0; i < this.wavers.length; i++) {
+            this.wavers[i].update();
+        }
+        
         for (var i = this.ufos.length - 1; i >= 0; i--) {
             if (this.outOfBounds(this.ufos[i].sprite)) {
                 this.ufos[i].sprite.body = null;
                 this.ufos[i].sprite.destroy();
+                
+                //this.enemies.remove(this.ufos[i].sprite);
+                
                 this.ufos.splice(i, 1);
+                
                 console.log('REMOVED A UFO');
+            }
+        }
+        
+        for (var i = this.wavers.length - 1; i >= 0; i--) {
+            if (this.outOfBounds(this.wavers[i].sprite)) {
+                this.wavers[i].sprite.body = null;
+                this.wavers[i].sprite.destroy();
+                
+                //this.enemies.remove(this.wavers[i].sprite);
+                
+                this.wavers.splice(i, 1);
+            
+                console.log('REMOVED A WAVER');
             }
         }
         
@@ -169,9 +213,14 @@ function World() {
             if (percent(ufoChance) && !(this.ufos.length >= maxUFOs)) {
                 //spawn a UFO sometimes, as long as we don't have too many
                 var ufo = new UFO(this, this.difficulty)
-                this.ufos[this.ufos.length] = ufo;                          //TODO remove these when you're done with them
+                this.ufos[this.ufos.length] = ufo;
                 return ufo;
-            } else {
+            } else if (percent(waveEnemyChance)) {
+                var waveEnemy = new WaveEnemy();
+                this.wavers[this.wavers.length] = waveEnemy;
+                return waveEnemy;
+            }
+            else {
                 //spawn a "friend" others
                 return new Enemy(randEnemySource(), this.difficulty);
             }

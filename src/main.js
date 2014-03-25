@@ -30,6 +30,8 @@ function preload() {
     game.load.image('arrowbuttons', 'assets/arrowbuttons.png');
     game.load.image('ufo', 'assets/ufo.png');
     game.load.image('laser', 'assets/laser.png');
+    game.load.image('enemyblue', 'assets/enemyblue.png');
+    game.load.image('enemyorange', 'assets/enemyorange.png');
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
     
     game.load.audio('jump', 'assets/Jump56.wav', true);

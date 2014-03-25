@@ -7,7 +7,7 @@ var maxUFOs = 5;
 
 var minUFODifficulty = 0.0;                     //TODO make this higher
 
-var ufoChance = 0.5;
+var ufoChance = 0.0;                        //TODO tweak this
 
 var minUFOStopX = windowWidth / 5;
 var maxUFOStopX = 4 * windowWidth / 5;
@@ -27,6 +27,9 @@ function UFO(world, difficulty) {
     y = topBounds + ufoY;
     
     this.sprite = game.add.sprite(x, y, 'ufo');
+    
+    this.sprite.isUFO = true;
+    
     game.physics.arcade.enable(this.sprite);
     this.sprite.body.velocity.x = (source ? -ufoSpeed: ufoSpeed);
     
