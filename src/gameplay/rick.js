@@ -46,6 +46,8 @@ function Rick(world) {
         this.moveLeftButton.fixedToCamera = true;
         this.moveRightButton.fixedToCamera = true;
         this.jumpButton.fixedToCamera = true;
+        
+        console.log('Made the buttons');
     } else {
         this.moveLeftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
         this.moveRightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
@@ -67,6 +69,8 @@ function Rick(world) {
     var jumpSpeed = 375;
     
     this.destroy = function () {
+        console.log('Destroying rick');
+        
         this.sprite.destroy();
         
         if (mobile) {
@@ -74,13 +78,14 @@ function Rick(world) {
             this.moveLeftButton.destroy();
             this.moveRightButton.destroy();
             this.jumpButton.destroy();
+            
+            console.log('destroying the buttons');
         }
     };
     
     this.die = function () {
         this.dead = true;
-        this.sprite.body = null;
-        this.sprite.destroy();
+        this.destroy();
         this.deathSound.play();
     };
     
