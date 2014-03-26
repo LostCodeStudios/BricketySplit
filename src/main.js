@@ -32,7 +32,11 @@ function preload() {
     game.load.image('laser', 'assets/laser.png');
     game.load.image('enemyblue', 'assets/enemyblue.png');
     game.load.image('enemyorange', 'assets/enemyorange.png');
+    
     game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
+    game.load.spritesheet('leftarrow', 'assets/leftarrowbutton.png', buttonWidth, buttonHeight);
+    game.load.spritesheet('rightarrow', 'assets/rightarrowbutton.png', buttonWidth, buttonHeight);
+    game.load.spritesheet('uparrow', 'assets/uparrowbutton.png', buttonWidth, buttonHeight);
     
     game.load.audio('jump', 'assets/Jump56.wav', true);
     game.load.audio('brickfall', 'assets/Hit_Hurt135.wav', true);

@@ -30,3 +30,12 @@ var brickFallDelay = 2500; //2.5 seconds till bricks start falling
 var arrowDownHeight = 48;
 
 var laserSpeed = 800;
+
+var buttonWidth = 52;
+var buttonHeight = 48;
+
+var touchButtonY = windowHeight - buttonHeight - 4;
+
+var moveLeftButtonX = 24;
+var moveRightButtonX = 24 + buttonWidth + 4;
+var jumpButtonX = windowWidth - 24 - buttonWidth;

@@ -14,7 +14,7 @@ function World() {
     this.canBrickFall = true;
     this.heightText = MakeLabel(0, 0, '', '32px Arial', '#ff0000');
     this.boundsToPush = 0;
-    this.rowsScrolled = 0;
+    //this.rowsScrolled = 0;
     
     this.currentPhase = 0;
     
@@ -111,10 +111,10 @@ function World() {
         //after the first two rows are finished, start pushing the camera up
         if (this.wall.rowCompleted() && this.wall.currentRow > scrollStartRows && !this.rick.dead) {
             this.boundsToPush += brickHeight;
-            this.rowsScrolled++;
-            if (this.rowsScrolled > 1) {
-                this.wall.bottomShowingRow++;
-            }
+//            this.rowsScrolled++;
+//            if (this.rowsScrolled > 1) {
+//                this.wall.bottomShowingRow++;
+//            }
             
             if (this.wall.currentRow > scrollStartRows) {
                 //spawn new enemy
