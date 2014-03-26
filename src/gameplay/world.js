@@ -76,24 +76,20 @@ function World() {
             game.physics.arcade.overlap(this.rick.sprite, enemy, this.enemyRickCollision, null, this);
         }
         
-        if (!this.rick.dead) {
-            game.physics.arcade.overlap(this.lasers, this.rick.sprite, this.laserCollision, null, this);
+        for (var i = 0; i < this.lasers.length && !this.rick.dead; i++) {
+            game.physics.arcade.overlap(this.lasers.getAt(i), this.rick.sprite, this.laserCollision, null, this);
         }
         
-        if (!this.rick.dead) {
-            for (var i = 0; i < this.ufos.length; i++) {
-                var ufo = this.ufos[i];
-                
-                game.physics.arcade.overlap(this.rick.sprite, ufo.sprite, this.enemyRickCollision, null, this);
-            }
+        for (var i = 0; !this.rick.dead && i < this.ufos.length; i++) {
+            var ufo = this.ufos[i];
+
+            game.physics.arcade.overlap(this.rick.sprite, ufo.sprite, this.enemyRickCollision, null, this);
         }
         
-        if (!this.rick.dead) {
-            for (var i = 0; i < this.wavers.length; i++) {
-                var waver = this.wavers[i];
-                
-                game.physics.arcade.overlap(this.rick.sprite, waver.sprite, this.enemyRickCollision, null, this);
-            }
+        for (var i = 0; !this.rick.dead && i < this.wavers.length; i++) {
+            var waver = this.wavers[i];
+
+            game.physics.arcade.overlap(this.rick.sprite, waver.sprite, this.enemyRickCollision, null, this);
         }
         
         if (!this.rick.dead && this.fallingBrick) { //there is a reason for this

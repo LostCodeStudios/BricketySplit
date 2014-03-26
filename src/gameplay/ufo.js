@@ -3,14 +3,8 @@ var ufoSpeed = 100;
 var minUFOStopTime = 2500;
 var maxUFOStopTime = 5000;
 
-var maxUFOs = 5;
-
-var minUFODifficulty = 0.0;                     //TODO make this higher
-
-var ufoChance = 0.0;                        //TODO tweak this
-
-var minUFOStopX = windowWidth / 5;
-var maxUFOStopX = 4 * windowWidth / 5;
+var minUFOStopX = wallLeftX;
+var maxUFOStopX = wallRightX;
 var ufoShotDelay = 250;
 
 function UFO(world, difficulty) {
@@ -42,8 +36,8 @@ function UFO(world, difficulty) {
             
             if (!this.source) {
                 //from the left
-                if (this.sprite.x >= this.stopX && !this.stopped) {
-                    this.sprite.x = this.stopX;
+                if (this.sprite.x + this.sprite.width / 2 >= this.stopX && !this.stopped) {
+                    this.sprite.x = this.stopX - this.sprite.width / 2;
                     this.stopped = true;
                     
                     this.sprite.body.velocity.x = 0;
@@ -52,8 +46,8 @@ function UFO(world, difficulty) {
                 }
             } else {
                 //from the right
-                if (this.sprite.x <= this.stopX && !this.stopped) {
-                    this.sprite.x = this.stopX;
+                if (this.sprite.x + this.sprite.width / 2 <= this.stopX && !this.stopped) {
+                    this.sprite.x = this.stopX - this.sprite.width / 2;
                     this.stopped = true;
                     
                     this.sprite.body.velocity.x = 0;

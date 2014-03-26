@@ -2,9 +2,6 @@ var waveEnemyMidY = windowHeight / 2;
 var waveEnemyAmp = windowHeight / 4;
 var waveEnemySpeed = 350;
 
-var minWaveEnemyDifficulty = 0.0;               //TODO raise this
-var waveEnemyChance = 0.33;                     //TODO tweak this
-
 function WaveEnemy() {
     var width = game.cache.getImage('enemyorange').width;
     

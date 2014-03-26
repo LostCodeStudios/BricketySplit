@@ -1,7 +1,32 @@
+//debug flags
+
+var resetScores = false; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
+var alwaysMobile = false;   //                      TODO do not leave this enabled
+
+//end debug flags
+
+//enemy spawn pattern
+
+var minWaveEnemyDifficulty = 0.0;               //TODO raise this
+var waveEnemyChance = 0.33;                     //TODO tweak this
+
+var maxUFOs = 5;
+
+var minUFODifficulty = 0.0;                     //TODO make this higher
+
+var ufoChance = 1.0;                        //TODO tweak this
+
+//end enemy spawn pattern
+
 var windowWidth = 800;
 var windowHeight = 480;
 
+var brickHeight = 32;
+var brickWidth = 96;
+
 var wallWidth = 6;
+var wallLeftX = (windowWidth - brickWidth * wallWidth) / 2;
+var wallRightX = windowWidth - wallLeftX;
 
 var gravity = 1600;
 var brickGravity = 1000;
@@ -9,9 +34,6 @@ var cameraSpeed = 32;
 var fullDifficultyTime = 5 * 60 * 1000;
                       // ^Time it takes for the game to reach full difficulty, in minutes
 var scrollStartRows = 3;
-
-var brickHeight = 32;
-var brickWidth = 96;
 
 var rickWidth = 16;
 var rickHeight = 24;

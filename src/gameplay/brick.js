@@ -5,7 +5,7 @@ function Brick(lane, offset, wall) {
     var height = game.cache.getImage('brick').height;
     var wallWidth = wall.width;
     
-    var x = width + lane * width;
+    var x = wallLeftX + lane * width;
     
     if (offset) {
         x -= width / 2;

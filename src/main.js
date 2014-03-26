@@ -12,8 +12,6 @@ var mobile = false;
 var topBounds = 0;
 var bottomBounds = windowHeight;
 
-var resetScores = false; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
-
 var tutorial;
 
 function preload() {
@@ -97,6 +95,10 @@ function create() {
         }
         
         game.input.onUp.add(onInputUp, this);
+    }
+    
+    if (alwaysMobile) {
+        mobile = true;
     }
     
     lastTime = 0;

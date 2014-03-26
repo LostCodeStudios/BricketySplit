@@ -31,9 +31,9 @@ function Rick(world) {
     
     if (mobile) {
         //add touch buttons
-        this.moveLeftButton = game.add.button(moveLeftButtonX, touchButtonY, 'leftarrow', null, this, 0, 0, 1);
-        this.moveRightButton = game.add.button(moveRightButtonX, touchButtonY, 'rightarrow', null, this, 0, 0, 1);
-        this.jumpButton = game.add.button(jumpButtonX, touchButtonY, 'uparrow', null, this, 0, 0, 1);
+        this.moveLeftButton = game.add.button(moveLeftButtonX, touchButtonY, 'leftarrow', null, null, 0, 0, 1);
+        this.moveRightButton = game.add.button(moveRightButtonX, touchButtonY, 'rightarrow', null, null, 0, 0, 1);
+        this.jumpButton = game.add.button(jumpButtonX, touchButtonY, 'uparrow', null, null, 0, 0, 1);
     
         this.moveLeftButton.onInputDown.add(moveLeftCallback, this);
         this.moveRightButton.onInputDown.add(moveRightCallback, this);
@@ -70,7 +70,7 @@ function Rick(world) {
         this.sprite.destroy();
         
         if (mobile) {
-            //destroy buttons
+            //destroy buttons            
             this.moveLeftButton.destroy();
             this.moveRightButton.destroy();
             this.jumpButton.destroy();
