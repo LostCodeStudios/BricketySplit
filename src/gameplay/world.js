@@ -53,7 +53,7 @@ function World() {
         if (this.elapsedTime >= brickDelay && this.canBrickFall && !this.rick.dead) {
             var lane = this.wall.nextLane();
             
-            var brick = new Brick(lane, this.wall.isOffset(lane), this.wall);
+            var brick = new Brick(lane, this.wall.isOffset(lane), this.wall, this.difficulty);
             this.fallingBrick = brick;
             
             this.wall.addBrick(lane);
@@ -144,6 +144,14 @@ function World() {
         }
         
         this.rick.update();
+        
+        if (this.ground) {
+            if (this.ground.y >= bottomBounds - 1) {
+                this.ground.body = null;
+                this.ground.destroy();
+                this.ground = null;
+            }
+        }
         
         for (var i = 0; i < this.ufos.length; i++) {
             this.ufos[i].update(delta);

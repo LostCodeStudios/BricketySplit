@@ -29,7 +29,10 @@ var wallLeftX = (windowWidth - brickWidth * wallWidth) / 2;
 var wallRightX = windowWidth - wallLeftX;
 
 var gravity = 1600;
-var brickGravity = 1000;
+
+var minBrickGravity = 1000;
+var maxBrickGravity = 1500;
+
 var cameraSpeed = 32;
 var fullDifficultyTime = 5 * 60 * 1000;
                       // ^Time it takes for the game to reach full difficulty, in minutes

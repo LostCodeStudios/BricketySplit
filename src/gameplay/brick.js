@@ -1,6 +1,6 @@
 var brickWidthMargin = 1;
 
-function Brick(lane, offset, wall) {
+function Brick(lane, offset, wall, difficulty) {
     var width = game.cache.getImage('brick').width;
     var height = game.cache.getImage('brick').height;
     var wallWidth = wall.width;
@@ -28,8 +28,8 @@ function Brick(lane, offset, wall) {
     
     this.sprite.body.x += brickWidthMargin;
     this.sprite.body.width -= brickWidthMargin * 2;
-    this.sprite.body.gravity.y = brickGravity;
     
+    this.sprite.body.gravity.y = lerp(minBrickGravity, maxBrickGravity, difficulty);
         
     this.sprite.fallSound = game.add.audio('brickfall');
     this.sprite.isBrick = true;
