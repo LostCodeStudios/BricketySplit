@@ -147,7 +147,7 @@ function Rick(world) {
         if (mobile) {
             return this.jumping;
         } else {
-            return game.input.keyboard.isDown(Phaser.Keyboard.Z);
+            return game.input.keyboard.isDown(Phaser.Keyboard.Z) || game.input.keyboard.isDown(Phaser.Keyboard.UP);
         }
     };
 }
