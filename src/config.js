@@ -17,14 +17,14 @@ var mediumTextFont = '36px Bangers';
 
 //end fonts
 
-var minWaveEnemyDifficulty = 0.0;               //TODO raise this
-var waveEnemyChance = 0.33;                     //TODO tweak this
+var minWaveEnemyDifficulty = 0.25;               //TODO raise this
+var waveEnemyChance = 0.1;                     //TODO tweak this
 
 var maxUFOs = 5;
 
-var minUFODifficulty = 0.0;                     //TODO make this higher
+var minUFODifficulty = 0.125;                     //TODO make this higher
 
-var ufoChance = 1.0;                        //TODO tweak this
+var ufoChance = 0.2;                        //TODO tweak this
 
 //end enemy spawn pattern
 

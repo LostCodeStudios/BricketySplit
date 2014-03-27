@@ -40,6 +40,7 @@ var tutorialTimes = [
 
 var jumpPhase = 2;
 var runPhase = 3;
+var brickFallPhase = 4;
 var enemySpawnPhase = 6;
 var lastPhase = 11;
 

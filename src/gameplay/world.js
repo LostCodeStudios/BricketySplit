@@ -1,5 +1,7 @@
 
-function World() {
+function World(skipIntro) {
+    
+    this.skipIntro = skipIntro;
     
     this.ground = makeGround();
     this.rick = new Rick(this);
@@ -262,6 +264,15 @@ function World() {
     
     this.updateTutorial = function () {
         
+        if (this.skipIntro && this.elapsedTime >= brickFallDelay) {
+            this.skipIntro = false;
+            
+            this.elapsedTime = timeTill(brickFallPhase);    //skip the first few tutorial messages if they saw them already
+            this.currentPhase = brickFallPhase;
+            
+            this.startPhase(this.currentPhase);
+        }
+        
         if (this.currentPhase == 1) {
             this.arrow.x = this.rickCenterX();
             this.arrow.y = this.rick.sprite.y - arrowDownHeight;
@@ -300,7 +311,7 @@ function World() {
             this.warningLabel = MakeCenteredLabel(this.friendCenterX(), this.followingEnemy.sprite.y - arrowDownHeight - tutorialTextSize, 'Avoid "friends"', tutorialFont, '#000000', false);
         }
         
-        if (this.currentPhase != enemySpawnPhase && this.elapsedTime >= timeTill(this.currentPhase + 1)) {
+        if (!this.skipIntro && this.currentPhase != enemySpawnPhase && this.elapsedTime >= timeTill(this.currentPhase + 1)) {
             this.endPhase(this.currentPhase);
             
             this.currentPhase++;

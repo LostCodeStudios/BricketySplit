@@ -1,9 +1,9 @@
-function GameplayScreen() {
+function GameplayScreen(skipIntro) {
     this.gameOverWaitTime = 2000;
     this.newRecord = -1;
     
     this.show = function () {
-        this.world = new World();
+        this.world = new World(skipIntro);
         this.gameOverTimer = 0;
     };
     
@@ -20,7 +20,8 @@ function GameplayScreen() {
         
         if (this.world.gameOver()) {           
             if (!this.gameOverText) {
-                this.gameOverText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.3, 'GAME OVER', mediumTextFont, '#FF0000');
+                var text = (tutorial ? 'TRY AGAIN' : 'GAME OVER');
+                this.gameOverText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.3, text, mediumTextFont, '#FF0000');
                 
                 //also check for a high score
                 var scores = JSON.parse(localStorage.getItem('Scores'));
@@ -43,7 +44,13 @@ function GameplayScreen() {
             this.gameOverTimer += delta;
             
             if (this.gameOverTimer >= this.gameOverWaitTime) {
-                setState(new HighScoreScreen(this.newRecord));
+                if (tutorial) {
+                    var skipIntro = this.world.elapsedTime > tutorialBrickFallDelay;
+                    
+                    setState(new GameplayScreen(skipIntro));
+                } else {
+                    setState(new HighScoreScreen(this.newRecord));
+                }
             }
         }
     };

@@ -30,6 +30,8 @@ function preload() {
     game.load.image('laser', 'assets/sprites/laser.png');
     game.load.image('enemyblue', 'assets/sprites/enemyblue.png');
     game.load.image('enemyorange', 'assets/sprites/enemyorange.png');
+    game.load.image('smallparticle', 'assets/sprites/smallparticle.png');
+    game.load.image('bigparticle', 'assets/sprites/bigparticle.png');
     game.load.spritesheet('rick', 'assets/sprites/rick.png', 16, 24);
     
     //load tutorial assets

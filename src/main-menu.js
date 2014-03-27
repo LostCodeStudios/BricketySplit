@@ -12,8 +12,8 @@ function MainMenu() {
     var titleY2 = windowHeight * 0.35;
     var title2 = 'Split';
     
-    var msgX = windowWidth / 2;
-    var msgY = windowHeight / 2;
+    var msgX = windowWidth * 0.5;
+    var msgY = windowHeight * 0.7;
     var msgFill = '#FF0000';
     var msg = 'Press SPACE to play.';
     

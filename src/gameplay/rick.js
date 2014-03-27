@@ -85,6 +85,20 @@ function Rick(world) {
     };
     
     this.die = function () {
+        var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, this.sprite.y + this.sprite.height / 2, 100);
+        emitter.gravity = gravity / 6;
+        
+        emitter.makeParticles('smallparticle');
+        //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+        //  The second gives each particle a 2000ms lifespan
+        //  The third is ignored when using burst/explode mode
+        //  The final parameter (10) is how many particles will be emitted in this single burst
+        emitter.start(false, 1000, null, 15);
+        
+        emitter.makeParticles('bigparticle');
+        emitter.start(false, 1000, null, 5);
+
+        
         this.dead = true;
         this.destroy();
         
