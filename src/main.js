@@ -137,7 +137,7 @@ function update() {
     currentTime = game.time.now;
     var delta = currentTime - lastTime;
     
-    state.update(delta);
+    if (delta <= frameTime) state.update(delta);
     
     lastTime = currentTime;
     

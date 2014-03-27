@@ -1,32 +1,36 @@
 //debug flags
 
-var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
-var alwaysMobile = false;   //                      TODO do not leave this enabled
+    var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
+    var alwaysMobile = false;   //                      TODO do not leave this enabled
 
 //end debug flags
 
 var soundVolume = 0.2;
 
-//enemy spawn pattern
 
 //fonts
 
-var titleFont = '72px Bangers';
-var smallTextFont = '24px Bangers';
-var mediumTextFont = '36px Bangers';
+    var titleFont = '72px Bangers';
+    var smallTextFont = '24px Bangers';
+    var mediumTextFont = '36px Bangers';
 
 //end fonts
 
-var minWaveEnemyDifficulty = 0.25;               //TODO raise this
-var waveEnemyChance = 0.1;                     //TODO tweak this
+//enemy spawn pattern
 
-var maxUFOs = 5;
+    var minWaveEnemyDifficulty = 0.25;               //TODO raise this
+    var waveEnemyChance = 0.1;                     //TODO tweak this
 
-var minUFODifficulty = 0.125;                     //TODO make this higher
+    var maxUFOs = 5;
 
-var ufoChance = 0.2;                        //TODO tweak this
+    var minUFODifficulty = 0.125;                     //TODO make this higher
+
+    var ufoChance = 0.2;                        //TODO tweak this
 
 //end enemy spawn pattern
+
+var fps = 10;
+var frameTime = 1000 / fps;
 
 var windowWidth = 800;
 var windowHeight = 480;
