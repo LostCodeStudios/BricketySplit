@@ -23,16 +23,16 @@ function preload() {
     game.load.image('halfbrick', 'assets/sprites/halfbrick.png');
     game.load.image('enemy', 'assets/sprites/enemy.png');
     game.load.image('scoreline', 'assets/sprites/scoreline2.png');
-    game.load.image('rowdivider', 'assets/sprites/rowdivider2.png');
-    game.load.image('normalrow', 'assets/sprites/normalrow.png');
-    game.load.image('offsetrow', 'assets/sprites/offsetrow.png');
-    game.load.image('ufo', 'assets/sprites/ufo.png');
+    game.load.image('rowdivider', 'assets/sprites/rowdivider3.png');
+    game.load.image('normalrow', 'assets/sprites/normalrow2.png');
+    game.load.image('offsetrow', 'assets/sprites/offsetrow2.png');
+    game.load.image('ufo', 'assets/sprites/ufo2.png');
     game.load.image('laser', 'assets/sprites/laser.png');
     game.load.image('enemyblue', 'assets/sprites/enemyblue.png');
     game.load.image('enemyorange', 'assets/sprites/enemyorange.png');
-    game.load.image('smallparticle', 'assets/sprites/smallparticle.png');
-    game.load.image('bigparticle', 'assets/sprites/bigparticle.png');
-    game.load.spritesheet('rick', 'assets/sprites/rick.png', 16, 24);
+    game.load.image('smallparticle', 'assets/sprites/smallparticle2.png');
+    game.load.image('bigparticle', 'assets/sprites/bigparticle2.png');
+    game.load.spritesheet('rick', 'assets/sprites/rick2.png', 16, 24);
     
     //load tutorial assets
     game.load.image('arrowdown', 'assets/tutorial/arrowdown.png');
@@ -63,6 +63,8 @@ function preload() {
     tutorial = !localStorage.getItem('TutorialComplete');
     
     if (resetScores) tutorial = true;
+    
+    if (skipTutorial) tutorial = false;
 }
 
 function updateWorldBounds () {
