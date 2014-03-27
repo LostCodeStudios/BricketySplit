@@ -281,26 +281,28 @@ function World(skipIntro) {
             this.label = MakeCenteredLabel(this.rickCenterX(), this.rick.sprite.y - arrowDownHeight - tutorialTextSize, tutorialText[1], tutorialFont, '#000000', false);
         }
         
-        if (this.currentPhase == jumpPhase) {
-            this.button.x = this.rickCenterX();
-            this.button.y = this.rick.sprite.y - this.button.height;
-            
-            this.button.visible = this.rick.sprite.body.touching.down;
-        }
-        
-        if (this.currentPhase == runPhase) {
-            //move left/right arrowkey sprites, show pressed/not pressed
-            
-            var arrowKeyPadding = 32;
-            
-            this.buttonLeft.x = this.rick.sprite.x - this.buttonLeft.width - arrowKeyPadding;
-            this.buttonLeft.frame = (this.rick.sprite.body.velocity.x < 0 ? 1 : 0);
-            
-            this.buttonRight.x = this.rick.sprite.x + this.rick.sprite.width + arrowKeyPadding;
-            this.buttonRight.frame = (this.rick.sprite.body.velocity.x > 0 ? 1 : 0);
-            
-            this.buttonLeft.y = this.rick.sprite.y;
-            this.buttonRight.y = this.rick.sprite.y;
+        if (!this.rick.dead) { //these phases rely on the player being alive...
+            if (this.currentPhase == jumpPhase) {
+                this.button.x = this.rickCenterX();
+                this.button.y = this.rick.sprite.y - this.button.height;
+
+                this.button.visible = this.rick.sprite.body.touching.down;
+            }
+
+            if (this.currentPhase == runPhase) {
+                //move left/right arrowkey sprites, show pressed/not pressed
+
+                var arrowKeyPadding = 32;
+
+                this.buttonLeft.x = this.rick.sprite.x - this.buttonLeft.width - arrowKeyPadding;
+                this.buttonLeft.frame = (this.rick.sprite.body.velocity.x < 0 ? 1 : 0);
+
+                this.buttonRight.x = this.rick.sprite.x + this.rick.sprite.width + arrowKeyPadding;
+                this.buttonRight.frame = (this.rick.sprite.body.velocity.x > 0 ? 1 : 0);
+
+                this.buttonLeft.y = this.rick.sprite.y;
+                this.buttonRight.y = this.rick.sprite.y;
+            }
         }
         
         if (this.currentPhase == enemySpawnPhase + 1) {
@@ -420,10 +422,9 @@ function rickCollisionCallback(rick, other) {
 }
 
 function makeGround() {
-    var groundWidth = 640;
     var groundHeight = 32;
     
-    var x = 0;
+    var x = wallLeftX;
     var y = windowHeight - groundHeight;
     
     var ground = game.add.sprite(x, y, 'ground');

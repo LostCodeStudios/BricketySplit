@@ -127,6 +127,7 @@ function start() {
     
     lastTime = 0;
     
+    console.log('Wall x: ' + wallLeftX);
     setState(new MainMenu());
 }
 
@@ -148,6 +149,12 @@ function render() {
     if (!started) return;
     state.render();
     
+    if (debugPhysics) game.world.forEach(physicsDebugCallback, null, true);
+    
+}
+
+function physicsDebugCallback (sprite) {
+    if (sprite.body) game.debug.body(sprite);
 }
 
 function setState(newState) {

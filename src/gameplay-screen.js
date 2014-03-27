@@ -22,6 +22,7 @@ function GameplayScreen(skipIntro) {
             if (!this.gameOverText) {
                 var text = (tutorial ? 'TRY AGAIN' : 'GAME OVER');
                 this.gameOverText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.3, text, mediumTextFont, '#FF0000');
+                this.skipIntro = this.world.elapsedTime > tutorialBrickFallDelay;
                 
                 //also check for a high score
                 var scores = JSON.parse(localStorage.getItem('Scores'));
@@ -45,9 +46,7 @@ function GameplayScreen(skipIntro) {
             
             if (this.gameOverTimer >= this.gameOverWaitTime) {
                 if (tutorial) {
-                    var skipIntro = this.world.elapsedTime > tutorialBrickFallDelay;
-                    
-                    setState(new GameplayScreen(skipIntro));
+                    setState(new GameplayScreen(this.skipIntro));
                 } else {
                     setState(new HighScoreScreen(this.newRecord));
                 }

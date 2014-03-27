@@ -126,12 +126,12 @@ function Rick(world) {
         
         this.sprite.body.velocity.x = 0;
         
-        if (this.movingLeft && this.sprite.x > 0) {
+        if (this.movingLeft && this.sprite.x > 0 && !this.sprite.body.touching.up) {
             this.sprite.animations.play('walkLeft');
             this.facing = 'left';
             
             this.sprite.body.velocity.x = -moveSpeed;
-        } else if (this.movingRight && this.sprite.x < windowWidth - width) {
+        } else if (this.movingRight && this.sprite.x < windowWidth - width && !this.sprite.body.touching.up) {
             this.sprite.animations.play('walkRight');
             this.facing = 'right';
             
