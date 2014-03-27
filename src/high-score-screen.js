@@ -11,14 +11,14 @@ function HighScoreScreen(newRecord) {
         if (this.newRecord !== -1) {
             text = 'New record!';
         }
-        this.titleText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.1, text, '32px Arial', '#FF0000');
+        this.titleText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.1, text, mediumTextFont, '#FF0000');
         this.brickFallSound = game.add.audio('brickfall');
         
         var scores = JSON.parse(localStorage.getItem('Scores'));
         
         this.scores = scores;
         
-        this.helpText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.2, 'Press SPACE for menu', '24px Arial', '#FF0000');
+        this.helpText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.2, 'Press SPACE for menu', smallTextFont, '#FF0000');
         
         game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
         this.playKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -63,12 +63,11 @@ function HighScoreScreen(newRecord) {
                     //show height number
                     var heightText = '' + sprite.wallHeight + 'm';
                     
-                    //when you change this: Also change 24 magic number                                                 TO MATCH THIS
-                    MakeLabel(sprite.body.x, bottomBounds - (brickHeight + 1 + sprite.wallHeight * 3) - 24 * 2, heightText, '24px Arial', '#000000', false);
+                    MakeLabel(sprite.body.x, bottomBounds - (brickHeight + 1 + sprite.wallHeight * 3) - 24 * 2, heightText, smallTextFont, '#000000', false);
                     
                     this.nextMiniWall = sprite.lane - 1;
                     
-                    this.brickFallSound.play();
+                    playSound(this.brickFallSound);
                     sprite.handleFallEvent = false; //don't do this repeatedly, please
                 }
             }

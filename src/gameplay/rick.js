@@ -71,6 +71,7 @@ function Rick(world) {
     this.destroy = function () {
         console.log('Destroying rick');
         
+        this.sprite.body = null;
         this.sprite.destroy();
         
         if (mobile) {
@@ -86,7 +87,8 @@ function Rick(world) {
     this.die = function () {
         this.dead = true;
         this.destroy();
-        this.deathSound.play();
+        
+        playSound(this.deathSound);
     };
     
     this.update = function () {
@@ -129,7 +131,7 @@ function Rick(world) {
         if (this.jumping && this.sprite.body.touching.down)
         {
             this.sprite.body.velocity.y = -jumpSpeed;
-            this.jumpSound.play();
+            playSound(this.jumpSound);
         }
         
         if (this.sprite.body.y > bottomBounds) {

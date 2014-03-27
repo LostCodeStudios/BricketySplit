@@ -14,32 +14,43 @@ var bottomBounds = windowHeight;
 
 var tutorial;
 
+var started = false;
+
 function preload() {
-    game.load.image('ground', 'assets/ground.png');
-    game.load.image('brick', 'assets/brick.png');
-    game.load.image('halfbrick', 'assets/halfbrick.png');
-    game.load.image('enemy', 'assets/enemy.png');
-    game.load.image('scoreline', 'assets/scoreline2.png');
-    game.load.image('rowdivider', 'assets/rowdivider2.png');
-    game.load.image('normalrow', 'assets/normalrow.png');
-    game.load.image('offsetrow', 'assets/offsetrow.png');
-    game.load.image('arrowdown', 'assets/arrowdown.png');
-    game.load.image('zbutton', 'assets/zbutton.png');
-    game.load.image('arrowbuttons', 'assets/arrowbuttons.png');
-    game.load.image('ufo', 'assets/ufo.png');
-    game.load.image('laser', 'assets/laser.png');
-    game.load.image('enemyblue', 'assets/enemyblue.png');
-    game.load.image('enemyorange', 'assets/enemyorange.png');
+    //load sprites
+    game.load.image('ground', 'assets/sprites/ground.png');
+    game.load.image('brick', 'assets/sprites/brick.png');
+    game.load.image('halfbrick', 'assets/sprites/halfbrick.png');
+    game.load.image('enemy', 'assets/sprites/enemy.png');
+    game.load.image('scoreline', 'assets/sprites/scoreline2.png');
+    game.load.image('rowdivider', 'assets/sprites/rowdivider2.png');
+    game.load.image('normalrow', 'assets/sprites/normalrow.png');
+    game.load.image('offsetrow', 'assets/sprites/offsetrow.png');
+    game.load.image('ufo', 'assets/sprites/ufo.png');
+    game.load.image('laser', 'assets/sprites/laser.png');
+    game.load.image('enemyblue', 'assets/sprites/enemyblue.png');
+    game.load.image('enemyorange', 'assets/sprites/enemyorange.png');
+    game.load.spritesheet('rick', 'assets/sprites/rick.png', 16, 24);
     
-    game.load.spritesheet('rick', 'assets/rick.png', 16, 24);
-    game.load.spritesheet('leftarrow', 'assets/leftarrowbutton.png', buttonWidth, buttonHeight);
-    game.load.spritesheet('rightarrow', 'assets/rightarrowbutton.png', buttonWidth, buttonHeight);
-    game.load.spritesheet('uparrow', 'assets/uparrowbutton.png', buttonWidth, buttonHeight);
+    //load tutorial assets
+    game.load.image('arrowdown', 'assets/tutorial/arrowdown.png');
+    game.load.image('zbutton', 'assets/tutorial/zbutton.png');
     
-    game.load.audio('jump', 'assets/Jump56.wav', true);
-    game.load.audio('brickfall', 'assets/Hit_Hurt135.wav', true);
-    game.load.audio('squish', 'assets/Randomize167.wav', true);
-    game.load.audio('laser', 'assets/Laser_Shoot66.wav', true);
+    var arrowKeyWidth = 48, arrowKeyHeight = 48;
+    
+    game.load.spritesheet('leftarrowkey', 'assets/tutorial/leftarrow.png', arrowKeyWidth, arrowKeyHeight);
+    game.load.spritesheet('rightarrowkey', 'assets/tutorial/rightarrow.png', arrowKeyWidth, arrowKeyHeight);
+
+    //load UI elements
+    game.load.spritesheet('leftarrow', 'assets/ui/leftarrowbutton.png', buttonWidth, buttonHeight);
+    game.load.spritesheet('rightarrow', 'assets/ui/rightarrowbutton.png', buttonWidth, buttonHeight);
+    game.load.spritesheet('uparrow', 'assets/ui/uparrowbutton.png', buttonWidth, buttonHeight);
+    
+    //load sounds
+    game.load.audio('jump', 'assets/sounds/Jump56.wav', true);
+    game.load.audio('brickfall', 'assets/sounds/Hit_Hurt135.wav', true);
+    game.load.audio('squish', 'assets/sounds/Randomize167.wav', true);
+    game.load.audio('laser', 'assets/sounds/Laser_Shoot66.wav', true);
     
     if (!localStorage.getItem('Scores') || resetScores) {
         var scores = [ 100, 50, 15 ]; //100 50 20                                TODO finalize these & disable resetScores
@@ -69,12 +80,23 @@ function resetWorldBounds () {
 }
 
 function create() {
+    game.time.events.add(Phaser.Timer.SECOND, start, this);
+    
+}
+
+function onInputUp() {
+    game.input.x = -1;
+    game.input.y = -1;
+}
+
+function start() {
+    console.log('Starting');
+    started = true;
+    
     game.stage.backgroundColor = backgroundColor;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     
     updateWorldBounds();
-    
-    setState(new MainMenu());
     
     if (!game.device.desktop) {
         mobile = true;
@@ -103,14 +125,12 @@ function create() {
     
     lastTime = 0;
     
-}
-
-function onInputUp() {
-    game.input.x = -1;
-    game.input.y = -1;
+    setState(new MainMenu());
 }
 
 function update() {
+    
+    if (!started) return;
     
     currentTime = game.time.now;
     var delta = currentTime - lastTime;
@@ -123,6 +143,7 @@ function update() {
 
 function render() {
     
+    if (!started) return;
     state.render();
     
 }

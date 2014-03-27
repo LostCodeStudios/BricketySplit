@@ -1,11 +1,21 @@
 //debug flags
 
-var resetScores = false; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
-var alwaysMobile = true;   //                      TODO do not leave this enabled
+var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
+var alwaysMobile = false;   //                      TODO do not leave this enabled
 
 //end debug flags
 
+var soundVolume = 0.2;
+
 //enemy spawn pattern
+
+//fonts
+
+var titleFont = '72px Bangers';
+var smallTextFont = '24px Bangers';
+var mediumTextFont = '36px Bangers';
+
+//end fonts
 
 var minWaveEnemyDifficulty = 0.0;               //TODO raise this
 var waveEnemyChance = 0.33;                     //TODO tweak this

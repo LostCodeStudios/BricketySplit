@@ -12,7 +12,6 @@ function World() {
     
     this.wall = new Wall(wallWidth);
     this.canBrickFall = true;
-    this.heightText = MakeLabel(0, 0, '', '32px Arial', '#ff0000');
     this.boundsToPush = 0;
     //this.rowsScrolled = 0;
     
@@ -29,7 +28,7 @@ function World() {
         var y = windowHeight - brickHeight - score * brickHeight;
         game.add.sprite(0, y, 'scoreline');
         
-        MakeLabel(0, y - 24, '  ' + score + 'm', '24px Arial', '#000000', false);
+        MakeLabel(0, y - 24, '  ' + score + 'm', smallTextFont, '#000000', false);
     }
     
     this.destroy = function () {
@@ -241,7 +240,7 @@ function World() {
         brick.body.gravity.y = 0;
         this.canBrickFall = true; //one brick falling at a time
         
-        brick.fallSound.play();
+        playSound(brick.fallSound);
         
     };
     
@@ -271,6 +270,28 @@ function World() {
             this.label = MakeCenteredLabel(this.rickCenterX(), this.rick.sprite.y - arrowDownHeight - tutorialTextSize, tutorialText[1], tutorialFont, '#000000', false);
         }
         
+        if (this.currentPhase == jumpPhase) {
+            this.button.x = this.rickCenterX();
+            this.button.y = this.rick.sprite.y - this.button.height;
+            
+            this.button.visible = this.rick.sprite.body.touching.down;
+        }
+        
+        if (this.currentPhase == runPhase) {
+            //move left/right arrowkey sprites, show pressed/not pressed
+            
+            var arrowKeyPadding = 32;
+            
+            this.buttonLeft.x = this.rick.sprite.x - this.buttonLeft.width - arrowKeyPadding;
+            this.buttonLeft.frame = (this.rick.sprite.body.velocity.x < 0 ? 1 : 0);
+            
+            this.buttonRight.x = this.rick.sprite.x + this.rick.sprite.width + arrowKeyPadding;
+            this.buttonRight.frame = (this.rick.sprite.body.velocity.x > 0 ? 1 : 0);
+            
+            this.buttonLeft.y = this.rick.sprite.y;
+            this.buttonRight.y = this.rick.sprite.y;
+        }
+        
         if (this.currentPhase == enemySpawnPhase + 1) {
             this.arrow.x = this.friendCenterX();
             this.arrow.y = this.followingEnemy.sprite.y - arrowDownHeight;
@@ -284,7 +305,9 @@ function World() {
             
             this.currentPhase++;
             
-            this.startPhase(this.currentPhase);
+            if (this.currentPhase <= lastPhase) {
+                this.startPhase(this.currentPhase);
+            }
         }
         
     };
@@ -295,18 +318,22 @@ function World() {
             this.arrow.anchor.set(0.5, 0);
         }
         
-        if (phase == 2) {
-            this.label = MakeCenteredLabel(windowWidth * 0.45, windowHeight * 0.5, tutorialText[2], tutorialFont, '#000000', true);
-            this.button = game.add.sprite(windowWidth * 0.6, windowHeight * 0.5, 'zbutton');
+        if (phase == jumpPhase) {
+            this.label = MakeCenteredLabel(tutorialTextX, tutorialTextY, tutorialText[2], tutorialFont, '#000000', true);
+            this.button = game.add.sprite(-500, windowHeight * 0.5, 'zbutton');
+            this.button.anchor.set(0.5, 0);
         }
         
-        if (phase == 3) {
-            this.label = MakeCenteredLabel(windowWidth * 0.45, windowHeight * 0.5, tutorialText[3], tutorialFont, '#000000', true);
-            this.button = game.add.sprite(windowWidth * 0.6, windowHeight * 0.5, 'arrowbuttons');
+        if (phase == runPhase) {
+            this.label = MakeCenteredLabel(tutorialTextX, tutorialTextY, tutorialText[3], tutorialFont, '#000000', true);
+            this.buttonLeft = game.add.sprite(-500, windowHeight * 0.5, 'leftarrowkey');
+            this.buttonRight = game.add.sprite(-500, 0, 'rightarrowkey');
+            this.buttonLeft.anchor.set(0, 0.25);
+            this.buttonRight.anchor.set(0, 0.25);
         }
         
         if (phase >= 4) {
-            this.label = MakeCenteredLabel(windowWidth * 0.5, windowHeight * 0.5, tutorialText[phase], tutorialFont, '#000000', true);
+            this.label = MakeCenteredLabel(tutorialTextX, tutorialTextY, tutorialText[phase], tutorialFont, '#000000', true);
         }
         
         if (phase == enemySpawnPhase + 1) {
@@ -321,14 +348,15 @@ function World() {
             this.arrow.destroy();
         }
         
-        if (phase == 2) {
+        if (phase == jumpPhase) {
             this.label.destroy();
             this.button.destroy();
         }
         
-        if (phase == 3) {
+        if (phase == runPhase) {
             this.label.destroy();
-            this.button.destroy();
+            this.buttonLeft.destroy();
+            this.buttonRight.destroy();
         }
         
         if (phase >= 4) {
@@ -354,7 +382,7 @@ function World() {
         game.physics.arcade.enable(laser);
         laser.body.velocity.y = laserSpeed;
         
-        this.laserSound.play();
+        playSound(this.laserSound);
         
         this.lasers.add(laser);
     };

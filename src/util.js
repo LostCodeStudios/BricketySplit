@@ -13,3 +13,7 @@ function lerp(min, max, progress) {
 function percent(chance) {
     return Math.random() < chance;
 }
+
+function playSound(sound) {
+    sound.play('', 0, soundVolume);
+}

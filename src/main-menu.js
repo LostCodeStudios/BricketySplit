@@ -2,7 +2,6 @@
 
 function MainMenu() {
     
-    var titleFont = '72px Script MT Bold';
     var titleFill = '#FF0000';
     
     var titleX1 = windowWidth * 0.45;
@@ -15,7 +14,6 @@ function MainMenu() {
     
     var msgX = windowWidth / 2;
     var msgY = windowHeight / 2;
-    var msgFont = '24px Arial';
     var msgFill = '#FF0000';
     var msg = 'Press SPACE to play.';
     
@@ -23,7 +21,7 @@ function MainMenu() {
         this.titleText1 = MakeCenteredLabel(titleX1, titleY1, title1, titleFont, titleFill);
         this.titleText2 = MakeCenteredLabel(titleX2, titleY2, title2, titleFont, titleFill);
         
-        this.msgText = MakeCenteredLabel(msgX, msgY, msg, msgFont, msgFill);
+        this.msgText = MakeCenteredLabel(msgX, msgY, msg, mediumTextFont, msgFill);
         
         game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
         this.playKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);

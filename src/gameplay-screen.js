@@ -20,7 +20,7 @@ function GameplayScreen() {
         
         if (this.world.gameOver()) {           
             if (!this.gameOverText) {
-                this.gameOverText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.3, 'GAME OVER', '32px Arial', '#FF0000');
+                this.gameOverText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.3, 'GAME OVER', mediumTextFont, '#FF0000');
                 
                 //also check for a high score
                 var scores = JSON.parse(localStorage.getItem('Scores'));

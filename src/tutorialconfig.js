@@ -1,5 +1,8 @@
-var tutorialFont = '24px Arial';
+var tutorialFont = '24px Bangers';
 var tutorialTextSize = 24;
+
+var tutorialTextX = windowWidth / 2;
+var tutorialTextY = windowHeight / 3;
 
 var tutorialText = [
     "",
@@ -35,6 +38,8 @@ var tutorialTimes = [
     4000
 ];
 
+var jumpPhase = 2;
+var runPhase = 3;
 var enemySpawnPhase = 6;
 var lastPhase = 11;
 
