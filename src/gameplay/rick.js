@@ -8,7 +8,7 @@ function Rick(world) {
     var x = windowWidth / 2 - width / 2;
     var y = topBounds - rickHeight; //fall from the top!
     
-    var fps = 3;
+    var fps = 5;
     
     this.sprite = game.add.sprite(x, y, 'rick');
     this.sprite.animations.add('walkLeft', [1, 0], fps, true);
@@ -109,13 +109,19 @@ function Rick(world) {
         
         if (this.dead) return;
         
+        if (this.sprite.body.touching.down && this.sprite.body.touching.up) {
+            //crushed
+            this.die();
+            return;
+        }
+        
         if (mobile) {
             this.moveLeftButton.bringToTop();
             this.moveRightButton.bringToTop();
             this.jumpButton.bringToTop();
         }
         
-        var bounceDist = gravity / 3000;
+        var bounceDist = gravity / 1500;
         if (this.sprite.body.touching.left) {
             this.sprite.body.y -= bounceDist;
         }
@@ -158,10 +164,12 @@ function Rick(world) {
 
 function moveLeftCallback () {
     this.movingLeft = true;
+    this.movingRight = false;
 }
 
 function moveRightCallback () {
     this.movingRight = true;
+    this.movingLeft = false;
 }
 
 function jumpCallback () {
@@ -170,10 +178,14 @@ function jumpCallback () {
 
 function stopLeftCallback () {
     this.movingLeft = false;
+    
+    this.movingRight = game.input.keyboard.isDown(Phaser.Keyboard.RIGHT);
 }
 
  function stopRightCallback () {
     this.movingRight = false;
+     
+    this.movingLeft = game.input.keyboard.isDown(Phaser.Keyboard.LEFT);
 };
 
 function stopJumpCallback () {

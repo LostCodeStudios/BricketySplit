@@ -95,7 +95,7 @@ function World(skipIntro) {
         
         if (!this.rick.dead && this.fallingBrick) { //there is a reason for this
             this.fallingBrick.sprite.body.immovable = true;
-            game.physics.arcade.collide(this.rick.sprite, this.fallingBrick.sprite, rickCollisionCallback, null, this);
+            game.physics.arcade.collide(this.rick.sprite, this.fallingBrick.sprite);
             this.fallingBrick.sprite.body.immovable = false;
         }
         if (this.fallingBrick) { //there is a reason for this
@@ -108,10 +108,6 @@ function World(skipIntro) {
         //after the first two rows are finished, start pushing the camera up
         if (this.wall.rowCompleted() && this.wall.currentRow > scrollStartRows && !this.rick.dead) {
             this.boundsToPush += brickHeight;
-//            this.rowsScrolled++;
-//            if (this.rowsScrolled > 1) {
-//                this.wall.bottomShowingRow++;
-//            }
             
             if (this.wall.currentRow > scrollStartRows) {
                 //spawn new enemy
@@ -273,9 +269,9 @@ function World(skipIntro) {
             this.startPhase(this.currentPhase);
         }
         
-        if (this.currentPhase == 1) {
+        if (this.currentPhase == introPhase) {
             this.arrow.x = this.rickCenterX();
-            this.arrow.y = this.rick.sprite.y - arrowDownHeight;
+            this.arrow.y = this.rick.sprite.y - arrowDownHeight - 5;
             
             if (this.label) this.label.destroy();
             this.label = MakeCenteredLabel(this.rickCenterX(), this.rick.sprite.y - arrowDownHeight - tutorialTextSize, tutorialText[1], tutorialFont, '#000000', false);
@@ -284,7 +280,7 @@ function World(skipIntro) {
         if (!this.rick.dead) { //these phases rely on the player being alive...
             if (this.currentPhase == jumpPhase) {
                 this.button.x = this.rickCenterX();
-                this.button.y = this.rick.sprite.y - this.button.height;
+                this.button.y = this.rick.sprite.y - this.button.height - 5;
 
                 this.button.visible = this.rick.sprite.body.touching.down;
             }
@@ -326,26 +322,24 @@ function World(skipIntro) {
     };
     
     this.startPhase = function (phase) {
-        if (phase == 1) {
+        if (phase == introPhase) {
             this.arrow = game.add.sprite(this.rickCenterX(), this.rick.sprite.y - arrowDownHeight, 'arrowdown');
             this.arrow.anchor.set(0.5, 0);
         }
         
         if (phase == jumpPhase) {
-            this.label = MakeCenteredLabel(tutorialTextX, tutorialTextY, tutorialText[2], tutorialFont, '#000000', true);
             this.button = game.add.sprite(-500, windowHeight * 0.5, 'zbutton');
             this.button.anchor.set(0.5, 0);
         }
         
         if (phase == runPhase) {
-            this.label = MakeCenteredLabel(tutorialTextX, tutorialTextY, tutorialText[3], tutorialFont, '#000000', true);
             this.buttonLeft = game.add.sprite(-500, windowHeight * 0.5, 'leftarrowkey');
             this.buttonRight = game.add.sprite(-500, 0, 'rightarrowkey');
             this.buttonLeft.anchor.set(0, 0.25);
             this.buttonRight.anchor.set(0, 0.25);
         }
         
-        if (phase >= 4) {
+        if (phase != introPhase) {
             this.label = MakeCenteredLabel(tutorialTextX, tutorialTextY, tutorialText[phase], tutorialFont, '#000000', true);
         }
         
@@ -356,25 +350,20 @@ function World(skipIntro) {
     };
     
     this.endPhase = function (phase) {
-        if (phase == 1) {
-            this.label.destroy();
+        if (phase == introPhase) {
             this.arrow.destroy();
         }
         
         if (phase == jumpPhase) {
-            this.label.destroy();
             this.button.destroy();
         }
         
         if (phase == runPhase) {
-            this.label.destroy();
             this.buttonLeft.destroy();
             this.buttonRight.destroy();
         }
         
-        if (phase >= 4) {
-            this.label.destroy();
-        }
+        if (this.label) this.label.destroy();
         
         if (phase == enemySpawnPhase + 1) {
             this.followingEnemy = null;
@@ -404,21 +393,6 @@ function World(skipIntro) {
 
 function processBrickCollision() {
     return true;
-}
-
-function rickCollisionCallback(rick, other) {
-    
-    if (other === this.fallingBrick.sprite) {
-        //check if Rick was crushed
-    
-        var forgivingness = 10;
-        
-        if (other.body.y < rick.body.y + forgivingness) {
-            if (rick.body.touching.down) {
-                this.rick.die();
-            }
-        }
-    }
 }
 
 function makeGround() {

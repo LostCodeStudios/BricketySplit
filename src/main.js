@@ -1,4 +1,4 @@
-var backgroundColor = '#00FFFF';
+var backgroundColor = '#33DDDD';
 
 var game = new Phaser.Game(windowWidth, windowHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
@@ -19,13 +19,13 @@ var started = false;
 function preload() {
     //load sprites
     game.load.image('ground', 'assets/sprites/ground.png');
-    game.load.image('brick', 'assets/sprites/brick.png');
-    game.load.image('halfbrick', 'assets/sprites/halfbrick.png');
+    game.load.image('brick', 'assets/sprites/brick2.png');
+    game.load.image('halfbrick', 'assets/sprites/halfbrick2.png');
     game.load.image('enemy', 'assets/sprites/enemy.png');
     game.load.image('scoreline', 'assets/sprites/scoreline2.png');
-    game.load.image('rowdivider', 'assets/sprites/rowdivider3.png');
-    game.load.image('normalrow', 'assets/sprites/normalrow2.png');
-    game.load.image('offsetrow', 'assets/sprites/offsetrow2.png');
+    game.load.image('rowdivider', 'assets/sprites/rowdivider4.png');
+    game.load.image('normalrow', 'assets/sprites/normalrow3.png');
+    game.load.image('offsetrow', 'assets/sprites/offsetrow3.png');
     game.load.image('ufo', 'assets/sprites/ufo2.png');
     game.load.image('laser', 'assets/sprites/laser.png');
     game.load.image('enemyblue', 'assets/sprites/enemyblue.png');
@@ -35,13 +35,13 @@ function preload() {
     game.load.spritesheet('rick', 'assets/sprites/rick2.png', 16, 24);
     
     //load tutorial assets
-    game.load.image('arrowdown', 'assets/tutorial/arrowdown.png');
-    game.load.image('zbutton', 'assets/tutorial/zbutton.png');
+    game.load.image('arrowdown', 'assets/tutorial/arrowdown2.png');
+    game.load.image('zbutton', 'assets/tutorial/zbutton2.png');
     
     var arrowKeyWidth = 48, arrowKeyHeight = 48;
     
-    game.load.spritesheet('leftarrowkey', 'assets/tutorial/leftarrow.png', arrowKeyWidth, arrowKeyHeight);
-    game.load.spritesheet('rightarrowkey', 'assets/tutorial/rightarrow.png', arrowKeyWidth, arrowKeyHeight);
+    game.load.spritesheet('leftarrowkey', 'assets/tutorial/leftarrow2.png', arrowKeyWidth, arrowKeyHeight);
+    game.load.spritesheet('rightarrowkey', 'assets/tutorial/rightarrow2.png', arrowKeyWidth, arrowKeyHeight);
 
     //load UI elements
     game.load.spritesheet('leftarrow', 'assets/ui/leftarrowbutton.png', buttonWidth, buttonHeight);

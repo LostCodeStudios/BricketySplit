@@ -3,11 +3,11 @@
     var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
     var alwaysMobile = false;   //                      TODO do not leave this enabled
     var debugPhysics = false;
-    var skipTutorial = true;
+    var skipTutorial = false;
 
 //end debug flags
 
-var soundVolume = 0.2;
+var soundVolume = 0.5;
 
 
 //fonts
@@ -25,7 +25,7 @@ var soundVolume = 0.2;
 
     var maxUFOs = 5;
 
-    var minUFODifficulty = 0.125;                     //TODO make this higher
+    var minUFODifficulty = 0.25;                     //TODO make this higher
 
     var ufoChance = 0.2;                        //TODO tweak this
 
