@@ -28,7 +28,9 @@ function HighScoreScreen(newRecord) {
         
         //make the physical stuff
         makeGround();
-        
+        makeWaterLeft();
+        makeWaterRight();
+
         var startX = lerp(wallRightX, wallLeftX, 0.15);
         var endX = windowWidth - startX;
         this.dx = (startX - endX) / 2;

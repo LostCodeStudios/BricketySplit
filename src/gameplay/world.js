@@ -4,6 +4,9 @@ function World(skipIntro) {
     this.skipIntro = skipIntro;
     
     this.ground = makeGround();
+    this.waterLeft = makeWaterLeft();
+    this.waterRight = makeWaterRight();
+
     this.rick = new Rick(this);
     this.bricks = game.add.group();
     this.enemies = game.add.group();
@@ -343,7 +346,7 @@ function World(skipIntro) {
     };
     
     this.enemyRickCollision = function (rick, enemy) {
-        this.rick.die();
+        this.rick.die(RICK_DEATH_HIT);
     };
     
     this.laserCollision = function (laser, other) {
@@ -509,4 +512,40 @@ function makeGround() {
     
     ground.isGround = true;
     return ground;
+}
+
+function makeWaterLeft() {
+    var waterHeight = 24;
+
+    var x = 0;
+    var y = windowHeight - waterHeight;
+
+    var water = game.add.sprite(x, y, 'water');
+    water.animations.add('normal', [0, 1], 1.25, true);
+    water.animations.play('normal');
+    water.fixedToCamera = true;
+
+    game.physics.arcade.enable(water);
+    water.body.moves = false;
+    water.body.immovable = true;
+
+    return water;
+}
+
+function makeWaterRight() {
+    var waterHeight = 24;
+
+    var x = wallRightX;
+    var y = windowHeight - waterHeight;
+
+    var water = game.add.sprite(x, y, 'water');
+    water.animations.add('normal', [1, 0], 1.25, true);
+    water.animations.play('normal');
+    water.fixedToCamera = true;
+
+    game.physics.arcade.enable(water);
+    water.body.moves = false;
+    water.body.immovable = true;
+
+    return water;
 }

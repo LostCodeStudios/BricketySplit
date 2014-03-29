@@ -1,3 +1,7 @@
+var RICK_DEATH_SQUASH = 0;
+var RICK_DEATH_SPLASH = 1;
+var RICK_DEATH_HIT = 2;
+
 function Rick(world) {
     
     this.world = world;
@@ -64,6 +68,9 @@ function Rick(world) {
     }
     
     this.deathSound = game.add.audio('squish');
+    this.hitSound = game.add.audio('death');
+    this.splashSound = game.add.audio('splash');
+
     this.facing = 'left';
     
     var moveSpeed = 300;
@@ -85,36 +92,66 @@ function Rick(world) {
         }
     };
     
-    this.die = function () {
-        var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, this.sprite.y + this.sprite.height, 100);
-        emitter.gravity = gravity / 6;
+    this.die = function (deathType) {
+        if (deathType == RICK_DEATH_SQUASH || deathType == RICK_DEATH_HIT) {
+            var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, this.sprite.y + this.sprite.height, 100);
+            emitter.gravity = gravity / 6;
 
-        var maxSpeedX = 125;
-        
-        var minSpeedY = 20;
-        var maxSpeedY = 180;
+            var maxSpeedX = 125;
+            
+            var minSpeedY = 20;
+            var maxSpeedY = 180;
 
-        emitter.minParticleSpeed.x = -maxSpeedX;
-        emitter.maxParticleSpeed.x = maxSpeedX;
+            emitter.minParticleSpeed.x = -maxSpeedX;
+            emitter.maxParticleSpeed.x = maxSpeedX;
 
-        emitter.minParticleSpeed.y = -maxSpeedY;
-        emitter.maxParticleSpeed.y = -minSpeedY;
+            emitter.minParticleSpeed.y = -maxSpeedY;
+            emitter.maxParticleSpeed.y = -minSpeedY;
 
-        emitter.makeParticles('smallparticle');
-        //  The first parameter sets the effect to "explode" which means all particles are emitted at once
-        //  The second gives each particle a 2000ms lifespan
-        //  The third is ignored when using burst/explode mode
-        //  The final parameter (10) is how many particles will be emitted in this single burst
-        emitter.start(true, 1000, null, 30);
-        
-        emitter.makeParticles('bigparticle');
-        emitter.start(true, 1000, null, 15);
+            emitter.makeParticles('smallparticle');
+            //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+            //  The second gives each particle a 2000ms lifespan
+            //  The third is ignored when using burst/explode mode
+            //  The final parameter (10) is how many particles will be emitted in this single burst
+            emitter.start(true, 1000, null, 30);
+            
+            emitter.makeParticles('bigparticle');
+            emitter.start(true, 1000, null, 15);
+
+            
+            if (deathType == RICK_DEATH_SQUASH) {
+                playSound(this.deathSound);
+            } else {
+                playSound(this.hitSound);
+            }
+        } else {
+            //handle a splash death
+            var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, bottomBounds, 100);
+            emitter.gravity = gravity / 3;
+            var maxSpeedX = 100;
+            
+            var minSpeedY = 70;
+            var maxSpeedY = 300;
+
+            emitter.minParticleSpeed.x = -maxSpeedX;
+            emitter.maxParticleSpeed.x = maxSpeedX;
+
+            emitter.minParticleSpeed.y = -maxSpeedY;
+            emitter.maxParticleSpeed.y = -minSpeedY;
+
+            emitter.makeParticles('waterparticle');
+            //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+            //  The second gives each particle a 2000ms lifespan
+            //  The third is ignored when using burst/explode mode
+            //  The final parameter (10) is how many particles will be emitted in this single burst
+            emitter.start(true, 1000, null, 30);
+
+            playSound(this.splashSound);
+        }
 
         
         this.dead = true;
         this.destroy();
-        
-        playSound(this.deathSound);
     };
     
     this.update = function () {
@@ -123,7 +160,7 @@ function Rick(world) {
         
         if (this.sprite.body.touching.down && this.sprite.body.touching.up) {
             //crushed
-            this.die();
+            this.die(RICK_DEATH_SQUASH);
             return;
         }
         
@@ -185,8 +222,8 @@ function Rick(world) {
             playSound(this.jumpSound);
         }
         
-        if (this.sprite.body.y > bottomBounds) {
-            this.die();
+        if (this.sprite.body.y > bottomBounds + 30) {
+            this.die(RICK_DEATH_SPLASH);
         }
         
     };
