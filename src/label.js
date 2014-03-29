@@ -11,3 +11,7 @@ function MakeCenteredLabel(x, y, text, font, fill, fixedToCamera) {
     label.anchor.setTo(0.5, 0.5);
     return label;
 }
+
+function AddLabelShadow(label, x, y, color, blur) {
+	label.setShadow(x, y, color, blur);
+}

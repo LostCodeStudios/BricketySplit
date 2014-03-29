@@ -2,11 +2,11 @@ function HighScoreScreen(newRecord) {
     
     this.newRecord = newRecord;
         
-    this.scoreText = new Array();
+    this.scoreText = game.add.group();
     
     this.wallSprites = new Array();
     
-    this.show = function () {
+    this.show = function (oldState) {
         var text = "Rick's Best Walls";
         if (this.newRecord !== -1) {
             text = 'New record!';
@@ -27,23 +27,33 @@ function HighScoreScreen(newRecord) {
         game.input.onDown.add(playKeyPressed, this);
         
         //make the physical stuff
-        makeGround();
-        makeWaterLeft();
-        makeWaterRight();
+        this.ground = makeGround();
+        this.waterLeft = makeWaterLeft();
+        this.waterRight = makeWaterRight();
 
         var startX = lerp(wallRightX, wallLeftX, 0.15);
         var endX = windowWidth - startX;
         this.dx = (startX - endX) / 2;
         
         this.x = startX;
-        
-        console.log('First wall x: ' + this.x);
 
         this.nextMiniWall = scores.length - 1;
     };
     
     this.hide = function () {
-        game.world.removeAll();
+        this.scoreText.destroy();
+        this.helpText.destroy();
+        this.titleText.destroy();
+
+        this.ground.body = null;
+        this.ground.destroy();
+        this.waterLeft.destroy();
+        this.waterRight.destroy();
+
+        for (var i = 0; i < this.wallSprites.length; i++) {
+            this.wallSprites[i].body = null;
+            this.wallSprites[i].destroy();
+        }
         
         game.input.onDown.remove(playKeyPressed, this);
         game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
@@ -68,7 +78,7 @@ function HighScoreScreen(newRecord) {
                     //show height number
                     var heightText = '' + sprite.wallHeight + 'm';
                     
-                    MakeLabel(sprite.body.x, bottomBounds - (brickHeight + 1 + sprite.wallHeight * 3) - 24 * 2, heightText, smallTextFont, '#000000', false);
+                    this.scoreText.add(MakeLabel(sprite.body.x, bottomBounds - (brickHeight + 1 + sprite.wallHeight * 3) - 24 * 2, heightText, smallTextFont, '#000000', false));
                     
                     this.nextMiniWall = sprite.lane - 1;
                     

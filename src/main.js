@@ -60,6 +60,8 @@ function preload() {
     game.load.spritesheet('rightarrow', 'assets/ui/rightarrowbutton.png', buttonWidth, buttonHeight);
     game.load.spritesheet('uparrow', 'assets/ui/uparrowbutton.png', buttonWidth, buttonHeight);
     game.load.image('scoreline', 'assets/ui/scoreline2.png');
+    game.load.image('backdrop', 'assets/ui/brickbackdrop.png');
+    game.load.image('loadingscreen', 'assets/ui/loadingscreen2.png');
 
     //load sounds
     game.load.audio('jump', 'assets/sounds/Jump56.wav', true);
@@ -70,7 +72,7 @@ function preload() {
     game.load.audio('splash', 'assets/sounds/Splash3.wav');
 
     if (!localStorage.getItem('Scores') || resetScores) {
-        var scores = [ 100, 50, 15 ]; //100 50 20                                TODO finalize these & disable resetScores
+        var scores = [ 100, 50, 15 ];
         
         localStorage.setItem('Scores', JSON.stringify(scores));
     }
@@ -99,6 +101,8 @@ function resetWorldBounds () {
 }
 
 function create() {
+    loadingScreen = game.add.sprite(0, 0, 'loadingscreen');
+
     game.time.events.add(Phaser.Timer.SECOND, start, this);
     
 }
@@ -109,7 +113,8 @@ function onInputUp() {
 }
 
 function start() {
-    console.log('Starting');
+    loadingScreen.destroy();
+
     started = true;
     
     game.stage.backgroundColor = backgroundColor;
@@ -180,6 +185,7 @@ function setState(newState) {
     }
     
     resetWorldBounds();
+
+    newState.show(state);
     state = newState;
-    state.show();
 }

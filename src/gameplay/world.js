@@ -11,10 +11,14 @@ function World(skipIntro) {
     this.bricks = game.add.group();
     this.enemies = game.add.group();
     
+    this.brickSprites = new Array();
+
     this.ufos = new Array();
     this.wavers = new Array();
     this.lasers = game.add.group();
     
+    this.markers = game.add.group();
+
     this.wall = new Wall(wallWidth);
     this.canBrickFall = true;
     this.boundsToPush = 0;
@@ -33,13 +37,46 @@ function World(skipIntro) {
     for (var i = 0; i < scores.length; i++) {
         var score = scores[i];
         var y = windowHeight - brickHeight - score * brickHeight;
-        game.add.sprite(0, y, 'scoreline');
         
-        MakeLabel(0, y - 24, '  ' + score + 'm', smallTextFont, '#000000', false);
+        this.markers.add(game.add.sprite(0, y, 'scoreline'));
+        
+        this.markers.add(MakeLabel(0, y - 24, '  ' + score + 'm', smallTextFont, '#000000', false));
     }
     
     this.destroy = function () {
-        game.world.removeAll();
+        if (this.ground) {
+            this.ground.body = null;
+            this.ground.destroy();
+        }
+
+        this.waterLeft.destroy();
+        this.waterRight.destroy();
+
+        for (var i = 0; i < this.brickSprites.length; i++) {
+            this.brickSprites[i].sprite.body = null;
+            this.brickSprites[i].sprite.destroy();
+        }
+
+        for (var i = 0; i < this.enemies.length; i++) {
+            this.enemies.getAt(i).body = null;
+            this.enemies.getAt(i).destroy();
+        }
+
+        for (var i = 0; i < this.ufos.length; i++) {
+            this.ufos[i].sprite.body = null;
+            this.ufos[i].sprite.destroy();
+        }
+
+        for (var i = 0; i < this.wavers.length; i++) {
+            this.wavers[i].sprite.body = null;
+            this.wavers[i].sprite.destroy();
+        }
+
+        for (var i = 0; i < this.lasers.length; i++) {
+            this.lasers.getAt(i).body = null;
+            this.lasers.getAt(i).destroy();
+        }
+        this.markers.destroy();
     };
     
     this.gameOver = function () {
@@ -61,6 +98,8 @@ function World(skipIntro) {
             
             var brick = new Brick(lane, this.wall.isOffset(lane), this.wall, this.difficulty);
             this.fallingBrick = brick;
+
+            this.brickSprites[this.brickSprites.length] = brick;
             
             this.wall.addBrick(lane, brick);
             this.canBrickFall = false;
@@ -255,7 +294,6 @@ function World(skipIntro) {
     
     this.brickCollisionCallback = function (brick, other) {        
         this.fallingBrick = null;
-        this.bricks.add(brick);
 
         brick.body.x -= brickWidthMargin;
         brick.body.width += brickWidthMargin * 2;
@@ -342,6 +380,10 @@ function World(skipIntro) {
 
                 // console.log('Merged bricks to the left');
             }
+        }
+
+        if (brick.body) {
+            this.bricks.add(brick);
         }
     };
     
@@ -525,10 +567,6 @@ function makeWaterLeft() {
     water.animations.play('normal');
     water.fixedToCamera = true;
 
-    game.physics.arcade.enable(water);
-    water.body.moves = false;
-    water.body.immovable = true;
-
     return water;
 }
 
@@ -542,10 +580,6 @@ function makeWaterRight() {
     water.animations.add('normal', [1, 0], 1.25, true);
     water.animations.play('normal');
     water.fixedToCamera = true;
-
-    game.physics.arcade.enable(water);
-    water.body.moves = false;
-    water.body.immovable = true;
 
     return water;
 }

@@ -2,7 +2,7 @@ function GameplayScreen(skipIntro) {
     this.gameOverWaitTime = 2000;
     this.newRecord = -1;
     
-    this.show = function () {
+    this.show = function (oldState) {
         this.world = new World(skipIntro);
         this.gameOverTimer = 0;
     };

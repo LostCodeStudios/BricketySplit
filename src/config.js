@@ -10,6 +10,10 @@
 var soundVolume = 0.1;
 var backgroundColor = '#38ACEC';
 
+var titleColor = '#FFFFFF';
+
+var menuEasing = Phaser.Easing.Linear.None;
+
 //fonts
 
     var titleFont = '72px Bangers';
