@@ -3,7 +3,7 @@
     var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
     var alwaysMobile = false;   //                      TODO do not leave this enabled
     var debugPhysics = false;
-    var skipTutorial = true;
+    var skipTutorial = false;
 
 //end debug flags
 

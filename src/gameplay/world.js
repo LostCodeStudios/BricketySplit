@@ -237,6 +237,7 @@ function World(skipIntro) {
         brick.body.x -= brickWidthMargin;
         brick.body.width += brickWidthMargin * 2;
         brick.body.immovable = true;
+        brick.body.moves = false;
         brick.body.gravity.y = 0;
 
         brick.x = brick.body.x;
@@ -330,7 +331,7 @@ function World(skipIntro) {
     };
     
     this.rickCenterX = function () {
-        return this.rick.sprite.x + this.rick.sprite.width / 2;
+        return this.rick.sprite.body.x + this.rick.sprite.body.width / 2;
     };
     
     this.friendCenterX = function () {
@@ -349,6 +350,7 @@ function World(skipIntro) {
         }
         
         if (this.currentPhase == introPhase) {
+
             this.arrow.x = this.rickCenterX();
             this.arrow.y = this.rick.sprite.y - arrowDownHeight - 5;
             
@@ -482,6 +484,7 @@ function makeGround() {
     
     var ground = game.add.sprite(x, y, 'ground');
     game.physics.enable(ground, Phaser.Physics.ARCADE);
+    ground.body.moves = false;
     ground.body.immovable = true;
     
     ground.isGround = true;
