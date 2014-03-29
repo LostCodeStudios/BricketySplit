@@ -29,11 +29,14 @@ function HighScoreScreen(newRecord) {
         //make the physical stuff
         makeGround();
         
-        var startX = windowWidth - 61 - windowWidth / 5;
-        this.dx = windowWidth / 4;
+        var startX = lerp(wallRightX, wallLeftX, 0.15);
+        var endX = windowWidth - startX;
+        this.dx = (startX - endX) / 2;
         
         this.x = startX;
         
+        console.log('First wall x: ' + this.x);
+
         this.nextMiniWall = scores.length - 1;
     };
     
@@ -118,6 +121,10 @@ function HighScoreScreen(newRecord) {
     };
     
     this.makeMiniWall = function (x, lane, height, newRecord) {
+        x = x - 61 / 2; //place them by center
+
+        console.log('Making x: ' + x);
+
         var y = topBounds - 1;
         var sprite = game.add.sprite(x, y, 'rowdivider');
         game.physics.arcade.enable(sprite);
@@ -133,8 +140,10 @@ function HighScoreScreen(newRecord) {
         for (var i = 0; i < height; i++) {
             if (i % 2 == 0) {
                 sprite = game.add.sprite(x, y, 'normalrow');
+                sprite.frame = Math.floor(Math.random() * 5);
             } else {
                 sprite = game.add.sprite(x, y, 'offsetrow');
+                sprite.frame = Math.floor(Math.random() * 5);
             }
             game.physics.arcade.enable(sprite);
             this.wallSprites[this.wallSprites.length] = sprite;

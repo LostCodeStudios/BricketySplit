@@ -22,8 +22,8 @@ function preload() {
     game.load.image('enemy', 'assets/sprites/enemy.png');
     game.load.image('scoreline', 'assets/sprites/scoreline2.png');
     game.load.image('rowdivider', 'assets/sprites/rowdivider4.png');
-    game.load.image('normalrow', 'assets/sprites/normalrow3.png');
-    game.load.image('offsetrow', 'assets/sprites/offsetrow3.png');
+    game.load.spritesheet('normalrow', 'assets/sprites/normalrow4.png', 61, 2);
+    game.load.spritesheet('offsetrow', 'assets/sprites/offsetrow4.png', 61, 2);
     game.load.image('ufo', 'assets/sprites/ufo2.png');
     game.load.image('laser', 'assets/sprites/laser.png');
     game.load.image('enemyblue', 'assets/sprites/enemyblue.png');

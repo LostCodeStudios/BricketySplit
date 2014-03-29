@@ -24,6 +24,8 @@ function World(skipIntro) {
     
     this.laserSound = game.add.audio('laser');
     
+    this.bottomBrickRow = 0; //for checking and removing
+
     var scores = JSON.parse(localStorage.getItem('Scores'));
     for (var i = 0; i < scores.length; i++) {
         var score = scores[i];
@@ -140,6 +142,24 @@ function World(skipIntro) {
             
             pushWorldBoundsUp(sec * cameraSpeed);
             this.boundsToPush -= sec * cameraSpeed;
+
+            //check the bottom row of bricks to see if they need to be removed
+            var i = 0;
+
+            var brick = this.wall.bricks[this.bottomBrickRow][i];
+
+            if (this.outOfBounds(brick.sprite)) {
+                //remove the whole row
+                do {
+                    brick.sprite.body = null;
+                    brick.sprite.destroy();
+                    console.log('REMOVING A BRICK');
+
+                    brick = this.wall.bricks[this.bottomBrickRow][i++]; //take the next brick to the right
+                } while (brick);
+
+                this.bottomBrickRow++;
+            }
         }
         
         this.rick.update();
@@ -206,7 +226,7 @@ function World(skipIntro) {
     };
     
     this.outOfBounds = function (sprite) {
-        return sprite.x + sprite.width < 0 || sprite.x > windowWidth || sprite.y + sprite.height < topBounds || sprite.y > windowHeight;
+        return sprite.x + sprite.width < 0 || sprite.x > windowWidth || sprite.y + sprite.height < topBounds || sprite.y > bottomBounds;
     };
     
     this.spawnEnemy = function () {
@@ -302,7 +322,7 @@ function World(skipIntro) {
                 brick.body.width += this.wall.bricks[brick.brick.row - 1][lane + 1].sprite.body.width;
                 this.wall.bricks[brick.brick.row - 1][lane + 1].sprite.body = null;
 
-                console.log('Merged a brick to the right');
+                // console.log('Merged a brick to the right');
             }
         }
         if (lane > 0) {
@@ -317,7 +337,7 @@ function World(skipIntro) {
                 this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body.width += brick.body.width;
                 brick.body = null;
 
-                console.log('Merged bricks to the left');
+                // console.log('Merged bricks to the left');
             }
         }
     };

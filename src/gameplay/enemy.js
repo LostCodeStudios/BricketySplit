@@ -1,16 +1,14 @@
-var ENEMY_TOTAL_SOURCES = 4; //for randomization
+var ENEMY_TOTAL_SOURCES = 2; //for randomization
+var ENEMY_LEFT = 0;
+var ENEMY_RIGHT = 1;
 
 //spawning bounds in terms of world bounds
 
 var enemySideMinY = windowHeight * 0.5;
 var enemySideMaxY = windowHeight * 0.6 - brickHeight;
 
-var enemyBottomMinX = windowWidth * 0.2;
-var enemyBottomMaxX = windowWidth - enemyBottomMinX;
-
 function randEnemySource() {
-    var rand = Math.floor(Math.random() * ENEMY_TOTAL_SOURCES);
-    return rand === 3 ? rand - 1: rand; //make vertical as likely as horizontal
+    return Math.floor(Math.random() * ENEMY_TOTAL_SOURCES);
 }
 
 //difficulty from 0 to 1, ramps up enemy speed
@@ -33,12 +31,6 @@ function Enemy(source, difficulty) {
             y = topBounds + randPos(enemySideMinY, enemySideMaxY);
             velX = lerp(enemyMinSpeed, enemyMaxSpeed, difficulty) * -1;
             velY = 0;
-            break;
-        case ENEMY_BOTTOM:
-            x = randPos(enemyBottomMinX, enemyBottomMaxX);
-            y = bottomBounds;
-            velX = 0;
-            velY = lerp(enemyMinSpeed, enemyMaxSpeed, difficulty) * -1;
             break;
     }
     

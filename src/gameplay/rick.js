@@ -22,7 +22,7 @@ function Rick(world) {
     
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     
-    this.sprite.anchor.set(0.11, 0);
+    this.sprite.anchor.set(2/19, 0);
     this.sprite.body.width -= 4; //remove padding
     this.sprite.body.gravity.y = gravity;
     
@@ -167,12 +167,16 @@ function Rick(world) {
             //he's stuck on the left edge of the wall! Push him off!
             this.sprite.body.x -= pushOffAmount;
             this.sprite.body.velocity.x = -pushOffAmount;
+
+            this.jumping = false;
         }
 
         if (this.sprite.x >= wallRightX && this.sprite.body.touching.down) {
             //he's stuck on the right edge of the wall! Push him off!
             this.sprite.body.x += pushOffAmount;
             this.sprite.body.velocity.x = pushOffAmount;
+
+            this.jumping = false;
         }
         
         if (this.jumping && this.sprite.body.touching.down)

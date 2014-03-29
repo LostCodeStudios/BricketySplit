@@ -3,11 +3,11 @@
     var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
     var alwaysMobile = false;   //                      TODO do not leave this enabled
     var debugPhysics = false;
-    var skipTutorial = false;
+    var skipTutorial = true;
 
 //end debug flags
 
-var soundVolume = 0.5;
+var soundVolume = 0.1;
 var backgroundColor = '#38ACEC';
 
 //fonts
@@ -59,10 +59,6 @@ var scrollStartRows = 3;
 
 var rickWidth = 19;
 var rickHeight = 24;
-
-var ENEMY_LEFT = 0;
-var ENEMY_RIGHT = 1;
-var ENEMY_BOTTOM = 2;
 
 var enemyMinSpeed = 64;
 var enemyMaxSpeed = 256;
