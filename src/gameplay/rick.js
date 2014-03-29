@@ -85,18 +85,29 @@ function Rick(world) {
     };
     
     this.die = function () {
-        var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, this.sprite.y + this.sprite.height / 2, 100);
+        var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, this.sprite.y + this.sprite.height, 100);
         emitter.gravity = gravity / 6;
+
+        var maxSpeedX = 125;
         
+        var minSpeedY = 20;
+        var maxSpeedY = 180;
+
+        emitter.minParticleSpeed.x = -maxSpeedX;
+        emitter.maxParticleSpeed.x = maxSpeedX;
+
+        emitter.minParticleSpeed.y = -maxSpeedY;
+        emitter.maxParticleSpeed.y = -minSpeedY;
+
         emitter.makeParticles('smallparticle');
         //  The first parameter sets the effect to "explode" which means all particles are emitted at once
         //  The second gives each particle a 2000ms lifespan
         //  The third is ignored when using burst/explode mode
         //  The final parameter (10) is how many particles will be emitted in this single burst
-        emitter.start(false, 1000, null, 15);
+        emitter.start(true, 1000, null, 30);
         
         emitter.makeParticles('bigparticle');
-        emitter.start(false, 1000, null, 5);
+        emitter.start(true, 1000, null, 15);
 
         
         this.dead = true;
@@ -121,17 +132,6 @@ function Rick(world) {
             this.jumpButton.bringToTop();
         }
         
-        //var bounceDist = gravity / 1500;
-        if (this.sprite.body.touching.left) {
-            //this.sprite.body.y -= bounceDist;
-            console.log('Rick is touching on the left');
-        }
-        
-        if (this.sprite.body.touching.right) {
-            //this.sprite.body.y -= bounceDist;
-            console.log('Rick is touching on the right');
-        }
-        
         this.sprite.body.velocity.x = 0;
         
         if (this.movingLeft && this.sprite.x > 0 && !this.sprite.body.touching.up) {
@@ -148,6 +148,19 @@ function Rick(world) {
             this.sprite.animations.play('standLeft');
         } else if (this.facing === 'right') {
             this.sprite.animations.play('standRight');
+        }
+
+        var pushOffAmount = 1;
+        if (this.sprite.body.x <= wallLeftX - this.sprite.width && this.sprite.body.touching.down) {
+            //he's stuck on the left edge of the wall! Push him off!
+            this.sprite.body.x -= pushOffAmount;
+            this.sprite.body.velocity.x = 0;
+        }
+
+        if (this.sprite.body.x >= wallRightX && this.sprite.body.touching.down) {
+            //he's stuck on the right edge of the wall! Push him off!
+            this.sprite.body.x += pushOffAmount;
+            this.sprite.body.velocity.x = 0;
         }
         
         if (this.jumping && this.sprite.body.touching.down)

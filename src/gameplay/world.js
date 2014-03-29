@@ -260,13 +260,13 @@ function World(skipIntro) {
 
         leftEmitter.minParticleSpeed.x = -maxSpeedX;
         leftEmitter.maxParticleSpeed.x = -minSpeedX;
-        leftEmitter.minParticleSpeed.y = -minSpeedY;
-        leftEmitter.maxParticleSpeed.y = -maxSpeedY;
+        leftEmitter.minParticleSpeed.y = -maxSpeedY;
+        leftEmitter.maxParticleSpeed.y = -minSpeedY;
 
         rightEmitter.minParticleSpeed.x = minSpeedX;
         rightEmitter.maxParticleSpeed.x = maxSpeedX;
-        rightEmitter.minParticleSpeed.y = -minSpeedY;
-        rightEmitter.maxParticleSpeed.y = -maxSpeedY;
+        rightEmitter.minParticleSpeed.y = -maxSpeedY;
+        rightEmitter.maxParticleSpeed.y = -minSpeedY;
 
         leftEmitter.gravity = gravity / 6;
         rightEmitter.gravity = gravity / 6;
