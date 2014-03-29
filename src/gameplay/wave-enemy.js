@@ -13,7 +13,8 @@ function WaveEnemy() {
     var x = (this.source ? windowWidth : -width);
     
     this.sprite = game.add.sprite(x, 0, 'enemy' + color);
-
+    this.sprite.smoothed = false;
+    
     game.physics.arcade.enable(this.sprite);
     this.sprite.body.velocity.x = (this.source ? -waveEnemySpeed : waveEnemySpeed);
     

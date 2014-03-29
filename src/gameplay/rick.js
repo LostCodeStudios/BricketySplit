@@ -11,6 +11,8 @@ function Rick(world) {
     var fps = 5;
     
     this.sprite = game.add.sprite(x, y, 'rick');
+    this.sprite.smoothed = false;
+
     this.sprite.animations.add('walkLeft', [1, 0], fps, true);
     this.sprite.animations.add('standLeft', [0], fps, true);
     this.sprite.animations.add('walkRight', [3, 2], fps, true);
@@ -20,6 +22,8 @@ function Rick(world) {
     
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     
+    this.sprite.anchor.set(0.11, 0);
+    this.sprite.body.width -= 4; //remove padding
     this.sprite.body.gravity.y = gravity;
     
     this.sprite.isRick = true;
@@ -159,16 +163,16 @@ function Rick(world) {
         }
 
         var pushOffAmount = 1;
-        if (this.sprite.body.x <= wallLeftX - this.sprite.width && this.sprite.body.touching.down) {
+        if (this.sprite.x <= wallLeftX - this.sprite.width && this.sprite.body.touching.down) {
             //he's stuck on the left edge of the wall! Push him off!
             this.sprite.body.x -= pushOffAmount;
-            this.sprite.body.velocity.x = 0;
+            this.sprite.body.velocity.x = -pushOffAmount;
         }
 
-        if (this.sprite.body.x >= wallRightX && this.sprite.body.touching.down) {
+        if (this.sprite.x >= wallRightX && this.sprite.body.touching.down) {
             //he's stuck on the right edge of the wall! Push him off!
             this.sprite.body.x += pushOffAmount;
-            this.sprite.body.velocity.x = 0;
+            this.sprite.body.velocity.x = pushOffAmount;
         }
         
         if (this.jumping && this.sprite.body.touching.down)

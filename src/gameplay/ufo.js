@@ -21,7 +21,8 @@ function UFO(world, difficulty) {
     y = topBounds + ufoY;
     
     this.sprite = game.add.sprite(x, y, 'ufo');
-    
+    this.sprite.smoothed = false;
+
     this.sprite.isUFO = true;
     
     game.physics.arcade.enable(this.sprite);

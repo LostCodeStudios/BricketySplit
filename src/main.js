@@ -32,7 +32,7 @@ function preload() {
     game.load.image('bigparticle', 'assets/sprites/bigparticle2.png');
     game.load.image('brickparticle', 'assets/sprites/brickparticle2.png');
     game.load.image('dirtparticle', 'assets/sprites/dirtparticle.png');
-    game.load.spritesheet('rick', 'assets/sprites/rick3.png', rickWidth, rickHeight);
+    game.load.spritesheet('rick', 'assets/sprites/rick6.png', rickWidth, rickHeight);
     
     //load tutorial assets
     game.load.image('arrowdown', 'assets/tutorial/arrowdown2.png');

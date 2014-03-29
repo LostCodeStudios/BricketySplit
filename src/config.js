@@ -57,7 +57,7 @@ var fullDifficultyTime = 5 * 60 * 1000;
                       // ^Time it takes for the game to reach full difficulty, in minutes
 var scrollStartRows = 3;
 
-var rickWidth = 16;
+var rickWidth = 19;
 var rickHeight = 24;
 
 var ENEMY_LEFT = 0;

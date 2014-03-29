@@ -43,6 +43,8 @@ function Enemy(source, difficulty) {
     }
     
     this.sprite = game.add.sprite(x, y, 'enemy');
+    this.sprite.smoothed = false;
+    
     game.physics.arcade.enable(this.sprite);
     this.sprite.body.velocity.x = velX;
     this.sprite.body.velocity.y = velY;

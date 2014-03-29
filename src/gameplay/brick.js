@@ -22,6 +22,8 @@ function Brick(lane, offset, wall, difficulty) {
         game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     }
     
+    this.sprite.smoothed = false;
+
     this.sprite.body.x += brickWidthMargin;
     this.sprite.body.width -= brickWidthMargin * 2;
     
