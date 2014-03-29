@@ -121,13 +121,15 @@ function Rick(world) {
             this.jumpButton.bringToTop();
         }
         
-        var bounceDist = gravity / 1500;
+        //var bounceDist = gravity / 1500;
         if (this.sprite.body.touching.left) {
-            this.sprite.body.y -= bounceDist;
+            //this.sprite.body.y -= bounceDist;
+            console.log('Rick is touching on the left');
         }
         
         if (this.sprite.body.touching.right) {
-            this.sprite.body.y -= bounceDist;
+            //this.sprite.body.y -= bounceDist;
+            console.log('Rick is touching on the right');
         }
         
         this.sprite.body.velocity.x = 0;

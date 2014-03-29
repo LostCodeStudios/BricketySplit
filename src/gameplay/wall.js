@@ -8,6 +8,9 @@ function Wall(width) {
     //Lane management
     this.lanes = new Array(width);
     
+    //Brick containment
+    this.bricks = new Array();
+
     this.rightHalfBrickFallen = false;
     
     for (var i = 0; i <= width; i++) {
@@ -26,7 +29,13 @@ function Wall(width) {
         return this.isOffset(lane) ? lane - 1 : lane + 1;
     };
     
-    this.addBrick = function (lane) {            
+    this.addBrick = function (lane, brick) {
+        if (this.bricks.length <= this.lanes[lane]) {
+            this.bricks[this.bricks.length] = new Array(this.width); //add a new row to the brick array if necessary
+        }
+
+        this.bricks[this.lanes[lane]][lane] = brick; //store the brick in a 2D array.
+
         this.lanes[lane]++;
 
         if (lane == this.width - 1 && this.isOffset(lane)) {

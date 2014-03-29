@@ -3,12 +3,12 @@
     var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
     var alwaysMobile = false;   //                      TODO do not leave this enabled
     var debugPhysics = false;
-    var skipTutorial = false;
+    var skipTutorial = true;
 
 //end debug flags
 
 var soundVolume = 0.5;
-
+var backgroundColor = '#38ACEC';
 
 //fonts
 

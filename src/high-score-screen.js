@@ -69,6 +69,39 @@ function HighScoreScreen(newRecord) {
                     
                     playSound(this.brickFallSound);
                     sprite.handleFallEvent = false; //don't do this repeatedly, please
+
+                    //throw up some particles
+                    var leftEmitter = game.add.emitter(sprite.x, sprite.startY + this.fallDist, 100);
+                    var rightEmitter = game.add.emitter(sprite.x + sprite.width, sprite.startY + this.fallDist, 100);
+
+                    var minSpeedX = 20;
+                    var maxSpeedX = 150;
+
+                    var minSpeedY = 20;
+                    var maxSpeedY = 100;
+
+                    leftEmitter.minParticleSpeed.x = -maxSpeedX;
+                    leftEmitter.maxParticleSpeed.x = -minSpeedX;
+                    leftEmitter.minParticleSpeed.y = -minSpeedY;
+                    leftEmitter.maxParticleSpeed.y = -maxSpeedY;
+
+                    rightEmitter.minParticleSpeed.x = minSpeedX;
+                    rightEmitter.maxParticleSpeed.x = maxSpeedX;
+                    rightEmitter.minParticleSpeed.y = -minSpeedY;
+                    rightEmitter.maxParticleSpeed.y = -maxSpeedY;
+
+                    leftEmitter.gravity = gravity / 6;
+                    rightEmitter.gravity = gravity / 6;
+
+                    leftEmitter.makeParticles('dirtparticle');
+                    rightEmitter.makeParticles('dirtparticle');
+
+                    //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+                    //  The second gives each particle a 500ms lifespan
+                    //  The third is ignored when using burst/explode mode
+                    //  The final parameter (10) is how many particles will be emitted in this single burst
+                    leftEmitter.start(true, 500, null, 4);
+                    rightEmitter.start(true, 500, null, 4);
                 }
             }
         }

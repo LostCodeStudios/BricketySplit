@@ -57,7 +57,7 @@ function World(skipIntro) {
             var brick = new Brick(lane, this.wall.isOffset(lane), this.wall, this.difficulty);
             this.fallingBrick = brick;
             
-            this.wall.addBrick(lane);
+            this.wall.addBrick(lane, brick);
             this.canBrickFall = false;
         }
         
@@ -98,10 +98,12 @@ function World(skipIntro) {
             game.physics.arcade.collide(this.rick.sprite, this.fallingBrick.sprite);
             this.fallingBrick.sprite.body.immovable = false;
         }
-        if (this.fallingBrick) { //there is a reason for this
-            game.physics.arcade.collide(this.fallingBrick.sprite, this.bricks, this.brickCollisionCallback, processBrickCollision, this);
+        for (var i = 0; i < this.bricks.length && this.fallingBrick; i++) { //there is a reason for this
+            if (this.bricks.getAt(i).body) {
+                game.physics.arcade.collide(this.fallingBrick.sprite, this.bricks.getAt(i), this.brickCollisionCallback, processBrickCollision, this);
+            }
         }
-        if (this.fallingBrick) { //there is a reason for this
+        if (this.fallingBrick && this.ground) { //there is a reason for this
             game.physics.arcade.collide(this.fallingBrick.sprite, this.ground, this.brickCollisionCallback, processBrickCollision, this);
         }
         
@@ -236,10 +238,87 @@ function World(skipIntro) {
         brick.body.width += brickWidthMargin * 2;
         brick.body.immovable = true;
         brick.body.gravity.y = 0;
+
+        brick.x = brick.body.x;
+        brick.y = brick.body.y; //the body may be about to be removed, 
+
+        //so set the sprite's position to the body for the last time
+
         this.canBrickFall = true; //one brick falling at a time
         
         playSound(brick.fallSound);
         
+        //throw up some particles
+        var leftEmitter = game.add.emitter(brick.x, brick.y + brick.height, 100);
+        var rightEmitter = game.add.emitter(brick.x + brick.width, brick.y + brick.height, 100);
+
+        var minSpeedX = 20;
+        var maxSpeedX = 150;
+
+        var minSpeedY = 20;
+        var maxSpeedY = 100; 
+
+        leftEmitter.minParticleSpeed.x = -maxSpeedX;
+        leftEmitter.maxParticleSpeed.x = -minSpeedX;
+        leftEmitter.minParticleSpeed.y = -minSpeedY;
+        leftEmitter.maxParticleSpeed.y = -maxSpeedY;
+
+        rightEmitter.minParticleSpeed.x = minSpeedX;
+        rightEmitter.maxParticleSpeed.x = maxSpeedX;
+        rightEmitter.minParticleSpeed.y = -minSpeedY;
+        rightEmitter.maxParticleSpeed.y = -maxSpeedY;
+
+        leftEmitter.gravity = gravity / 6;
+        rightEmitter.gravity = gravity / 6;
+
+        var particleKey;
+
+        if (other.isGround) {
+            //dirt particles
+        
+            particleKey = 'dirtparticle';
+        } else {
+            //brick particles
+
+            particleKey = 'brickparticle';
+        }
+
+        leftEmitter.makeParticles(particleKey);
+        rightEmitter.makeParticles(particleKey);
+
+        //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+        //  The second gives each particle a 500ms lifespan
+        //  The third is ignored when using burst/explode mode
+        //  The final parameter (10) is how many particles will be emitted in this single burst
+        leftEmitter.start(true, 500, null, 4);
+        rightEmitter.start(true, 500, null, 4);
+
+        //merge bodies with the adjacent brick
+        var lane = brick.brick.lane;
+
+        if (lane < wallWidth) {
+            if (this.wall.bricks[brick.brick.row - 1][lane + 1]) { //merge with the brick on the right if it exists
+                brick.body.width += this.wall.bricks[brick.brick.row - 1][lane + 1].sprite.body.width;
+                this.wall.bricks[brick.brick.row - 1][lane + 1].sprite.body = null;
+
+                console.log('Merged a brick to the right');
+            }
+        }
+        if (lane > 0) {
+            if (this.wall.bricks[brick.brick.row - 1][lane - 1]) {  //merge with the bricks on the left if it exists
+                var leftBricksWidth;
+                var i = 1;
+                while (!this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body) {
+                    i++;
+                }
+                leftBricksWidth = this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body.width;
+
+                this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body.width += brick.body.width;
+                brick.body = null;
+
+                console.log('Merged bricks to the left');
+            }
+        }
     };
     
     this.enemyRickCollision = function (rick, enemy) {
@@ -405,5 +484,6 @@ function makeGround() {
     game.physics.enable(ground, Phaser.Physics.ARCADE);
     ground.body.immovable = true;
     
+    ground.isGround = true;
     return ground;
 }

@@ -1,5 +1,3 @@
-var backgroundColor = '#33DDDD';
-
 var game = new Phaser.Game(windowWidth, windowHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
 var currentTime;
@@ -32,7 +30,9 @@ function preload() {
     game.load.image('enemyorange', 'assets/sprites/enemyorange.png');
     game.load.image('smallparticle', 'assets/sprites/smallparticle2.png');
     game.load.image('bigparticle', 'assets/sprites/bigparticle2.png');
-    game.load.spritesheet('rick', 'assets/sprites/rick2.png', 16, 24);
+    game.load.image('brickparticle', 'assets/sprites/brickparticle2.png');
+    game.load.image('dirtparticle', 'assets/sprites/dirtparticle.png');
+    game.load.spritesheet('rick', 'assets/sprites/rick2.png', rickWidth, rickHeight);
     
     //load tutorial assets
     game.load.image('arrowdown', 'assets/tutorial/arrowdown2.png');

@@ -33,4 +33,8 @@ function Brick(lane, offset, wall, difficulty) {
         
     this.sprite.fallSound = game.add.audio('brickfall');
     this.sprite.isBrick = true;
+
+    this.lane = lane;
+    this.row = wall.lanes[lane] + 1;
+    this.sprite.brick = this;
 }
