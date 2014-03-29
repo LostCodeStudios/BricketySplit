@@ -51,15 +51,12 @@ function Rick(world) {
     } else {
         this.moveLeftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
         this.moveRightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-        this.jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.Z);
         
         this.moveLeftKey.onDown.add(moveLeftCallback, this);
         this.moveRightKey.onDown.add(moveRightCallback, this);
-        this.jumpKey.onDown.add(jumpCallback, this);
         
         this.moveLeftKey.onUp.add(stopLeftCallback, this);
         this.moveRightKey.onUp.add(stopRightCallback, this);
-        this.jumpKey.onUp.add(stopJumpCallback, this);
     }
     
     this.deathSound = game.add.audio('squish');
@@ -126,6 +123,17 @@ function Rick(world) {
             return;
         }
         
+        this.jumping = false;
+        if (!mobile) {
+            //jump logic - take input from multiple keys
+            for (var i = 0; i < jumpKeys.length; i++) {
+                if (game.input.keyboard.isDown(jumpKeys[i])) {
+                    this.jumping = true;
+                    break;
+                }
+            }
+        }
+
         if (mobile) {
             this.moveLeftButton.bringToTop();
             this.moveRightButton.bringToTop();
@@ -187,10 +195,6 @@ function moveRightCallback () {
     this.movingLeft = false;
 }
 
-function jumpCallback () {
-    this.jumping = true;
-}
-
 function stopLeftCallback () {
     this.movingLeft = false;
     
@@ -201,8 +205,4 @@ function stopLeftCallback () {
     this.movingRight = false;
      
     this.movingLeft = game.input.keyboard.isDown(Phaser.Keyboard.LEFT);
-};
-
-function stopJumpCallback () {
-    this.jumping = false;
 };

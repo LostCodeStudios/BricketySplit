@@ -18,7 +18,7 @@ function preload() {
     //load sprites
     game.load.image('ground', 'assets/sprites/ground.png');
     game.load.image('brick', 'assets/sprites/brick2.png');
-    game.load.image('halfbrick', 'assets/sprites/halfbrick2.png');
+    game.load.image('halfbrick', 'assets/sprites/halfbrick3.png');
     game.load.image('enemy', 'assets/sprites/enemy.png');
     game.load.image('scoreline', 'assets/sprites/scoreline2.png');
     game.load.image('rowdivider', 'assets/sprites/rowdivider4.png');
@@ -32,7 +32,7 @@ function preload() {
     game.load.image('bigparticle', 'assets/sprites/bigparticle2.png');
     game.load.image('brickparticle', 'assets/sprites/brickparticle2.png');
     game.load.image('dirtparticle', 'assets/sprites/dirtparticle.png');
-    game.load.spritesheet('rick', 'assets/sprites/rick2.png', rickWidth, rickHeight);
+    game.load.spritesheet('rick', 'assets/sprites/rick3.png', rickWidth, rickHeight);
     
     //load tutorial assets
     game.load.image('arrowdown', 'assets/tutorial/arrowdown2.png');

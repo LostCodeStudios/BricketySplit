@@ -1,23 +1,19 @@
 var brickWidthMargin = 1;
 
 function Brick(lane, offset, wall, difficulty) {
-    var width = game.cache.getImage('brick').width;
-    var height = game.cache.getImage('brick').height;
     var wallWidth = wall.width;
     
-    var x = wallLeftX + lane * width;
+    var x = wallLeftX + lane * brickWidth;
     
     if (offset) {
-        x -= width / 2;
+        x -= brickWidth / 2;
     }
     
-    var y = topBounds - height;
+    var y = topBounds -  brickHeight;
     
     if (offset && lane == 0 || lane == wallWidth) {
-        //half brick
-        width /= 2;
-        
-        if (lane == 0) x += width;
+        //half brick     
+        if (lane == 0) x += brickWidth / 2;
         
         this.sprite = game.add.sprite(x, y, 'halfbrick');
         game.physics.enable(this.sprite, Phaser.Physics.ARCADE);

@@ -4,6 +4,10 @@ function randPos(min, max) {
     return min + Math.random() * dif;
 }
 
+function randInt(max) {
+	return Math.floor(Math.random() * max);
+}
+
 function lerp(min, max, progress) {
     var dif = max - min;
     

@@ -40,6 +40,9 @@ var windowHeight = 480;
 var brickHeight = 32;
 var brickWidth = 96;
 
+var brickSprites = 3;
+var halfBrickSprites = 3;
+
 var wallWidth = 6;
 var wallLeftX = (windowWidth - brickWidth * wallWidth) / 2;
 var wallRightX = windowWidth - wallLeftX;
@@ -80,3 +83,5 @@ var touchButtonY = windowHeight - buttonHeight - 4;
 var moveLeftButtonX = 24;
 var moveRightButtonX = 24 + buttonWidth + 4;
 var jumpButtonX = windowWidth - 24 - buttonWidth;
+
+var jumpKeys = [ Phaser.Keyboard.Z, Phaser.Keyboard.X, Phaser.Keyboard.SPACEBAR, Phaser.Keyboard.UP, Phaser.Keyboard.CONTROL ];
