@@ -8,13 +8,47 @@ function GameplayScreen(skipIntro) {
     };
     
     this.hide = function (newState) {
-        this.world.destroy();
-        
-        if (this.gameOverText) {
-            this.gameOverText.destroy();
-        }
+
+    };
+
+    this.transitionOff = function() {
+        updateState = false; 
+        console.log('Transitioning off');
+
+        this.transitioning = true;
+
+        screenToDestroy = this;
+        tweener = game.add.sprite(-800, 0, 'backdrop');
+        var tween = game.add.tween(tweener).to({x: 800}, 1250, menuEasing, true);
+
+        tween.onUpdateCallback(this.tweenUpdate);
+        tween.onComplete.add(endGameOverTween);
     };
     
+    this.tweenUpdate = function () {
+        if (tweener.x > 0 && !tweener.halfway) {
+            //more than halfway
+            tweener.halfway = true;
+
+            screenToDestroy.world.destroy();
+        
+            if (screenToDestroy.gameOverText) {
+                screenToDestroy.gameOverText.destroy();
+            }
+
+            if (tutorial) {
+                setState(new GameplayScreen(screenToDestroy.skipIntro));
+            } else {
+                setState(new HighScoreScreen(screenToDestroy.newRecord));
+            }
+
+            tweener.bringToTop();
+        } else if (tweener.halfway) {
+            //push to front to cover new stuff
+            tweener.bringToTop();
+        }
+    };
+
     this.update = function (delta) {
         this.world.update(delta);
         
@@ -43,13 +77,9 @@ function GameplayScreen(skipIntro) {
             }
             
             this.gameOverTimer += delta;
-            
-            if (this.gameOverTimer >= this.gameOverWaitTime) {
-                if (tutorial) {
-                    setState(new GameplayScreen(this.skipIntro));
-                } else {
-                    setState(new HighScoreScreen(this.newRecord));
-                }
+
+            if (this.gameOverTimer >= this.gameOverWaitTime && !this.transitioning) {
+                this.transitionOff();
             }
         }
     };
@@ -58,4 +88,9 @@ function GameplayScreen(skipIntro) {
         
     };
     
+}
+
+function endGameOverTween() {
+    tweener.destroy();
+    updateState = true;
 }

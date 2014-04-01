@@ -153,6 +153,7 @@ function start() {
     setState(new MainMenu());
 }
 
+var updateState = true;
 function update() {
     
     if (!started) return;
@@ -160,7 +161,7 @@ function update() {
     currentTime = game.time.now;
     var delta = currentTime - lastTime;
     
-    if (delta <= frameTime) state.update(delta);
+    if (delta <= frameTime && updateState) state.update(delta);
     
     lastTime = currentTime;
     
@@ -180,6 +181,7 @@ function physicsDebugCallback (sprite) {
 }
 
 function setState(newState) {
+    var oldState = state;
     if (state) {
         state.hide(newState);
     }

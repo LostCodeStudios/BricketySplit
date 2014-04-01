@@ -40,7 +40,19 @@ function HighScoreScreen(newRecord) {
         this.nextMiniWall = scores.length - 1;
     };
     
-    this.hide = function () {
+    this.setNewState = function(newState) {
+        this.newState = newState;
+        this.newState.backdropTween.onComplete.add(this.destroy, this);
+
+    }
+
+    this.hide = function (newState) {
+        game.input.onDown.remove(playKeyPressed, this);
+        game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
+        game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
+    };
+    
+    this.destroy = function() {
         this.scoreText.destroy();
         this.helpText.destroy();
         this.titleText.destroy();
@@ -54,12 +66,8 @@ function HighScoreScreen(newRecord) {
             this.wallSprites[i].body = null;
             this.wallSprites[i].destroy();
         }
-        
-        game.input.onDown.remove(playKeyPressed, this);
-        game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
-        game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
     };
-    
+
     this.fallDist = windowHeight - brickHeight;
     
     this.update = function (delta) {
@@ -69,7 +77,7 @@ function HighScoreScreen(newRecord) {
             if (sprite.body.y > sprite.startY + this.fallDist) {
                 sprite.body.y = sprite.startY + this.fallDist;
                 sprite.body.gravity.y = 0;
-                sprite.body.immovable = true;
+                sprite.body.moves = false;
                 
                 if (sprite.handleFallEvent) {
                     //play a noise for falling on the ground!

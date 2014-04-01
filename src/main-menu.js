@@ -20,7 +20,9 @@ function MainMenu() {
             this.backdrop = game.add.sprite(0, 0, 'backdrop');
             this.backdrop.y -= this.backdrop.height;
 
-            game.add.tween(this.backdrop).to({y: 0}, 500, menuEasing, true);
+            console.log('Adding backdrop tween');
+            this.backdropTween = game.add.tween(this.backdrop).to({y: 0}, 500, menuEasing, true);
+            if (oldState instanceof HighScoreScreen) oldState.setNewState(this);
 
             this.titleText1 = game.add.text(titleX1, titleY1 - windowHeight, title1, new Style(titleFont, titleColor, true));
             this.titleText1.anchor.set(0.5, 0);
