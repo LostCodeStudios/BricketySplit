@@ -33,6 +33,8 @@ function World(skipIntro) {
     
     this.bottomBrickRow = 0; //for checking and removing
 
+    makeClouds(this);
+
     var scores = JSON.parse(localStorage.getItem('Scores'));
     for (var i = 0; i < scores.length; i++) {
         var score = scores[i];
@@ -51,6 +53,8 @@ function World(skipIntro) {
 
         this.waterLeft.destroy();
         this.waterRight.destroy();
+
+        destroyClouds(this);
 
         for (var i = 0; i < this.brickSprites.length; i++) {
             this.brickSprites[i].sprite.body = null;
@@ -204,6 +208,8 @@ function World(skipIntro) {
             }
         }
         
+        updateClouds(this);
+
         this.rick.update();
         
         if (this.ground) {

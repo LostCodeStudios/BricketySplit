@@ -18,6 +18,7 @@ function preload() {
     //load world sprites
     game.load.image('ground', 'assets/sprites/ground.png');
     game.load.spritesheet('water', 'assets/sprites/water.png', 112, 24);
+    game.load.image('cloud', 'assets/sprites/cloud1.png');
 
     //load brick sprites
     game.load.image('brick', 'assets/sprites/brick2.png');
