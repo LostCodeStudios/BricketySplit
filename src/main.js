@@ -60,6 +60,7 @@ function preload() {
     game.load.spritesheet('leftarrow', 'assets/ui/leftarrowbutton.png', buttonWidth, buttonHeight);
     game.load.spritesheet('rightarrow', 'assets/ui/rightarrowbutton.png', buttonWidth, buttonHeight);
     game.load.spritesheet('uparrow', 'assets/ui/uparrowbutton.png', buttonWidth, buttonHeight);
+    game.load.spritesheet('playbutton', 'assets/ui/playbutton.png', 384, 100);
     game.load.image('scoreline', 'assets/ui/scoreline2.png');
     game.load.image('backdrop', 'assets/ui/brickbackdrop.png');
     game.load.image('loadingscreen', 'assets/ui/loadingscreen2.png');
