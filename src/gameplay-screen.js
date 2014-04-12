@@ -18,14 +18,16 @@ function GameplayScreen(skipIntro) {
         this.transitioning = true;
 
         screenToDestroy = this;
-        tweener = game.add.sprite(-800, 0, 'backdrop');
+        tweener = game.add.sprite(-800, topBounds, 'backdrop');
         var tween = game.add.tween(tweener).to({x: 800}, 1250, menuEasing, true);
 
         tween.onUpdateCallback(this.tweenUpdate);
-        tween.onComplete.add(endGameOverTween);
+        tween.onComplete.add(endGameOverTween, null);
     };
     
     this.tweenUpdate = function () {
+        console.log('Updating tween');
+
         if (tweener.x > 0 && !tweener.halfway) {
             //more than halfway
             tweener.halfway = true;
@@ -36,7 +38,7 @@ function GameplayScreen(skipIntro) {
                 screenToDestroy.gameOverText.destroy();
             }
 
-            if (tutorial) {
+            if (tutorial()) {
                 setState(new GameplayScreen(screenToDestroy.skipIntro));
             } else {
                 setState(new HighScoreScreen(screenToDestroy.newRecord));
@@ -55,7 +57,8 @@ function GameplayScreen(skipIntro) {
         if (this.world.gameOver()) {           
             if (!this.gameOverText) {
                 var text = (tutorial ? 'TRY AGAIN' : 'GAME OVER');
-                this.gameOverText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.3, text, mediumTextFont, '#FF0000');
+                this.gameOverText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.3, text, mediumTextFont, skyTextColor);
+                this.gameOverText.fixedToCamera = true;
                 this.skipIntro = this.world.elapsedTime > tutorialBrickFallDelay;
                 
                 //also check for a high score

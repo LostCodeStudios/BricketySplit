@@ -10,7 +10,16 @@ var mobile = false;
 var topBounds = 0;
 var bottomBounds = windowHeight;
 
-var tutorial;
+function tutorial () {
+    if (localStorage.getItem('tutorialEnabled') === null) {
+        //enable the tutorial for first timers
+        localStorage.setItem('tutorialEnabled', 'true');
+    }
+
+    var tutorial = localStorage.getItem('tutorialEnabled');
+
+    return tutorial === 'true';
+};
 
 var started = false;
 
@@ -60,10 +69,22 @@ function preload() {
     game.load.spritesheet('leftarrow', 'assets/ui/leftarrowbutton.png', buttonWidth, buttonHeight);
     game.load.spritesheet('rightarrow', 'assets/ui/rightarrowbutton.png', buttonWidth, buttonHeight);
     game.load.spritesheet('uparrow', 'assets/ui/uparrowbutton.png', buttonWidth, buttonHeight);
-    game.load.spritesheet('playbutton', 'assets/ui/playbutton.png', 384, 100);
+    game.load.spritesheet('downarrow', 'assets/ui/downarrowbutton.png', buttonWidth, buttonHeight);
+    game.load.spritesheet('plusbutton', 'assets/ui/plusbutton.png', 51, 48);
+    game.load.spritesheet('minusbutton', 'assets/ui/minusbutton.png', 51, 48);
     game.load.image('scoreline', 'assets/ui/scoreline2.png');
     game.load.image('backdrop', 'assets/ui/brickbackdrop.png');
     game.load.image('loadingscreen', 'assets/ui/loadingscreen2.png');
+    game.load.image('credits', 'assets/ui/credits.png');
+    game.load.spritesheet('menubutton', 'assets/ui/menubutton.png', 160, 64);
+    game.load.spritesheet('emptycheckbox', 'assets/ui/emptycheckbox.png', 51, 48);
+    game.load.spritesheet('filledcheckbox', 'assets/ui/filledcheckbox.png', 51, 48);
+
+    //main menu buttons
+    game.load.spritesheet('playbutton', 'assets/ui/playbutton3.png', 384, 100);
+    game.load.spritesheet('scorebutton', 'assets/ui/scorebutton2.png', 384, 100);
+    game.load.spritesheet('optionsbutton', 'assets/ui/optionsbutton.png', 384, 100);
+    game.load.spritesheet('creditsbutton', 'assets/ui/creditsbutton.png', 68, 64);
 
     //load sounds
     game.load.audio('jump', 'assets/sounds/Jump56.wav', true);
@@ -78,12 +99,12 @@ function preload() {
         
         localStorage.setItem('Scores', JSON.stringify(scores));
     }
-    
-    tutorial = !localStorage.getItem('TutorialComplete');
-    
-    if (resetScores) tutorial = true;
-    
-    if (skipTutorial) tutorial = false;
+
+    loadSoundVolume();
+
+    if (resetSound) {
+        setSoundVolume(1);
+    }
 }
 
 function updateWorldBounds () {
@@ -97,6 +118,12 @@ function pushWorldBoundsUp (amount) {
 }
 
 function resetWorldBounds () {
+    console.log('resetting bounds');
+
+    if (!(typeof tweener === 'undefined')) {
+        tweener.y = 0;
+    }
+
     topBounds = 0;
     bottomBounds = windowHeight;
     updateWorldBounds();
@@ -188,7 +215,7 @@ function setState(newState) {
         state.hide(newState);
     }
     
-    resetWorldBounds();
+    if (oldState) resetWorldBounds();
 
     newState.show(state);
     state = newState;

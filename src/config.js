@@ -1,18 +1,19 @@
 //debug flags
 
-    var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
+    var resetScores = false; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
     var alwaysMobile = false;   //                      TODO do not leave this enabled
     var debugPhysics = false;
-    var skipTutorial = true;
+    var resetSound = false;
 
 //end debug flags
 
-var soundVolume = 0.1;
 var backgroundColor = '#38ACEC';
 
 var titleColor = '#FFFFFF';
 
 var menuEasing = Phaser.Easing.Linear.None;
+
+var skyTextColor = '#480000';
 
 //fonts
 

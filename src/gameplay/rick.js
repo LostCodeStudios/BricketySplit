@@ -55,7 +55,7 @@ function Rick(world) {
         this.moveRightButton.fixedToCamera = true;
         this.jumpButton.fixedToCamera = true;
         
-        console.log('Made the buttons');
+        //console.log('Made the buttons');
     } else {
         this.moveLeftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
         this.moveRightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
@@ -88,7 +88,7 @@ function Rick(world) {
             this.moveRightButton.destroy();
             this.jumpButton.destroy();
             
-            console.log('destroying the buttons');
+            //console.log('destroying the buttons');
         }
     };
     

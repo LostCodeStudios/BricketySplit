@@ -46,12 +46,14 @@ function World(skipIntro) {
     }
     
     this.destroy = function () {
+        console.log('Destroying the woooooooooorlld!');
+
         if (this.ground) {
             this.ground.body = null;
             this.ground.destroy();
         }
 
-        this.waterLeft.destroy();
+        this.waterLeft.destroy(); 
         this.waterRight.destroy();
 
         destroyClouds(this);
@@ -90,7 +92,7 @@ function World(skipIntro) {
     this.update = function (delta) {
         this.elapsedTime += delta;
         
-        var brickDelay = (tutorial ? tutorialBrickFallDelay : brickFallDelay);
+        var brickDelay = (tutorial() ? tutorialBrickFallDelay : brickFallDelay);
         
         if (this.elapsedTime >= brickDelay) {
             this.difficulty += delta / fullDifficultyTime;
@@ -122,6 +124,7 @@ function World(skipIntro) {
         
         for (var i = 0; i < this.enemies.length && !this.rick.dead; i++) {
             var enemy = this.enemies.getAt(i);
+            enemy.enemy.update();
             game.physics.arcade.overlap(this.rick.sprite, enemy, this.enemyRickCollision, null, this);
         }
         
@@ -256,19 +259,30 @@ function World(skipIntro) {
         
         for (var i = this.enemies.length - 1; i >= 0; i--) {
             if (this.outOfBounds(this.enemies.getAt(i))) {
+                var enemy = this.enemies.getAt(i);
+
                 this.enemies.remove(this.enemies.getAt(i));
+
+                enemy.body = null;
+                enemy.destroy();
+
                 console.log('REMOVED A FRIEND');
             }
         }
         
         for (var i = this.lasers.length - 1; i >= 0; i--) {
             if (this.outOfBounds(this.lasers.getAt(i))) {
+                var laser = this.lasers.getAt(i);
                 this.lasers.remove(this.lasers.getAt(i));
+
+                laser.body = null;
+                laser.destroy();
+
                 console.log('REMOVED A LASER');
             }
         }
         
-        if (tutorial) {
+        if (tutorial()) {
             this.updateTutorial();
         }
     };
@@ -524,8 +538,7 @@ function World(skipIntro) {
         }
         
         if (phase == lastPhase) {
-            tutorial = false;
-            localStorage.setItem('TutorialComplete', 'You did it');
+            localStorage.setItem('tutorialEnabled', 'false');
         }
     };
     

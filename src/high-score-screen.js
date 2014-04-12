@@ -6,25 +6,22 @@ function HighScoreScreen(newRecord) {
     
     this.wallSprites = new Array();
     
+    var menuButtonX = 600;
+    var menuButtonY = 40;
+
     this.show = function (oldState) {
         var text = "Rick's Best Walls";
         if (this.newRecord !== -1) {
             text = 'New record!';
         }
-        this.titleText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.1, text, mediumTextFont, '#FF0000');
+        this.titleText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.1, text, '48px Bangers', skyTextColor);
         this.brickFallSound = game.add.audio('brickfall');
         
         var scores = JSON.parse(localStorage.getItem('Scores'));
         
         this.scores = scores;
-        
-        this.helpText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.2, 'Press SPACE for menu', smallTextFont, '#FF0000');
-        
-        game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
-        this.playKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        this.playKey.onDown.add(playKeyPressed, this);
-        
-        game.input.onDown.add(playKeyPressed, this);
+
+        this.menuButton = game.add.button(menuButtonX, menuButtonY, 'menubutton', playKeyPressed, this, 1, 0, 2);
         
         //make the physical stuff
         this.ground = makeGround();
@@ -47,20 +44,19 @@ function HighScoreScreen(newRecord) {
     }
 
     this.hide = function (newState) {
-        game.input.onDown.remove(playKeyPressed, this);
-        game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
-        game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
+        this.menuButton.inputEnabled = false;
     };
     
     this.destroy = function() {
         this.scoreText.destroy();
-        this.helpText.destroy();
         this.titleText.destroy();
 
         this.ground.body = null;
         this.ground.destroy();
         this.waterLeft.destroy();
         this.waterRight.destroy();
+
+        this.menuButton.destroy();
 
         for (var i = 0; i < this.wallSprites.length; i++) {
             this.wallSprites[i].body = null;
@@ -143,7 +139,7 @@ function HighScoreScreen(newRecord) {
     this.makeMiniWall = function (x, lane, height, newRecord) {
         x = x - 61 / 2; //place them by center
 
-        console.log('Making x: ' + x);
+        //console.log('Making x: ' + x);
 
         var y = topBounds - 1;
         var sprite = game.add.sprite(x, y, 'rowdivider');
@@ -198,9 +194,10 @@ function HighScoreScreen(newRecord) {
         }
     }
     
+    function playKeyPressed() {
+        setState(new MainMenu());
+    };
 }
 
-function playKeyPressed() {
-    setState(new MainMenu());
-}
+
 
