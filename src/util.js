@@ -29,6 +29,28 @@ function loadSoundVolume() {
 	soundVolume = parseFloat(localStorage.getItem('volume'));
 }
 
+var particles = true;
+
+function loadParticleSettings() {
+	if (localStorage.getItem('particles') === null) {
+		var enabled = (mobile ? 'false' : 'true');
+
+		localStorage.setItem('particles', enabled);
+	}
+
+	particles = localStorage.getItem('particles') === 'true';
+}
+
+function enableParticles() {
+	localStorage.setItem('particles', 'true');
+	particles = true;
+}
+
+function disableParticles() {
+	localStorage.setItem('particles', 'false');
+	particles = false;
+}
+
 function setSoundVolume(volume) {
 	localStorage.setItem('volume', '' + volume);
 

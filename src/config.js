@@ -1,13 +1,14 @@
 //debug flags
 
-    var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
+    var resetScores = false; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
     var alwaysMobile = false;   //                      TODO do not leave this enabled
     var debugPhysics = false;
     var resetSound = false;
+    var debugState = false;
 
 //end debug flags
 
-var backgroundColor = '#38ACEC';
+var backgroundColor = '#000000';
 
 var titleColor = '#FFFFFF';
 
@@ -76,8 +77,8 @@ var arrowDownHeight = 48;
 
 var laserSpeed = 800;
 
-var buttonWidth = 52;
-var buttonHeight = 48;
+var buttonWidth = 104;
+var buttonHeight = 96;
 
 var touchButtonY = windowHeight - buttonHeight - 4;
 

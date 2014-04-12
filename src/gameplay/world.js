@@ -9,6 +9,14 @@ function World(skipIntro) {
     this.clouds = makeClouds();
 
     this.rick = new Rick(this);
+
+    if (skipIntro) {
+        //make the buttons
+        this.rick.createMoveButtons();
+        this.rick.createJumpButton();
+    }
+
+
     this.bricks = game.add.group();
     this.enemies = new Array();
     
@@ -99,7 +107,7 @@ function World(skipIntro) {
             this.difficulty += delta / fullDifficultyTime;
             this.difficulty = Math.min(this.difficulty, 1);     //update difficulty after bricks start falling
         }
-        
+
         if (this.elapsedTime >= brickDelay && this.canBrickFall && !this.rick.dead) {
             var lane = this.wall.nextLane();
             
@@ -349,49 +357,53 @@ function World(skipIntro) {
         playSound(brick.fallSound);
         
         //throw up some particles
-        var leftEmitter = game.add.emitter(brick.x, brick.y + brick.height, 100);
-        var rightEmitter = game.add.emitter(brick.x + brick.width, brick.y + brick.height, 100);
 
-        var minSpeedX = 20;
-        var maxSpeedX = 150;
+        if (particles) { //not on mobile devices - too expensive
 
-        var minSpeedY = 20;
-        var maxSpeedY = 100; 
+            var leftEmitter = game.add.emitter(brick.x, brick.y + brick.height, 100);
+            var rightEmitter = game.add.emitter(brick.x + brick.width, brick.y + brick.height, 100);
 
-        leftEmitter.minParticleSpeed.x = -maxSpeedX;
-        leftEmitter.maxParticleSpeed.x = -minSpeedX;
-        leftEmitter.minParticleSpeed.y = -maxSpeedY;
-        leftEmitter.maxParticleSpeed.y = -minSpeedY;
+            var minSpeedX = 20;
+            var maxSpeedX = 150;
 
-        rightEmitter.minParticleSpeed.x = minSpeedX;
-        rightEmitter.maxParticleSpeed.x = maxSpeedX;
-        rightEmitter.minParticleSpeed.y = -maxSpeedY;
-        rightEmitter.maxParticleSpeed.y = -minSpeedY;
+            var minSpeedY = 20;
+            var maxSpeedY = 100; 
 
-        leftEmitter.gravity = gravity / 6;
-        rightEmitter.gravity = gravity / 6;
+            leftEmitter.minParticleSpeed.x = -maxSpeedX;
+            leftEmitter.maxParticleSpeed.x = -minSpeedX;
+            leftEmitter.minParticleSpeed.y = -maxSpeedY;
+            leftEmitter.maxParticleSpeed.y = -minSpeedY;
 
-        var particleKey;
+            rightEmitter.minParticleSpeed.x = minSpeedX;
+            rightEmitter.maxParticleSpeed.x = maxSpeedX;
+            rightEmitter.minParticleSpeed.y = -maxSpeedY;
+            rightEmitter.maxParticleSpeed.y = -minSpeedY;
 
-        if (other.isGround) {
-            //dirt particles
-        
-            particleKey = 'dirtparticle';
-        } else {
-            //brick particles
+            leftEmitter.gravity = gravity / 6;
+            rightEmitter.gravity = gravity / 6;
 
-            particleKey = 'brickparticle';
+            var particleKey;
+
+            if (other.isGround) {
+                //dirt particles
+            
+                particleKey = 'dirtparticle';
+            } else {
+                //brick particles
+
+                particleKey = 'brickparticle';
+            }
+
+            leftEmitter.makeParticles(particleKey);
+            rightEmitter.makeParticles(particleKey);
+
+            //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+            //  The second gives each particle a 500ms lifespan
+            //  The third is ignored when using burst/explode mode
+            //  The final parameter (10) is how many particles will be emitted in this single burst
+            leftEmitter.start(true, 500, null, 4);
+            rightEmitter.start(true, 500, null, 4);
         }
-
-        leftEmitter.makeParticles(particleKey);
-        rightEmitter.makeParticles(particleKey);
-
-        //  The first parameter sets the effect to "explode" which means all particles are emitted at once
-        //  The second gives each particle a 500ms lifespan
-        //  The third is ignored when using burst/explode mode
-        //  The final parameter (10) is how many particles will be emitted in this single burst
-        leftEmitter.start(true, 500, null, 4);
-        rightEmitter.start(true, 500, null, 4);
 
         //merge bodies with the adjacent brick
         var lane = brick.brick.lane;
@@ -462,14 +474,14 @@ function World(skipIntro) {
         }
         
         if (!this.rick.dead) { //these phases rely on the player being alive...
-            if (this.currentPhase == jumpPhase) {
+            if (this.currentPhase == jumpPhase && !mobile) {
                 this.button.x = this.rickCenterX();
                 this.button.y = this.rick.sprite.y - this.button.height - 5;
 
                 this.button.visible = this.rick.sprite.body.touching.down;
             }
 
-            if (this.currentPhase == runPhase) {
+            if (this.currentPhase == runPhase && !mobile) {
                 //move left/right arrowkey sprites, show pressed/not pressed
 
                 var arrowKeyPadding = 32;
@@ -512,15 +524,23 @@ function World(skipIntro) {
         }
         
         if (phase == jumpPhase) {
-            this.button = game.add.sprite(-500, windowHeight * 0.5, 'zbutton');
-            this.button.anchor.set(0.5, 0);
+            if (!mobile) {
+                this.button = game.add.sprite(-500, windowHeight * 0.5, 'zbutton');
+                this.button.anchor.set(0.5, 0);
+            } else {
+                this.rick.createJumpButton();
+            }
         }
         
         if (phase == runPhase) {
-            this.buttonLeft = game.add.sprite(-500, windowHeight * 0.5, 'leftarrowkey');
-            this.buttonRight = game.add.sprite(-500, 0, 'rightarrowkey');
-            this.buttonLeft.anchor.set(0, 0.25);
-            this.buttonRight.anchor.set(0, 0.25);
+            if (!mobile) {
+                this.buttonLeft = game.add.sprite(-500, windowHeight * 0.5, 'leftarrowkey');
+                this.buttonRight = game.add.sprite(-500, 0, 'rightarrowkey');
+                this.buttonLeft.anchor.set(0, 0.25);
+                this.buttonRight.anchor.set(0, 0.25);
+            } else {
+                this.rick.createMoveButtons();
+            }
         }
         
         if (phase != introPhase) {
@@ -538,11 +558,11 @@ function World(skipIntro) {
             this.arrow.destroy();
         }
         
-        if (phase == jumpPhase) {
+        if (phase == jumpPhase && !mobile) {
             this.button.destroy();
         }
         
-        if (phase == runPhase) {
+        if (phase == runPhase && !mobile) {
             this.buttonLeft.destroy();
             this.buttonRight.destroy();
         }

@@ -96,8 +96,6 @@ function HighScoreScreen(newRecord) {
                 sprite.body.moves = false;
                 
                 if (sprite.handleFallEvent) {
-                    //play a noise for falling on the ground!
-                    //maybe throw up some dust particles!
                     
                     //show height number
                     var heightText = '' + sprite.wallHeight + 'm';
@@ -113,13 +111,12 @@ function HighScoreScreen(newRecord) {
 
                     var scoreTextX = sprite.body.x;
                     var scoreTextY = windowHeight - (brickHeight + 1 + sprite.wallHeight * 3) - 24 * 2;
-                    console.log('score text x: ' + scoreTextX);
-                    console.log('Score text y: ' + scoreTextY);
+                    // console.log('score text x: ' + scoreTextX);
+                    // console.log('Score text y: ' + scoreTextY);
 
                     var scoreText = game.add.text(scoreTextX, scoreTextY, heightText, {font: smallTextFont, fill:'#000000'});
                     //MakeLabel(scoreTextX, scoreTextY, heightText, smallTextFont, '#000000', false);
                     this.scoreText.add(scoreText);
-                            console.log('game input y: ' + topBounds + game.input.y);
                     
                     this.nextMiniWall = sprite.lane - 1;
                     
@@ -127,37 +124,40 @@ function HighScoreScreen(newRecord) {
                     sprite.handleFallEvent = false; //don't do this repeatedly, please
 
                     //throw up some particles
-                    var leftEmitter = game.add.emitter(sprite.x, sprite.startY + this.fallDist, 100);
-                    var rightEmitter = game.add.emitter(sprite.x + sprite.width, sprite.startY + this.fallDist, 100);
 
-                    var minSpeedX = 20;
-                    var maxSpeedX = 150;
+                    if (particles) {
+                        var leftEmitter = game.add.emitter(sprite.x, sprite.startY + this.fallDist, 100);
+                        var rightEmitter = game.add.emitter(sprite.x + sprite.width, sprite.startY + this.fallDist, 100);
 
-                    var minSpeedY = 20;
-                    var maxSpeedY = 100;
+                        var minSpeedX = 20;
+                        var maxSpeedX = 150;
 
-                    leftEmitter.minParticleSpeed.x = -maxSpeedX;
-                    leftEmitter.maxParticleSpeed.x = -minSpeedX;
-                    leftEmitter.minParticleSpeed.y = -minSpeedY;
-                    leftEmitter.maxParticleSpeed.y = -maxSpeedY;
+                        var minSpeedY = 20;
+                        var maxSpeedY = 100;
 
-                    rightEmitter.minParticleSpeed.x = minSpeedX;
-                    rightEmitter.maxParticleSpeed.x = maxSpeedX;
-                    rightEmitter.minParticleSpeed.y = -minSpeedY;
-                    rightEmitter.maxParticleSpeed.y = -maxSpeedY;
+                        leftEmitter.minParticleSpeed.x = -maxSpeedX;
+                        leftEmitter.maxParticleSpeed.x = -minSpeedX;
+                        leftEmitter.minParticleSpeed.y = -minSpeedY;
+                        leftEmitter.maxParticleSpeed.y = -maxSpeedY;
 
-                    leftEmitter.gravity = gravity / 6;
-                    rightEmitter.gravity = gravity / 6;
+                        rightEmitter.minParticleSpeed.x = minSpeedX;
+                        rightEmitter.maxParticleSpeed.x = maxSpeedX;
+                        rightEmitter.minParticleSpeed.y = -minSpeedY;
+                        rightEmitter.maxParticleSpeed.y = -maxSpeedY;
 
-                    leftEmitter.makeParticles('dirtparticle');
-                    rightEmitter.makeParticles('dirtparticle');
+                        leftEmitter.gravity = gravity / 6;
+                        rightEmitter.gravity = gravity / 6;
 
-                    //  The first parameter sets the effect to "explode" which means all particles are emitted at once
-                    //  The second gives each particle a 500ms lifespan
-                    //  The third is ignored when using burst/explode mode
-                    //  The final parameter (10) is how many particles will be emitted in this single burst
-                    leftEmitter.start(true, 500, null, 4);
-                    rightEmitter.start(true, 500, null, 4);
+                        leftEmitter.makeParticles('dirtparticle');
+                        rightEmitter.makeParticles('dirtparticle');
+
+                        //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+                        //  The second gives each particle a 500ms lifespan
+                        //  The third is ignored when using burst/explode mode
+                        //  The final parameter (10) is how many particles will be emitted in this single burst
+                        leftEmitter.start(true, 500, null, 4);
+                        rightEmitter.start(true, 500, null, 4);
+                    }
                 }
             }
         }
@@ -191,12 +191,11 @@ function HighScoreScreen(newRecord) {
         this.wallSprites[this.wallSprites.length] = sprite;
 
         for (var i = 0; i < height; i++) {
+            sprite = game.add.sprite(x, y, 'smallrows');
             if (i % 2 == 0) {
-                sprite = game.add.sprite(x, y, 'normalrow');
-                sprite.frame = Math.floor(Math.random() * 5);
+                sprite.frame = 0;
             } else {
-                sprite = game.add.sprite(x, y, 'offsetrow');
-                sprite.frame = Math.floor(Math.random() * 5);
+                sprite.frame = 1;
             }
             game.physics.arcade.enable(sprite);
             this.wallSprites[this.wallSprites.length] = sprite;

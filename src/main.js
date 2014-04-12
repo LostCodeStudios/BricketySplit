@@ -25,6 +25,7 @@ var started = false;
 
 function preload() {
     //load world sprites
+    game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/sprites/ground.png');
     game.load.spritesheet('water', 'assets/sprites/water.png', 112, 24);
     game.load.spritesheet('clouds', 'assets/sprites/clouds.png', 800, 150);
@@ -34,9 +35,9 @@ function preload() {
     game.load.image('halfbrick', 'assets/sprites/halfbrick3.png');
 
     //load enemy sprites
-    game.load.spritesheet('enemy', 'assets/sprites/enemy2.png', 36, 32);
-    game.load.spritesheet('enemyblue', 'assets/sprites/enemyblue2.png', 36, 32);
-    game.load.spritesheet('enemyorange', 'assets/sprites/enemyorange2.png', 36, 32);
+    game.load.spritesheet('enemy', 'assets/sprites/enemy3.png', 36, 32);
+    game.load.spritesheet('enemyblue', 'assets/sprites/enemyblue3.png', 36, 32);
+    game.load.spritesheet('enemyorange', 'assets/sprites/enemyorange3.png', 36, 32);
 
     game.load.image('ufo', 'assets/sprites/ufo2.png');
     game.load.image('laser', 'assets/sprites/laser.png');
@@ -53,8 +54,7 @@ function preload() {
 
     //load high score screen assets
     game.load.image('rowdivider', 'assets/sprites/rowdivider4.png');
-    game.load.spritesheet('normalrow', 'assets/sprites/normalrow4.png', 61, 2);
-    game.load.spritesheet('offsetrow', 'assets/sprites/offsetrow4.png', 61, 2);
+    game.load.spritesheet('smallrows', 'assets/sprites/smallrows.png', 61, 2);
 
     //load tutorial assets
     game.load.image('arrowdown', 'assets/tutorial/arrowdown2.png');
@@ -66,10 +66,9 @@ function preload() {
     game.load.spritesheet('rightarrowkey', 'assets/tutorial/rightarrow2.png', arrowKeyWidth, arrowKeyHeight);
 
     //load UI elements
-    game.load.spritesheet('leftarrow', 'assets/ui/leftarrowbutton.png', buttonWidth, buttonHeight);
-    game.load.spritesheet('rightarrow', 'assets/ui/rightarrowbutton.png', buttonWidth, buttonHeight);
-    game.load.spritesheet('uparrow', 'assets/ui/uparrowbutton.png', buttonWidth, buttonHeight);
-    game.load.spritesheet('downarrow', 'assets/ui/downarrowbutton.png', buttonWidth, buttonHeight);
+    game.load.spritesheet('leftarrow', 'assets/ui/leftarrowbutton2.png', buttonWidth, buttonHeight);
+    game.load.spritesheet('rightarrow', 'assets/ui/rightarrowbutton2.png', buttonWidth, buttonHeight);
+    game.load.spritesheet('uparrow', 'assets/ui/uparrowbutton2.png', buttonWidth, buttonHeight);
     game.load.spritesheet('plusbutton', 'assets/ui/plusbutton.png', 51, 48);
     game.load.spritesheet('minusbutton', 'assets/ui/minusbutton.png', 51, 48);
     game.load.image('scoreline', 'assets/ui/scoreline2.png');
@@ -77,8 +76,8 @@ function preload() {
     game.load.image('loadingscreen', 'assets/ui/loadingscreen2.png');
     game.load.image('credits', 'assets/ui/credits.png');
     game.load.spritesheet('menubutton', 'assets/ui/menubutton.png', 160, 64);
-    game.load.spritesheet('emptycheckbox', 'assets/ui/emptycheckbox.png', 51, 48);
-    game.load.spritesheet('filledcheckbox', 'assets/ui/filledcheckbox.png', 51, 48);
+    game.load.spritesheet('emptycheckbox', 'assets/ui/emptycheckbox2.png', 51, 48);
+    game.load.spritesheet('filledcheckbox', 'assets/ui/filledcheckbox2.png', 51, 48);
 
     //main menu buttons
     game.load.spritesheet('playbutton', 'assets/ui/playbutton3.png', 384, 100);
@@ -105,6 +104,8 @@ function preload() {
     if (resetSound) {
         setSoundVolume(1);
     }
+
+    loadParticleSettings();
 }
 
 function updateWorldBounds () {
@@ -143,6 +144,9 @@ function onInputUp() {
 }
 
 function start() {
+    var sky = game.add.sprite(0, 0, 'sky');
+    sky.fixedToCamera = true;
+
     loadingScreen.destroy();
 
     started = true;
@@ -181,6 +185,10 @@ function start() {
     
 //    console.log('Wall x: ' + wallLeftX);
     setState(new MainMenu());
+
+    if (mobile) {
+        debugText = game.add.text(0, 0, '');
+    }
 }
 
 var updateState = true;
@@ -192,6 +200,10 @@ function update() {
     var delta = currentTime - lastTime;
     
     state.update(delta);
+
+    if (started && mobile && debugState) {
+        debugText.text = 'Updating state: ' + state;
+    }
     
     lastTime = currentTime;
     

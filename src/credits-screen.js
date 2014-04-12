@@ -67,40 +67,43 @@ function CreditsScreen() {
 		credits.body.gravity.y = 0;
 		this.fallen = true;
 
-		//throw up some particles
-		var leftEmitter = game.add.emitter(wallLeftX, windowHeight - groundHeight, 100);
-        var rightEmitter = game.add.emitter(wallRightX, windowHeight - groundHeight, 100);
+		if (particles) {
 
-        var minSpeedX = 20;
-        var maxSpeedX = 150;
+			//throw up some particles
+			var leftEmitter = game.add.emitter(wallLeftX, windowHeight - groundHeight, 100);
+	        var rightEmitter = game.add.emitter(wallRightX, windowHeight - groundHeight, 100);
 
-        var minSpeedY = 20;
-        var maxSpeedY = 100; 
+	        var minSpeedX = 20;
+	        var maxSpeedX = 150;
 
-        leftEmitter.minParticleSpeed.x = -maxSpeedX;
-        leftEmitter.maxParticleSpeed.x = -minSpeedX;
-        leftEmitter.minParticleSpeed.y = -maxSpeedY;
-        leftEmitter.maxParticleSpeed.y = -minSpeedY;
+	        var minSpeedY = 20;
+	        var maxSpeedY = 100; 
 
-        rightEmitter.minParticleSpeed.x = minSpeedX;
-        rightEmitter.maxParticleSpeed.x = maxSpeedX;
-        rightEmitter.minParticleSpeed.y = -maxSpeedY;
-        rightEmitter.maxParticleSpeed.y = -minSpeedY;
+	        leftEmitter.minParticleSpeed.x = -maxSpeedX;
+	        leftEmitter.maxParticleSpeed.x = -minSpeedX;
+	        leftEmitter.minParticleSpeed.y = -maxSpeedY;
+	        leftEmitter.maxParticleSpeed.y = -minSpeedY;
 
-        leftEmitter.gravity = gravity / 6;
-        rightEmitter.gravity = gravity / 6;
+	        rightEmitter.minParticleSpeed.x = minSpeedX;
+	        rightEmitter.maxParticleSpeed.x = maxSpeedX;
+	        rightEmitter.minParticleSpeed.y = -maxSpeedY;
+	        rightEmitter.maxParticleSpeed.y = -minSpeedY;
 
-        var particleKey = 'dirtparticle';
+	        leftEmitter.gravity = gravity / 6;
+	        rightEmitter.gravity = gravity / 6;
 
-        leftEmitter.makeParticles(particleKey);
-        rightEmitter.makeParticles(particleKey);
+	        var particleKey = 'dirtparticle';
 
-        //  The first parameter sets the effect to "explode" which means all particles are emitted at once
-        //  The second gives each particle a 500ms lifespan
-        //  The third is ignored when using burst/explode mode
-        //  The final parameter (10) is how many particles will be emitted in this single burst
-        leftEmitter.start(true, 1000, null, 25);
-        rightEmitter.start(true, 1000, null, 25);
+	        leftEmitter.makeParticles(particleKey);
+	        rightEmitter.makeParticles(particleKey);
+
+	        //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+	        //  The second gives each particle a 500ms lifespan
+	        //  The third is ignored when using burst/explode mode
+	        //  The final parameter (10) is how many particles will be emitted in this single burst
+	        leftEmitter.start(true, 1000, null, 25);
+	        rightEmitter.start(true, 1000, null, 25);
+	    }
 
         // and play a sound
         playSound(this.brickSound);

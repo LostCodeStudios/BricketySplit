@@ -36,26 +36,45 @@ function Rick(world) {
     this.cursors = game.input.keyboard.createCursorKeys();
     
     var sideFraction = 1 / 4;
-    
+
     if (mobile) {
         //add touch buttons
-        this.moveLeftButton = game.add.button(moveLeftButtonX, touchButtonY, 'leftarrow', null, null, 0, 0, 1);
-        this.moveRightButton = game.add.button(moveRightButtonX, touchButtonY, 'rightarrow', null, null, 0, 0, 1);
-        this.jumpButton = game.add.button(jumpButtonX, touchButtonY, 'uparrow', null, null, 0, 0, 1);
-    
-        this.moveLeftButton.onInputDown.add(moveLeftCallback, this);
-        this.moveRightButton.onInputDown.add(moveRightCallback, this);
-        this.jumpButton.onInputDown.add(jumpCallback, this);
-    
-        this.moveLeftButton.onInputUp.add(stopLeftCallback, this);
-        this.moveRightButton.onInputUp.add(stopRightCallback, this);
-        this.jumpButton.onInputUp.add(stopJumpCallback, this);
-    
-        this.moveLeftButton.fixedToCamera = true;
-        this.moveRightButton.fixedToCamera = true;
-        this.jumpButton.fixedToCamera = true;
+
+        this.createMoveButtons = function () {
+            this.moveLeftButton = game.add.button(moveLeftButtonX, touchButtonY, 'leftarrow', null, null, 0, 0, 1);
+            this.moveRightButton = game.add.button(moveRightButtonX, touchButtonY, 'rightarrow', null, null, 0, 0, 1);
+            
+            this.moveLeftButton.onInputDown.add(moveLeftCallback, this);
+            this.moveRightButton.onInputDown.add(moveRightCallback, this);
+            
         
-        //console.log('Made the buttons');
+            this.moveLeftButton.onInputUp.add(stopLeftCallback, this);
+            this.moveRightButton.onInputUp.add(stopRightCallback, this);
+            
+        
+            this.moveLeftButton.fixedToCamera = true;
+            this.moveRightButton.fixedToCamera = true;
+            
+            this.moveButtonsCreated = true;
+
+        
+            //console.log('Made the buttons');
+        };
+
+        this.createJumpButton = function () {
+            this.jumpButton = game.add.button(jumpButtonX, touchButtonY, 'uparrow', null, null, 0, 0, 1);
+            this.jumpButton.onInputDown.add(jumpCallback, this);
+            this.jumpButton.onInputUp.add(stopJumpCallback, this);
+            this.jumpButton.fixedToCamera = true;
+
+            this.jumpButtonCreated = true;
+        };
+
+        if (!tutorial()) {
+            this.createMoveButtons();
+            this.createJumpButton();
+        }
+
     } else {
         this.moveLeftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
         this.moveRightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
@@ -83,10 +102,16 @@ function Rick(world) {
         this.sprite.destroy();
         
         if (mobile) {
-            //destroy buttons            
-            this.moveLeftButton.destroy();
-            this.moveRightButton.destroy();
-            this.jumpButton.destroy();
+            //destroy buttons
+
+            if (this.moveButtonsCreated) {      
+                this.moveLeftButton.destroy();
+                this.moveRightButton.destroy();
+            }
+
+            if (this.jumpButtonCreated) {
+                this.jumpButton.destroy();
+            }
             
             //console.log('destroying the buttons');
         }
@@ -94,29 +119,33 @@ function Rick(world) {
     
     this.die = function (deathType) {
         if (deathType == RICK_DEATH_SQUASH || deathType == RICK_DEATH_HIT) {
-            var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, this.sprite.y + this.sprite.height, 100);
-            emitter.gravity = gravity / 6;
 
-            var maxSpeedX = 125;
-            
-            var minSpeedY = 20;
-            var maxSpeedY = 180;
+            if (particles) {
 
-            emitter.minParticleSpeed.x = -maxSpeedX;
-            emitter.maxParticleSpeed.x = maxSpeedX;
+                var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, this.sprite.y + this.sprite.height, 100);
+                emitter.gravity = gravity / 6;
 
-            emitter.minParticleSpeed.y = -maxSpeedY;
-            emitter.maxParticleSpeed.y = -minSpeedY;
+                var maxSpeedX = 125;
+                
+                var minSpeedY = 20;
+                var maxSpeedY = 180;
 
-            emitter.makeParticles('smallparticle');
-            //  The first parameter sets the effect to "explode" which means all particles are emitted at once
-            //  The second gives each particle a 2000ms lifespan
-            //  The third is ignored when using burst/explode mode
-            //  The final parameter (10) is how many particles will be emitted in this single burst
-            emitter.start(true, 1000, null, 30);
-            
-            emitter.makeParticles('bigparticle');
-            emitter.start(true, 1000, null, 15);
+                emitter.minParticleSpeed.x = -maxSpeedX;
+                emitter.maxParticleSpeed.x = maxSpeedX;
+
+                emitter.minParticleSpeed.y = -maxSpeedY;
+                emitter.maxParticleSpeed.y = -minSpeedY;
+
+                emitter.makeParticles('smallparticle');
+                //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+                //  The second gives each particle a 2000ms lifespan
+                //  The third is ignored when using burst/explode mode
+                //  The final parameter (10) is how many particles will be emitted in this single burst
+                emitter.start(true, 1000, null, 30);
+                
+                emitter.makeParticles('bigparticle');
+                emitter.start(true, 1000, null, 15);
+            }
 
             
             if (deathType == RICK_DEATH_SQUASH) {
@@ -126,25 +155,27 @@ function Rick(world) {
             }
         } else {
             //handle a splash death
-            var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, bottomBounds, 100);
-            emitter.gravity = gravity / 3;
-            var maxSpeedX = 100;
-            
-            var minSpeedY = 70;
-            var maxSpeedY = 300;
+            if (particles) {
+                var emitter = game.add.emitter(this.sprite.x + this.sprite.width / 2, bottomBounds, 100);
+                emitter.gravity = gravity / 3;
+                var maxSpeedX = 100;
+                
+                var minSpeedY = 70;
+                var maxSpeedY = 300;
 
-            emitter.minParticleSpeed.x = -maxSpeedX;
-            emitter.maxParticleSpeed.x = maxSpeedX;
+                emitter.minParticleSpeed.x = -maxSpeedX;
+                emitter.maxParticleSpeed.x = maxSpeedX;
 
-            emitter.minParticleSpeed.y = -maxSpeedY;
-            emitter.maxParticleSpeed.y = -minSpeedY;
+                emitter.minParticleSpeed.y = -maxSpeedY;
+                emitter.maxParticleSpeed.y = -minSpeedY;
 
-            emitter.makeParticles('waterparticle');
-            //  The first parameter sets the effect to "explode" which means all particles are emitted at once
-            //  The second gives each particle a 2000ms lifespan
-            //  The third is ignored when using burst/explode mode
-            //  The final parameter (10) is how many particles will be emitted in this single burst
-            emitter.start(true, 1000, null, 30);
+                emitter.makeParticles('waterparticle');
+                //  The first parameter sets the effect to "explode" which means all particles are emitted at once
+                //  The second gives each particle a 2000ms lifespan
+                //  The third is ignored when using burst/explode mode
+                //  The final parameter (10) is how many particles will be emitted in this single burst
+                emitter.start(true, 1000, null, 30);
+            }
 
             playSound(this.splashSound);
         }
@@ -157,15 +188,15 @@ function Rick(world) {
     this.update = function () {
         
         if (this.dead) return;
-        
+
         if (this.sprite.body.touching.down && this.sprite.body.touching.up) {
             //crushed
             this.die(RICK_DEATH_SQUASH);
             return;
         }
         
-        this.jumping = false;
         if (!mobile) {
+            this.jumping = false;
             //jump logic - take input from multiple keys
             for (var i = 0; i < jumpKeys.length; i++) {
                 if (game.input.keyboard.isDown(jumpKeys[i])) {
@@ -176,9 +207,14 @@ function Rick(world) {
         }
 
         if (mobile) {
-            this.moveLeftButton.bringToTop();
-            this.moveRightButton.bringToTop();
-            this.jumpButton.bringToTop();
+            if (this.moveButtonsCreated) {
+                this.moveLeftButton.bringToTop();
+                this.moveRightButton.bringToTop();
+            }
+
+            if (this.jumpButtonCreated) {
+                this.jumpButton.bringToTop();
+            }
         }
         
         this.sprite.body.velocity.x = 0;
@@ -250,4 +286,12 @@ function stopLeftCallback () {
     this.movingRight = false;
      
     this.movingLeft = game.input.keyboard.isDown(Phaser.Keyboard.LEFT);
-};
+}
+
+function jumpCallback() {
+    this.jumping = true;
+}
+
+function stopJumpCallback() {
+    this.jumping = false;
+}

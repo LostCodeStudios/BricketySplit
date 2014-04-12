@@ -12,16 +12,27 @@ function OptionsScreen() {
 
     this.menuButton = game.add.button(menuButtonX, menuButtonY, 'menubutton', playKeyPressed, this, 1, 0, 2);
 
-    var tutorialTextX = windowWidth * 0.5;
+    var tutorialTextX = windowWidth * 0.6;
     var tutorialTextY = windowHeight * 0.3;
 
     this.tutorialText = MakeCenteredLabel(tutorialTextX, tutorialTextY, 'Tutorial: ', smallTextFont, skyTextColor);
 
-    var tutorialButtonX = windowWidth * 0.55;
+    var tutorialButtonX = windowWidth * 0.65;
     var tutorialButtonY = windowHeight * 0.28;
 
     this.checkBoxFilled = game.add.button(tutorialButtonX, tutorialButtonY, 'filledcheckbox', boxEmptied, this, 1, 0, 2);
     this.checkBoxEmpty = game.add.button(tutorialButtonX, tutorialButtonY, 'emptycheckbox', boxFilled, this, 1, 0, 2);
+
+    var particleTextX = windowWidth * 0.46;
+    var particleTextY = windowHeight * 0.45;
+
+    this.particleText = MakeCenteredLabel(particleTextX, particleTextY, 'Particle effects (may cause lag): ', smallTextFont, skyTextColor);
+
+    var particleButtonX = windowWidth * 0.65;
+    var particleButtonY = windowHeight * 0.43;
+
+    this.pCheckBoxFilled = game.add.button(particleButtonX, particleButtonY, 'filledcheckbox', pBoxEmptied, this, 1, 0, 2);
+    this.pCheckBoxEmpty = game.add.button(particleButtonX, particleButtonY, 'emptycheckbox', pBoxFilled, this, 1, 0, 2);
 
     if (tutorial()) {
     	this.checkBoxEmpty.kill();
@@ -29,9 +40,15 @@ function OptionsScreen() {
     	this.checkBoxFilled.kill();
     }
 
-    this.soundText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.5, 'Sound Volume', smallTextFont, skyTextColor);
+    if (particles) {
+    	this.pCheckBoxEmpty.kill();
+    } else {
+    	this.pCheckBoxFilled.kill();
+    }
 
-    var soundButtonX = windowWidth * 0.58;
+    this.soundText = MakeCenteredLabel(windowWidth * 0.65, windowHeight * 0.62, 'Sound Volume', smallTextFont, skyTextColor);
+
+    var soundButtonX = windowWidth * 0.62;
     var soundButtonUpY = windowHeight * 0.68;
     var soundButtonDownY = windowHeight * 0.81;
 
@@ -62,6 +79,8 @@ function OptionsScreen() {
 		this.menuButton.inputEnabled = false;
 		this.checkBoxEmpty.inputEnabled = false;
 		this.checkBoxFilled.inputEnabled = false;
+		this.pCheckBoxEmpty.inputEnabled = false;
+		this.pCheckBoxFilled.inputEnabled = false;
 	};
 
 	this.destroy = function () {
@@ -79,8 +98,12 @@ function OptionsScreen() {
 			this.volumeBricks[i].destroy();
 		}
 
+		this.particleText.destroy();
 		this.checkBoxFilled.destroy();
 		this.checkBoxEmpty.destroy();
+		this.pCheckBoxFilled.destroy();
+		this.pCheckBoxEmpty.destroy();
+
 		this.tutorialText.destroy();
 		this.clouds.destroy();
 
@@ -148,6 +171,24 @@ function OptionsScreen() {
     	localStorage.setItem('tutorialEnabled', 'false');
     	this.checkBoxFilled.kill();
     	this.checkBoxEmpty.revive();
+
+    	//console.log('disabled the tutorial');
+    };
+
+    function pBoxFilled() {
+    	this.pCheckBoxEmpty.kill();
+    	this.pCheckBoxFilled.revive();
+
+    	enableParticles();
+
+    	//console.log('Enabled the tutorial');
+    };
+
+    function pBoxEmptied() {
+    	this.pCheckBoxFilled.kill();
+    	this.pCheckBoxEmpty.revive();
+
+    	disableParticles();
 
     	//console.log('disabled the tutorial');
     };
