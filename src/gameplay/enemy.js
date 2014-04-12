@@ -13,12 +13,14 @@ function randEnemySource() {
 
 //difficulty from 0 to 1, ramps up enemy speed
 function Enemy(source, difficulty) {
-    var width = game.cache.getImage('enemy').width;
+    var width = game.cache.getImage('enemy').width / 2;
     var height = game.cache.getImage('enemy').height;
     
     var x, y;
     var velX, velY;
     
+    //console.log('Making enemy with source: ' + (source === ENEMY_LEFT ? 'left' : 'right'));
+
     switch (source) {
         case ENEMY_LEFT:
             x = -width;
@@ -29,17 +31,20 @@ function Enemy(source, difficulty) {
         case ENEMY_RIGHT:
             x = windowWidth;
             y = topBounds + randPos(enemySideMinY, enemySideMaxY);
-            velX = lerp(enemyMinSpeed, enemyMaxSpeed, difficulty) * -1;
+            velX = -lerp(enemyMinSpeed, enemyMaxSpeed, difficulty);
             velY = 0;
             break;
     }
     
-    this.update = function () {
-        console.log('updating enemy');
-        this.sprite.bringToTop();
-    };
+    // console.log('enemy x: ' + x);
+    // console.log('enemy y: ' + y);
+    // console.log('enemy velX: ' + velX);
+    // console.log('enemy velY: ' + velY);
 
     this.sprite = game.add.sprite(x, y, 'enemy');
+    this.sprite.animations.add('normal', [0, 1], 2, true);
+    this.sprite.animations.play('normal');
+
     this.sprite.smoothed = false;
     
     game.physics.arcade.enable(this.sprite);

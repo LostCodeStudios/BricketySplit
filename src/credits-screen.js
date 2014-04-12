@@ -3,6 +3,7 @@ function CreditsScreen() {
 	this.leftWater = makeWaterLeft();
 	this.rightWater = makeWaterRight();
 	this.brickSound = game.add.audio('brickfall');
+	this.clouds = makeClouds();
 
     var menuButtonX = 620;
     var menuButtonY = 30;
@@ -20,7 +21,7 @@ function CreditsScreen() {
 	};
 
 	this.destroy = function () {
-		console.log('destroying the credits screen');
+		//console.log('destroying the credits screen');
 
 		this.ground.body = null;
 		this.ground.destroy();
@@ -35,6 +36,7 @@ function CreditsScreen() {
 		this.credits.destroy();
 
 		this.menuButton.destroy();
+		this.clouds.destroy();
 	};
 
 	this.update = function (delta) {

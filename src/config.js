@@ -1,6 +1,6 @@
 //debug flags
 
-    var resetScores = false; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
+    var resetScores = true; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
     var alwaysMobile = false;   //                      TODO do not leave this enabled
     var debugPhysics = false;
     var resetSound = false;
@@ -30,7 +30,7 @@ var skyTextColor = '#480000';
 
     var maxUFOs = 5;
 
-    var minUFODifficulty = 0.25;                     //TODO make this higher
+    var minUFODifficulty = 0.1;                     //TODO make this higher
 
     var ufoChance = 0.2;                        //TODO tweak this
 
@@ -54,11 +54,11 @@ var wallRightX = windowWidth - wallLeftX;
 
 var gravity = 1600;
 
-var minBrickGravity = 1000;
+var minBrickGravity = 750;
 var maxBrickGravity = 1500;
 
 var cameraSpeed = 32;
-var fullDifficultyTime = 5 * 60 * 1000;
+var fullDifficultyTime = 10 * 60 * 1000;
                       // ^Time it takes for the game to reach full difficulty, in minutes
 var scrollStartRows = 3;
 

@@ -3,7 +3,7 @@ var waveEnemyAmp = windowHeight / 4;
 var waveEnemySpeed = 350;
 
 function WaveEnemy() {
-    var width = game.cache.getImage('enemyorange').width;
+    var width = game.cache.getImage('enemyorange').width / 2;
     
     this.source = percent(0.5);
     this.sin = percent(0.5);
@@ -13,6 +13,8 @@ function WaveEnemy() {
     var x = (this.source ? windowWidth : -width);
     
     this.sprite = game.add.sprite(x, 0, 'enemy' + color);
+    this.sprite.animations.add('normal', [0, 1], 2, true);
+    this.sprite.animations.play('normal');
     this.sprite.smoothed = false;
     
     game.physics.arcade.enable(this.sprite);
@@ -30,7 +32,7 @@ function WaveEnemy() {
             //from the right
             x = (4 * Math.PI) - ((this.sprite.x / windowWidth) * 4 * Math.PI);
         }
-        console.log('Waver X: ' + x);
+        //console.log('Waver X: ' + x);
         
         var y;
         if (this.sin) {

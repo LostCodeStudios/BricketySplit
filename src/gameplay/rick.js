@@ -77,7 +77,7 @@ function Rick(world) {
     var jumpSpeed = 375;
     
     this.destroy = function () {
-        console.log('Destroying rick');
+        //console.log('Destroying rick');
         
         this.sprite.body = null;
         this.sprite.destroy();

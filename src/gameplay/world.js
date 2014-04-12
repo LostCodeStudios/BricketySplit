@@ -6,10 +6,11 @@ function World(skipIntro) {
     this.ground = makeGround();
     this.waterLeft = makeWaterLeft();
     this.waterRight = makeWaterRight();
+    this.clouds = makeClouds();
 
     this.rick = new Rick(this);
     this.bricks = game.add.group();
-    this.enemies = game.add.group();
+    this.enemies = new Array();
     
     this.brickSprites = new Array();
 
@@ -33,7 +34,7 @@ function World(skipIntro) {
     
     this.bottomBrickRow = 0; //for checking and removing
 
-    makeClouds(this);
+    
 
     var scores = JSON.parse(localStorage.getItem('Scores'));
     for (var i = 0; i < scores.length; i++) {
@@ -56,7 +57,7 @@ function World(skipIntro) {
         this.waterLeft.destroy(); 
         this.waterRight.destroy();
 
-        destroyClouds(this);
+        this.clouds.destroy();
 
         for (var i = 0; i < this.brickSprites.length; i++) {
             this.brickSprites[i].sprite.body = null;
@@ -64,8 +65,8 @@ function World(skipIntro) {
         }
 
         for (var i = 0; i < this.enemies.length; i++) {
-            this.enemies.getAt(i).body = null;
-            this.enemies.getAt(i).destroy();
+            this.enemies[i].body = null;
+            this.enemies[i].destroy();
         }
 
         for (var i = 0; i < this.ufos.length; i++) {
@@ -123,8 +124,8 @@ function World(skipIntro) {
         }
         
         for (var i = 0; i < this.enemies.length && !this.rick.dead; i++) {
-            var enemy = this.enemies.getAt(i);
-            enemy.enemy.update();
+            var enemy = this.enemies[i];
+            enemy.bringToTop();
             game.physics.arcade.overlap(this.rick.sprite, enemy, this.enemyRickCollision, null, this);
         }
         
@@ -181,7 +182,7 @@ function World(skipIntro) {
                 }
                 
                 if (!enemy.isUFO && !enemy.isWaver) {
-                    this.enemies.add(enemy.sprite);
+                    this.enemies[this.enemies.length] = enemy.sprite;
                 }
             }
         }
@@ -192,26 +193,43 @@ function World(skipIntro) {
             pushWorldBoundsUp(sec * cameraSpeed);
             this.boundsToPush -= sec * cameraSpeed;
 
-            //check the bottom row of bricks to see if they need to be removed
-            var i = 0;
+            //check the bottom row of bricks to see if they need to be removed after the camera moves up
+            
 
-            var brick = this.wall.bricks[this.bottomBrickRow][i];
+            if (this.boundsToPush <= 0) {
+                console.log('Checking to remove bricks');
 
-            if (this.outOfBounds(brick.sprite)) {
-                //remove the whole row
-                do {
-                    brick.sprite.body = null;
-                    brick.sprite.destroy();
-                    console.log('REMOVING A BRICK');
+                console.log('Bottom brick row: ' + this.bottomBrickRow);
+                var brick = this.wall.bricks[this.bottomBrickRow][0];
 
-                    brick = this.wall.bricks[this.bottomBrickRow][i++]; //take the next brick to the right
-                } while (brick);
+                while (this.outOfBounds(brick.sprite)) {
+                    var i = 0;
+                    //remove the whole row
+                    console.log('REMOVING A ROW');
+                    
+                    brick = this.wall.bricks[this.bottomBrickRow][i];
+                    do {
 
-                this.bottomBrickRow++;
+                        brick.sprite.body = null;
+                        brick.sprite.destroy();
+                        console.log('REMOVING A BRICK');
+
+                        brick = this.wall.bricks[this.bottomBrickRow][i++]; //take the next brick to the right
+                    } while (brick);
+
+                    this.bottomBrickRow++;
+
+                    console.log('Bottom brick row: ' + this.bottomBrickRow);
+
+                    brick = this.wall.bricks[this.bottomBrickRow][0];
+
+
+
+                }
+
+
             }
         }
-        
-        updateClouds(this);
 
         this.rick.update();
         
@@ -240,7 +258,7 @@ function World(skipIntro) {
                 
                 this.ufos.splice(i, 1);
                 
-                console.log('REMOVED A UFO');
+               // console.log('REMOVED A UFO');
             }
         }
         
@@ -253,20 +271,20 @@ function World(skipIntro) {
                 
                 this.wavers.splice(i, 1);
             
-                console.log('REMOVED A WAVER');
+                //console.log('REMOVED A WAVER');
             }
         }
         
         for (var i = this.enemies.length - 1; i >= 0; i--) {
-            if (this.outOfBounds(this.enemies.getAt(i))) {
-                var enemy = this.enemies.getAt(i);
+            if (this.outOfBounds(this.enemies[i])) {
+                var enemy = this.enemies[i];
 
-                this.enemies.remove(this.enemies.getAt(i));
+                this.enemies.splice(i, 1);
 
                 enemy.body = null;
                 enemy.destroy();
 
-                console.log('REMOVED A FRIEND');
+                //console.log('REMOVED A FRIEND');
             }
         }
         
@@ -278,7 +296,7 @@ function World(skipIntro) {
                 laser.body = null;
                 laser.destroy();
 
-                console.log('REMOVED A LASER');
+                //console.log('REMOVED A LASER');
             }
         }
         
@@ -599,6 +617,17 @@ function makeWaterRight() {
     water.animations.add('normal', [1, 0], 1.25, true);
     water.animations.play('normal');
     water.fixedToCamera = true;
+    water.smoothed = false;
 
     return water;
+}
+
+function makeClouds() {
+    var clouds = game.add.sprite(0, 0, 'clouds');
+    clouds.animations.add('normal', [0, 1], 0.25, true);
+    clouds.animations.play('normal');
+    clouds.fixedToCamera = true;
+    clouds.smoothed = false;
+
+    return clouds;
 }

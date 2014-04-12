@@ -27,16 +27,16 @@ function preload() {
     //load world sprites
     game.load.image('ground', 'assets/sprites/ground.png');
     game.load.spritesheet('water', 'assets/sprites/water.png', 112, 24);
-    game.load.image('cloud', 'assets/sprites/cloud1.png');
+    game.load.spritesheet('clouds', 'assets/sprites/clouds.png', 800, 150);
 
     //load brick sprites
     game.load.image('brick', 'assets/sprites/brick2.png');
     game.load.image('halfbrick', 'assets/sprites/halfbrick3.png');
 
     //load enemy sprites
-    game.load.image('enemy', 'assets/sprites/enemy.png');
-    game.load.image('enemyblue', 'assets/sprites/enemyblue.png');
-    game.load.image('enemyorange', 'assets/sprites/enemyorange.png');
+    game.load.spritesheet('enemy', 'assets/sprites/enemy2.png', 36, 32);
+    game.load.spritesheet('enemyblue', 'assets/sprites/enemyblue2.png', 36, 32);
+    game.load.spritesheet('enemyorange', 'assets/sprites/enemyorange2.png', 36, 32);
 
     game.load.image('ufo', 'assets/sprites/ufo2.png');
     game.load.image('laser', 'assets/sprites/laser.png');
@@ -95,7 +95,7 @@ function preload() {
     game.load.audio('splash', 'assets/sounds/Splash3.wav');
 
     if (!localStorage.getItem('Scores') || resetScores) {
-        var scores = [ 100, 50, 15 ];
+        var scores = [ 40, 25, 15 ];
         
         localStorage.setItem('Scores', JSON.stringify(scores));
     }
@@ -118,7 +118,7 @@ function pushWorldBoundsUp (amount) {
 }
 
 function resetWorldBounds () {
-    console.log('resetting bounds');
+   // console.log('resetting bounds');
 
     if (!(typeof tweener === 'undefined')) {
         tweener.y = 0;
@@ -133,7 +133,8 @@ function create() {
     loadingScreen = game.add.sprite(0, 0, 'loadingscreen');
 
     game.time.events.add(Phaser.Timer.SECOND, start, this);
-    
+
+    game.time.deltaCap = frameTime;
 }
 
 function onInputUp() {
@@ -178,7 +179,7 @@ function start() {
     
     lastTime = 0;
     
-    console.log('Wall x: ' + wallLeftX);
+//    console.log('Wall x: ' + wallLeftX);
     setState(new MainMenu());
 }
 
@@ -190,7 +191,7 @@ function update() {
     currentTime = game.time.now;
     var delta = currentTime - lastTime;
     
-    if (delta <= frameTime && updateState) state.update(delta);
+    state.update(delta);
     
     lastTime = currentTime;
     

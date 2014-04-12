@@ -3,7 +3,7 @@ function Style(font, fill, centered) {
 	this.fill = fill;
 	this.align = centered ? 'center' : 'left';
 
-	console.log('Alignment: ' + this.align);
+	//console.log('Alignment: ' + this.align);
 }
 
 function AddLabelShadow(label, x, y, color, blur) {

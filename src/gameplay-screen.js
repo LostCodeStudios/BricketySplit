@@ -13,7 +13,7 @@ function GameplayScreen(skipIntro) {
 
     this.transitionOff = function() {
         updateState = false; 
-        console.log('Transitioning off');
+       // console.log('Transitioning off');
 
         this.transitioning = true;
 
@@ -26,7 +26,7 @@ function GameplayScreen(skipIntro) {
     };
     
     this.tweenUpdate = function () {
-        console.log('Updating tween');
+       // console.log('Updating tween');
 
         if (tweener.x > 0 && !tweener.halfway) {
             //more than halfway
@@ -56,7 +56,7 @@ function GameplayScreen(skipIntro) {
         
         if (this.world.gameOver()) {           
             if (!this.gameOverText) {
-                var text = (tutorial ? 'TRY AGAIN' : 'GAME OVER');
+                var text = (tutorial() ? 'TRY AGAIN' : 'GAME OVER');
                 this.gameOverText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.3, text, mediumTextFont, skyTextColor);
                 this.gameOverText.fixedToCamera = true;
                 this.skipIntro = this.world.elapsedTime > tutorialBrickFallDelay;

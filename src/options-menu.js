@@ -2,6 +2,7 @@ function OptionsScreen() {
 	this.ground = makeGround();
 	this.waterLeft = makeWaterLeft();
 	this.waterRight = makeWaterRight();
+	this.clouds = makeClouds();
 
 	this.titleText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.1, 'Options', '48px Bangers', skyTextColor);
     this.brickFallSound = game.add.audio('brickfall');
@@ -81,6 +82,7 @@ function OptionsScreen() {
 		this.checkBoxFilled.destroy();
 		this.checkBoxEmpty.destroy();
 		this.tutorialText.destroy();
+		this.clouds.destroy();
 
 	};
 
@@ -139,7 +141,7 @@ function OptionsScreen() {
     	this.checkBoxEmpty.kill();
     	this.checkBoxFilled.revive();
 
-    	console.log('Enabled the tutorial');
+    	//console.log('Enabled the tutorial');
     };
 
     function boxEmptied() {
@@ -147,7 +149,7 @@ function OptionsScreen() {
     	this.checkBoxFilled.kill();
     	this.checkBoxEmpty.revive();
 
-    	console.log('disabled the tutorial');
+    	//console.log('disabled the tutorial');
     };
 
 }

@@ -1,20 +1,26 @@
+var scoreTitleTextY = windowHeight * 0.1
+
 function HighScoreScreen(newRecord) {
     
     this.newRecord = newRecord;
         
-    this.scoreText = game.add.group();
     
     this.wallSprites = new Array();
     
     var menuButtonX = 600;
     var menuButtonY = 40;
 
+    topOfScreenWallHeight = (windowHeight - groundHeight - 150) / 4;
+
     this.show = function (oldState) {
         var text = "Rick's Best Walls";
         if (this.newRecord !== -1) {
             text = 'New record!';
         }
-        this.titleText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.1, text, '48px Bangers', skyTextColor);
+        this.clouds = makeClouds();
+        this.scoreText = game.add.group();
+        this.titleText = MakeCenteredLabel(windowWidth / 2, scoreTitleTextY, text, '48px Bangers', skyTextColor);
+        this.titleText.fixedToCamera = true;
         this.brickFallSound = game.add.audio('brickfall');
         
         var scores = JSON.parse(localStorage.getItem('Scores'));
@@ -22,11 +28,15 @@ function HighScoreScreen(newRecord) {
         this.scores = scores;
 
         this.menuButton = game.add.button(menuButtonX, menuButtonY, 'menubutton', playKeyPressed, this, 1, 0, 2);
+        this.menuButton.fixedToCamera = true;
         
         //make the physical stuff
         this.ground = makeGround();
         this.waterLeft = makeWaterLeft();
         this.waterRight = makeWaterRight();
+
+        this.waterLeft.fixedToCamera = false;
+        this.waterRight.fixedToCamera = false;
 
         var startX = lerp(wallRightX, wallLeftX, 0.15);
         var endX = windowWidth - startX;
@@ -55,6 +65,7 @@ function HighScoreScreen(newRecord) {
         this.ground.destroy();
         this.waterLeft.destroy();
         this.waterRight.destroy();
+        this.clouds.destroy();
 
         this.menuButton.destroy();
 
@@ -65,8 +76,17 @@ function HighScoreScreen(newRecord) {
     };
 
     this.fallDist = windowHeight - brickHeight;
-    
+    this.boundsToPush = 0;
+
     this.update = function (delta) {
+        var sec = delta / 1000;
+        if (this.boundsToPush > 0) {
+            var camSpeed = this.boundsToPush;
+
+            pushWorldBoundsUp(camSpeed * sec);
+            this.boundsToPush -= (camSpeed * sec);
+        }
+
         for (var i = 0; i < this.wallSprites.length; i++) {
             var sprite = this.wallSprites[i];
             
@@ -82,7 +102,24 @@ function HighScoreScreen(newRecord) {
                     //show height number
                     var heightText = '' + sprite.wallHeight + 'm';
                     
-                    this.scoreText.add(MakeLabel(sprite.body.x, bottomBounds - (brickHeight + 1 + sprite.wallHeight * 3) - 24 * 2, heightText, smallTextFont, '#000000', false));
+                    if (sprite.wallHeight > topOfScreenWallHeight) {
+                        var byHowMuch = sprite.wallHeight - topOfScreenWallHeight;
+
+                        topOfScreenWallHeight += byHowMuch;
+
+                        this.boundsToPush += 1 + byHowMuch * 3;
+                    }
+
+
+                    var scoreTextX = sprite.body.x;
+                    var scoreTextY = windowHeight - (brickHeight + 1 + sprite.wallHeight * 3) - 24 * 2;
+                    console.log('score text x: ' + scoreTextX);
+                    console.log('Score text y: ' + scoreTextY);
+
+                    var scoreText = game.add.text(scoreTextX, scoreTextY, heightText, {font: smallTextFont, fill:'#000000'});
+                    //MakeLabel(scoreTextX, scoreTextY, heightText, smallTextFont, '#000000', false);
+                    this.scoreText.add(scoreText);
+                            console.log('game input y: ' + topBounds + game.input.y);
                     
                     this.nextMiniWall = sprite.lane - 1;
                     
@@ -141,7 +178,7 @@ function HighScoreScreen(newRecord) {
 
         //console.log('Making x: ' + x);
 
-        var y = topBounds - 1;
+        var y = 0 - 1;
         var sprite = game.add.sprite(x, y, 'rowdivider');
         game.physics.arcade.enable(sprite);
         sprite.body.gravity.y = gravity;
