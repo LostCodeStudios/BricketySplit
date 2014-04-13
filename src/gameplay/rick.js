@@ -22,8 +22,6 @@ function Rick(world) {
     this.sprite.animations.add('walkRight', [3, 2], fps, true);
     this.sprite.animations.add('standRight', [2], fps, true);
     
-    this.jumpSound = game.add.audio('jump');
-    
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     
     this.sprite.anchor.set(2/19, 0);
@@ -149,9 +147,9 @@ function Rick(world) {
 
             
             if (deathType == RICK_DEATH_SQUASH) {
-                playSound(this.deathSound);
+                playSound(squishSound);
             } else {
-                playSound(this.hitSound);
+                playSound(deathSound);
             }
         } else {
             //handle a splash death
@@ -177,7 +175,7 @@ function Rick(world) {
                 emitter.start(true, 1000, null, 30);
             }
 
-            playSound(this.splashSound);
+            playSound(splashSound);
         }
 
         
@@ -255,7 +253,7 @@ function Rick(world) {
         if (this.jumping && this.sprite.body.touching.down)
         {
             this.sprite.body.velocity.y = -jumpSpeed;
-            playSound(this.jumpSound);
+            playSound(jumpSound);
         }
         
         if (this.sprite.body.y > bottomBounds + 30) {

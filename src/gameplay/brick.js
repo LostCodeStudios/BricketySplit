@@ -28,8 +28,7 @@ function Brick(lane, offset, wall, difficulty) {
     this.sprite.body.width -= brickWidthMargin * 2;
     
     this.sprite.body.gravity.y = lerp(minBrickGravity, maxBrickGravity, difficulty);
-        
-    this.sprite.fallSound = game.add.audio('brickfall');
+    
     this.sprite.isBrick = true;
 
     this.lane = lane;

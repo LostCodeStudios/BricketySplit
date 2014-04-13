@@ -2,7 +2,6 @@ function CreditsScreen() {
 	this.ground = makeGround();
 	this.leftWater = makeWaterLeft();
 	this.rightWater = makeWaterRight();
-	this.brickSound = game.add.audio('brickfall');
 	this.clouds = makeClouds();
 
     var menuButtonX = 620;
@@ -106,7 +105,7 @@ function CreditsScreen() {
 	    }
 
         // and play a sound
-        playSound(this.brickSound);
+        playSound(brickFallSound);
 	};
 
 	function playKeyPressed() {

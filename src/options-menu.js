@@ -5,7 +5,6 @@ function OptionsScreen() {
 	this.clouds = makeClouds();
 
 	this.titleText = MakeCenteredLabel(windowWidth / 2, windowHeight * 0.1, 'Options', '48px Bangers', skyTextColor);
-    this.brickFallSound = game.add.audio('brickfall');
 
 	var menuButtonX = 600;
     var menuButtonY = 40;
@@ -137,7 +136,7 @@ function OptionsScreen() {
 			this.brickY -= brickHeight;
     	}
 
-    	playSound(this.brickFallSound); //give the player a taste
+    	playSound(brickFallSound); //give the player a taste
     };
 
     function soundDownPressed() {
@@ -156,7 +155,7 @@ function OptionsScreen() {
 			this.brickY += brickHeight;
     	}
 
-    	playSound(this.brickFallSound); //give the player a taste
+    	playSound(brickFallSound); //give the player a taste
     };
 
     function boxFilled() {

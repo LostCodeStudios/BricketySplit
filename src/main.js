@@ -28,16 +28,17 @@ function preload() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/sprites/ground.png');
     game.load.spritesheet('water', 'assets/sprites/water.png', 112, 24);
-    game.load.spritesheet('clouds', 'assets/sprites/clouds.png', 800, 150);
+    game.load.spritesheet('clouds', 'assets/sprites/clouds2.png', 800, 150);
 
     //load brick sprites
     game.load.image('brick', 'assets/sprites/brick2.png');
     game.load.image('halfbrick', 'assets/sprites/halfbrick3.png');
+    game.load.spritesheet('fullrows', 'assets/sprites/fullrows.png', 576, 32);
 
     //load enemy sprites
-    game.load.spritesheet('enemy', 'assets/sprites/enemy3.png', 36, 32);
-    game.load.spritesheet('enemyblue', 'assets/sprites/enemyblue3.png', 36, 32);
-    game.load.spritesheet('enemyorange', 'assets/sprites/enemyorange3.png', 36, 32);
+    game.load.spritesheet('enemy', 'assets/sprites/enemy4.png', 36, 32);
+    game.load.spritesheet('enemyblue', 'assets/sprites/enemyblue4.png', 36, 32);
+    game.load.spritesheet('enemyorange', 'assets/sprites/enemyorange4.png', 36, 32);
 
     game.load.image('ufo', 'assets/sprites/ufo2.png');
     game.load.image('laser', 'assets/sprites/laser.png');
@@ -58,7 +59,7 @@ function preload() {
 
     //load tutorial assets
     game.load.image('arrowdown', 'assets/tutorial/arrowdown2.png');
-    game.load.image('zbutton', 'assets/tutorial/zbutton2.png');
+    game.load.image('zbutton', 'assets/tutorial/zbutton3.png');
     
     var arrowKeyWidth = 48, arrowKeyHeight = 48;
     
@@ -78,6 +79,8 @@ function preload() {
     game.load.spritesheet('menubutton', 'assets/ui/menubutton.png', 160, 64);
     game.load.spritesheet('emptycheckbox', 'assets/ui/emptycheckbox2.png', 51, 48);
     game.load.spritesheet('filledcheckbox', 'assets/ui/filledcheckbox2.png', 51, 48);
+    game.load.spritesheet('rbutton', 'assets/ui/rbutton.png', 51, 48);
+    game.load.image('rkey', 'assets/ui/rkey.png');
 
     //main menu buttons
     game.load.spritesheet('playbutton', 'assets/ui/playbutton3.png', 384, 100);
@@ -136,6 +139,13 @@ function create() {
     game.time.events.add(Phaser.Timer.SECOND, start, this);
 
     game.time.deltaCap = frameTime;
+
+    jumpSound = game.add.audio('jump');
+    brickFallSound = game.add.audio('brickfall');
+    squishSound = game.add.audio('squish');
+    laserSound = game.add.audio('laser');
+    deathSound = game.add.audio('death');
+    splashSound = game.add.audio('splash');
 }
 
 function onInputUp() {
@@ -199,7 +209,8 @@ function update() {
     currentTime = game.time.now;
     var delta = currentTime - lastTime;
     
-    state.update(delta);
+    if (delta <= frameTime)
+        state.update(delta);
 
     if (started && mobile && debugState) {
         debugText.text = 'Updating state: ' + state;

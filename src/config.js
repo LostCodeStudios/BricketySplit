@@ -1,7 +1,7 @@
 //debug flags
 
     var resetScores = false; //                              TODO IT WOULD BE WAY BAD TO LEAVE THIS ENABLED
-    var alwaysMobile = false;   //                      TODO do not leave this enabled
+    var alwaysMobile = true;   //                      TODO do not leave this enabled
     var debugPhysics = false;
     var resetSound = false;
     var debugState = false;
@@ -31,7 +31,7 @@ var skyTextColor = '#480000';
 
     var maxUFOs = 5;
 
-    var minUFODifficulty = 0.1;                     //TODO make this higher
+    var minUFODifficulty = 0.1; //0.1                     //TODO make this higher
 
     var ufoChance = 0.2;                        //TODO tweak this
 

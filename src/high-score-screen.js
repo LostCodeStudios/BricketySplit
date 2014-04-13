@@ -21,7 +21,6 @@ function HighScoreScreen(newRecord) {
         this.scoreText = game.add.group();
         this.titleText = MakeCenteredLabel(windowWidth / 2, scoreTitleTextY, text, '48px Bangers', skyTextColor);
         this.titleText.fixedToCamera = true;
-        this.brickFallSound = game.add.audio('brickfall');
         
         var scores = JSON.parse(localStorage.getItem('Scores'));
         
@@ -120,7 +119,7 @@ function HighScoreScreen(newRecord) {
                     
                     this.nextMiniWall = sprite.lane - 1;
                     
-                    playSound(this.brickFallSound);
+                    playSound(brickFallSound);
                     sprite.handleFallEvent = false; //don't do this repeatedly, please
 
                     //throw up some particles

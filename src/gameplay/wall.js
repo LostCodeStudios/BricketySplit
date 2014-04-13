@@ -70,7 +70,10 @@ function Wall(width) {
     
     this.rowFinishedCurrent = function(row) {
         for (var i = 0; i <= this.width; i++) {
-            if (!(this.lanes[i] == row)) return false;
+            if (this.lanes[i] < row) {
+               // console.log('Lane ' + i + 'is not filled');
+                return false;
+            }
         }
         
         return true;

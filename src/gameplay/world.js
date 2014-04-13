@@ -10,7 +10,7 @@ function World(skipIntro) {
 
     this.rick = new Rick(this);
 
-    if (skipIntro) {
+    if (skipIntro && mobile) {
         //make the buttons
         this.rick.createMoveButtons();
         this.rick.createJumpButton();
@@ -18,6 +18,7 @@ function World(skipIntro) {
 
 
     this.bricks = game.add.group();
+    this.fullRows = new Array();
     this.enemies = new Array();
     
     this.brickSprites = new Array();
@@ -55,7 +56,7 @@ function World(skipIntro) {
     }
     
     this.destroy = function () {
-        console.log('Destroying the woooooooooorlld!');
+        //console.log('Destroying the woooooooooorlld!');
 
         if (this.ground) {
             this.ground.body = null;
@@ -91,6 +92,15 @@ function World(skipIntro) {
             this.lasers.getAt(i).body = null;
             this.lasers.getAt(i).destroy();
         }
+
+        for (var i = this.bottomBrickRow; i < this.fullRows.length; i++) {
+            //console.log('destroying full row' + i);
+            if (typeof this.fullRows[i] !== 'undefined') {
+                this.fullRows[i].body = null;
+                this.fullRows[i].destroy();
+            }
+        }
+
         this.markers.destroy();
     };
     
@@ -205,37 +215,26 @@ function World(skipIntro) {
             
 
             if (this.boundsToPush <= 0) {
-                console.log('Checking to remove bricks');
+                //console.log('Checking to remove bricks');
 
-                console.log('Bottom brick row: ' + this.bottomBrickRow);
-                var brick = this.wall.bricks[this.bottomBrickRow][0];
+                //console.log('Bottom brick row: ' + this.bottomBrickRow);
+                
+                //TODO remove full rows offscreen 
 
-                while (this.outOfBounds(brick.sprite)) {
-                    var i = 0;
-                    //remove the whole row
-                    console.log('REMOVING A ROW');
-                    
-                    brick = this.wall.bricks[this.bottomBrickRow][i];
-                    do {
-
-                        brick.sprite.body = null;
-                        brick.sprite.destroy();
-                        console.log('REMOVING A BRICK');
-
-                        brick = this.wall.bricks[this.bottomBrickRow][i++]; //take the next brick to the right
-                    } while (brick);
-
+                if (this.bottomBrickRow === 0) {
                     this.bottomBrickRow++;
-
-                    console.log('Bottom brick row: ' + this.bottomBrickRow);
-
-                    brick = this.wall.bricks[this.bottomBrickRow][0];
-
-
-
                 }
 
+                while (typeof this.fullRows[this.bottomBrickRow] !== 'undefined' && this.outOfBounds(this.fullRows[this.bottomBrickRow])) { //loop because multiple may need to be removed
+                    this.bricks.remove(this.fullRows[this.bottomBrickRow]);
 
+                    this.fullRows[this.bottomBrickRow].body = null;
+                    this.fullRows[this.bottomBrickRow].destroy();
+
+                   // console.log('Removing a full row');
+
+                    this.bottomBrickRow++;
+                }
             }
         }
 
@@ -354,7 +353,7 @@ function World(skipIntro) {
 
         this.canBrickFall = true; //one brick falling at a time
         
-        playSound(brick.fallSound);
+        playSound(brickFallSound);
         
         //throw up some particles
 
@@ -405,35 +404,67 @@ function World(skipIntro) {
             rightEmitter.start(true, 500, null, 4);
         }
 
-        //merge bodies with the adjacent brick
-        var lane = brick.brick.lane;
+        //if a full row is complete, destroy all the bricks and put a full row sprite there
+        if (this.wall.rowFinishedCurrent(brick.brick.row)) {
+            var i = 0;
+            var brickToDestroy = this.wall.bricks[brick.brick.row - 1][i];
+            do {
+                brickToDestroy.sprite.body = null;
+                brickToDestroy.sprite.destroy();
+               // console.log('REMOVING A BRICK');
 
-        if (lane < wallWidth) {
-            if (this.wall.bricks[brick.brick.row - 1][lane + 1]) { //merge with the brick on the right if it exists
-                brick.body.width += this.wall.bricks[brick.brick.row - 1][lane + 1].sprite.body.width;
-                this.wall.bricks[brick.brick.row - 1][lane + 1].sprite.body = null;
+                brickToDestroy = this.wall.bricks[brick.brick.row - 1][i++]; //take the next brick to the right
+            } while (brickToDestroy);
 
-                // console.log('Merged a brick to the right');
+          //  console.log('Making a full row');
+            var fullRow = game.add.sprite(wallLeftX, windowHeight - brickHeight - brickHeight * brick.brick.row, 'fullrows');
+            fullRow.smoothed = false;
+
+            if (brick.brick.row % 2 == 0) {
+                fullRow.frame = 1;
+            } else {
+                fullRow.frame = 0;
             }
-        }
-        if (lane > 0) {
-            if (this.wall.bricks[brick.brick.row - 1][lane - 1]) {  //merge with the bricks on the left if it exists
-                var leftBricksWidth;
-                var i = 1;
-                while (!this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body) {
-                    i++;
+
+            game.physics.arcade.enable(fullRow);
+            fullRow.body.immovable = true;
+            fullRow.body.gravity.y = 0;
+            fullRow.body.moves = false;
+
+            this.bricks.add(fullRow);
+            this.fullRows[brick.brick.row] = fullRow;
+        } else {
+
+            //merge bodies with the adjacent brick
+            var lane = brick.brick.lane;
+
+            if (lane < wallWidth) {
+                if (this.wall.bricks[brick.brick.row - 1][lane + 1]) { //merge with the brick on the right if it exists
+                    brick.body.width += this.wall.bricks[brick.brick.row - 1][lane + 1].sprite.body.width;
+                    this.wall.bricks[brick.brick.row - 1][lane + 1].sprite.body = null;
+
+                    // console.log('Merged a brick to the right');
                 }
-                leftBricksWidth = this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body.width;
-
-                this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body.width += brick.body.width;
-                brick.body = null;
-
-                // console.log('Merged bricks to the left');
             }
-        }
+            if (lane > 0) {
+                if (this.wall.bricks[brick.brick.row - 1][lane - 1]) {  //merge with the bricks on the left if it exists
+                    var leftBricksWidth;
+                    var i = 1;
+                    while (!this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body) {
+                        i++;
+                    }
+                    leftBricksWidth = this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body.width;
 
-        if (brick.body) {
-            this.bricks.add(brick);
+                    this.wall.bricks[brick.brick.row - 1][lane - i].sprite.body.width += brick.body.width;
+                    brick.body = null;
+
+                    // console.log('Merged bricks to the left');
+                }
+            }
+
+            if (brick.body) {
+                this.bricks.add(brick);
+            }
         }
     };
     
@@ -442,7 +473,7 @@ function World(skipIntro) {
     };
     
     this.laserCollision = function (laser, other) {
-        this.rick.die();
+        this.rick.die(RICK_DEATH_HIT);
     };
     
     this.rickCenterX = function () {
@@ -455,6 +486,8 @@ function World(skipIntro) {
     
     this.updateTutorial = function () {
         
+        if (this.rick.dead) return;
+
         if (this.skipIntro && this.elapsedTime >= brickFallDelay) {
             this.skipIntro = false;
             
@@ -469,8 +502,8 @@ function World(skipIntro) {
             this.arrow.x = this.rickCenterX();
             this.arrow.y = this.rick.sprite.y - arrowDownHeight - 5;
             
-            if (this.label) this.label.destroy();
-            this.label = MakeCenteredLabel(this.rickCenterX(), this.rick.sprite.y - arrowDownHeight - tutorialTextSize, tutorialText[1], tutorialFont, '#000000', false);
+            this.label.x = this.rickCenterX();
+            this.label.y = this.rick.sprite.y - arrowDownHeight - tutorialTextSize;
         }
         
         if (!this.rick.dead) { //these phases rely on the player being alive...
@@ -501,8 +534,8 @@ function World(skipIntro) {
             this.arrow.x = this.friendCenterX();
             this.arrow.y = this.followingEnemy.sprite.y - arrowDownHeight;
             
-            if (this.warningLabel) this.warningLabel.destroy();
-            this.warningLabel = MakeCenteredLabel(this.friendCenterX(), this.followingEnemy.sprite.y - arrowDownHeight - tutorialTextSize, 'Avoid "friends"', tutorialFont, '#000000', false);
+            this.warningLabel.x = this.friendCenterX();
+            this.warningLabel.y = this.followingEnemy.sprite.y - arrowDownHeight - tutorialTextSize;
         }
         
         if (!this.skipIntro && this.currentPhase != enemySpawnPhase && this.elapsedTime >= timeTill(this.currentPhase + 1)) {
@@ -521,12 +554,16 @@ function World(skipIntro) {
         if (phase == introPhase) {
             this.arrow = game.add.sprite(this.rickCenterX(), this.rick.sprite.y - arrowDownHeight, 'arrowdown');
             this.arrow.anchor.set(0.5, 0);
+
+            this.label = game.add.text(this.rickCenterX(), this.rick.sprite.y - arrowDownHeight - tutorialTextSize, tutorialText[introPhase] + ' ', {font: smallTextFont, align: 'center', fill: '#000000'});
+            this.label.anchor.set(0.5, 0);
         }
         
         if (phase == jumpPhase) {
             if (!mobile) {
                 this.button = game.add.sprite(-500, windowHeight * 0.5, 'zbutton');
                 this.button.anchor.set(0.5, 0);
+
             } else {
                 this.rick.createJumpButton();
             }
@@ -550,6 +587,9 @@ function World(skipIntro) {
         if (phase == enemySpawnPhase + 1) {
             this.arrow = game.add.sprite(this.friendCenterX(), this.followingEnemy.sprite.y - arrowDownHeight, 'arrowdown');
             this.arrow.anchor.set(0.5, 0);
+
+            this.warningLabel = game.add.text(this.friendCenterX(), this.followingEnemy.sprite.y - 24, 'Avoid "friends" ', {font: smallTextFont, align: 'center', fill: '#000000'});
+            this.warningLabel.anchor.set(0.5, 0);
         }
     };
     
@@ -587,7 +627,7 @@ function World(skipIntro) {
         game.physics.arcade.enable(laser);
         laser.body.velocity.y = laserSpeed;
         
-        playSound(this.laserSound);
+        playSound(laserSound);
         
         this.lasers.add(laser);
     };

@@ -24,6 +24,30 @@ function GameplayScreen(skipIntro) {
         tween.onUpdateCallback(this.tweenUpdate);
         tween.onComplete.add(endGameOverTween, null);
     };
+
+    this.destroy = function (quickRestarting) {
+        this.world.destroy();
+        this.gameOverText.destroy();
+
+        if (this.quickRestartEnabled) {
+            this.quickRestartButton.destroy();
+            this.quickRestartText.destroy();
+
+            if (!mobile) {
+                this.rkey.onDown.remove(quickRestart, this);
+            }
+        }
+
+
+        if (!quickRestarting) {
+            //set the new state, "this" context REQUIRED
+            if (this.gameOverText.text === 'TRY AGAIN') {
+                setState(new GameplayScreen(screenToDestroy.skipIntro));
+            } else {
+                setState(new HighScoreScreen(screenToDestroy.newRecord));
+            }
+        }
+    };
     
     this.tweenUpdate = function () {
        // console.log('Updating tween');
@@ -32,17 +56,8 @@ function GameplayScreen(skipIntro) {
             //more than halfway
             tweener.halfway = true;
 
-            screenToDestroy.world.destroy();
-        
-            if (screenToDestroy.gameOverText) {
-                screenToDestroy.gameOverText.destroy();
-            }
-
-            if (tutorial()) {
-                setState(new GameplayScreen(screenToDestroy.skipIntro));
-            } else {
-                setState(new HighScoreScreen(screenToDestroy.newRecord));
-            }
+            //this will set a new state
+            screenToDestroy.destroy(false);
 
             tweener.bringToTop();
         } else if (tweener.halfway) {
@@ -53,6 +68,11 @@ function GameplayScreen(skipIntro) {
 
     this.update = function (delta) {
         this.world.update(delta);
+
+        if (this.destroyNextFrame) {
+            this.destroy(true);
+            setState(new GameplayScreen());
+        }
         
         if (this.world.gameOver()) {           
             if (!this.gameOverText) {
@@ -77,6 +97,25 @@ function GameplayScreen(skipIntro) {
                         break;
                     }
                 }
+
+                if (!tutorial() && this.newRecord === -1) {
+                    this.quickRestartEnabled = true;
+
+                    //enable quick restart
+                    this.quickRestartText = MakeCenteredLabel(windowWidth * 0.5, windowHeight * 0.4, 'Quick Restart', smallTextFont, skyTextColor);
+                    this.quickRestartText.fixedToCamera = true;
+
+                    if (mobile) {
+                        this.quickRestartButton = game.add.button(windowWidth * 0.35, windowHeight * 0.4 - 12, 'rbutton', quickRestart, this, 1, 0, 2);
+
+                    } else {
+                        this.quickRestartButton = game.add.sprite(windowWidth * 0.35, windowHeight * 0.4 - 12, 'rkey');
+                        this.rkey = game.input.keyboard.addKey(Phaser.Keyboard.R);
+                        this.rkey.onDown.add(quickRestart, this);
+                    }
+
+                    this.quickRestartButton.fixedToCamera = true;
+                }
             }
             
             this.gameOverTimer += delta;
@@ -91,6 +130,10 @@ function GameplayScreen(skipIntro) {
         
     };
     
+    function quickRestart() {
+        this.destroyNextFrame = true;
+    };
+
 }
 
 function endGameOverTween() {
