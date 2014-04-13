@@ -209,8 +209,11 @@ function update() {
     currentTime = game.time.now;
     var delta = currentTime - lastTime;
     
-    if (delta <= frameTime)
+    if (delta <= frameTime) {
         state.update(delta);
+    } else {
+        state.update(frameTime);
+    }
 
     if (started && mobile && debugState) {
         debugText.text = 'Updating state: ' + state;
