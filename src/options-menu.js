@@ -59,63 +59,6 @@ function OptionsScreen() {
     this.brickX = windowWidth * 0.5 - brickWidth / 2;
     this.brickY = windowHeight - groundHeight - brickHeight;
 
-	this.show = function (oldState) {
-		//load current settings
-
-		//place bricks for sound volume
-		var bricks = soundVolume / volumeInc;
-
-		for (var i = 0; i < bricks; i++) {
-			var brick = game.add.sprite(this.brickX, this.brickY, 'brick');
-
-			this.volumeBricks.push(brick);
-
-			this.brickY -= brickHeight;
-		}
-	};
-
-	this.hide = function (newState) {
-		this.menuButton.inputEnabled = false;
-		this.checkBoxEmpty.inputEnabled = false;
-		this.checkBoxFilled.inputEnabled = false;
-		this.pCheckBoxEmpty.inputEnabled = false;
-		this.pCheckBoxFilled.inputEnabled = false;
-	};
-
-	this.destroy = function () {
-		this.ground.body = null;
-		this.ground.destroy();
-		this.waterLeft.destroy();
-		this.waterRight.destroy();
-		this.titleText.destroy();
-		this.menuButton.destroy();
-		this.soundText.destroy();
-		this.soundUpButton.destroy();
-		this.soundDownButton.destroy();
-
-		for (var i = 0; i < this.volumeBricks.length; i++) {
-			this.volumeBricks[i].destroy();
-		}
-
-		this.particleText.destroy();
-		this.checkBoxFilled.destroy();
-		this.checkBoxEmpty.destroy();
-		this.pCheckBoxFilled.destroy();
-		this.pCheckBoxEmpty.destroy();
-
-		this.tutorialText.destroy();
-		this.clouds.destroy();
-
-	};
-
-	this.update = function (delta) {
-
-	};
-
-	this.render = function () {
-
-	};
-
 	function playKeyPressed() {
         setState(new MainMenu());
     };
@@ -193,3 +136,60 @@ function OptionsScreen() {
     };
 
 }
+
+OptionsScreen.prototype.show = function (oldState) {
+	//load current settings
+
+	//place bricks for sound volume
+	var bricks = soundVolume / volumeInc;
+
+	for (var i = 0; i < bricks; i++) {
+		var brick = game.add.sprite(this.brickX, this.brickY, 'brick');
+
+		this.volumeBricks.push(brick);
+
+		this.brickY -= brickHeight;
+	}
+};
+
+OptionsScreen.prototype.hide = function (newState) {
+	this.menuButton.inputEnabled = false;
+	this.checkBoxEmpty.inputEnabled = false;
+	this.checkBoxFilled.inputEnabled = false;
+	this.pCheckBoxEmpty.inputEnabled = false;
+	this.pCheckBoxFilled.inputEnabled = false;
+};
+
+OptionsScreen.prototype.destroy = function () {
+	this.ground.body = null;
+	this.ground.destroy();
+	this.waterLeft.destroy();
+	this.waterRight.destroy();
+	this.titleText.destroy();
+	this.menuButton.destroy();
+	this.soundText.destroy();
+	this.soundUpButton.destroy();
+	this.soundDownButton.destroy();
+
+	for (var i = 0; i < this.volumeBricks.length; i++) {
+		this.volumeBricks[i].destroy();
+	}
+
+	this.particleText.destroy();
+	this.checkBoxFilled.destroy();
+	this.checkBoxEmpty.destroy();
+	this.pCheckBoxFilled.destroy();
+	this.pCheckBoxEmpty.destroy();
+
+	this.tutorialText.destroy();
+	this.clouds.destroy();
+
+};
+
+OptionsScreen.prototype.update = function (delta) {
+
+};
+
+OptionsScreen.prototype.render = function () {
+
+};
