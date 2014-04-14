@@ -34,4 +34,6 @@ function Brick(lane, offset, wall, difficulty) {
     this.lane = lane;
     this.row = wall.lanes[lane] + 1;
     this.sprite.brick = this;
+
+    this.destY = windowHeight - groundHeight - this.row * brickHeight;
 }

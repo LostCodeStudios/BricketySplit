@@ -187,7 +187,7 @@ Rick.prototype.update = function () {
         this.die(RICK_DEATH_SQUASH);
         return;
     }
-    
+
     if (!mobile) {
         this.jumping = false;
         //jump logic - take input from multiple keys

@@ -31,6 +31,9 @@ function World(skipIntro) {
 
     this.wall = new Wall(wallWidth);
 
+    this.brickDelay = (tutorial() ? tutorialBrickFallDelay : brickFallDelay);
+    this.delayOver = false;
+
     var scores = JSON.parse(localStorage.getItem('Scores'));
     for (var i = 0; i < scores.length; i++) {
         var score = scores[i];
@@ -109,14 +112,13 @@ World.prototype.gameOver = function () {
 World.prototype.update = function (delta) {
     this.elapsedTime += delta;
     
-    var brickDelay = (tutorial() ? tutorialBrickFallDelay : brickFallDelay);
-    
-    if (this.elapsedTime >= brickDelay) {
+    if (this.elapsedTime >= this.brickDelay) {
+        this.delayOver = true;
         this.difficulty += delta / fullDifficultyTime;
-        this.difficulty = Math.min(this.difficulty, 1);     //update difficulty after bricks start falling
+        this.difficulty = Math.min(this.difficulty, 1);     //update difficulty after bricks start falling, cap at 1
     }
 
-    if (this.elapsedTime >= brickDelay && this.canBrickFall && !this.rick.dead) {
+    if (this.delayOver && this.canBrickFall && !this.rick.dead) {
         var lane = this.wall.nextLane();
         
         var brick = new Brick(lane, this.wall.isOffset(lane), this.wall, this.difficulty);
@@ -166,13 +168,12 @@ World.prototype.update = function (delta) {
         game.physics.arcade.collide(this.rick.sprite, this.fallingBrick.sprite);
         this.fallingBrick.sprite.body.immovable = false;
     }
-    for (var i = 0; i < this.bricks.length && this.fallingBrick; i++) { //there is a reason for this
-        if (this.bricks.getAt(i).body) {
-            game.physics.arcade.collide(this.fallingBrick.sprite, this.bricks.getAt(i), this.brickCollisionCallback, processBrickCollision, this);
+        
+    if (this.fallingBrick) { //there is a reason for this
+        if (this.fallingBrick.sprite.body.y >= this.fallingBrick.destY) {
+            //it's landed in place
+            this.brickCollisionCallback(this.fallingBrick.sprite);
         }
-    }
-    if (this.fallingBrick && this.ground) { //there is a reason for this
-        game.physics.arcade.collide(this.fallingBrick.sprite, this.ground, this.brickCollisionCallback, processBrickCollision, this);
     }
     
     //after the first two rows are finished, start pushing the camera up
@@ -216,8 +217,6 @@ World.prototype.update = function (delta) {
             //console.log('Checking to remove bricks');
 
             //console.log('Bottom brick row: ' + this.bottomBrickRow);
-            
-            //TODO remove full rows offscreen 
 
             if (this.bottomBrickRow === 0) {
                 this.bottomBrickRow++;
@@ -335,7 +334,7 @@ World.prototype.spawnEnemy = function () {
     }
 };
 
-World.prototype.brickCollisionCallback = function (brick, other) {        
+World.prototype.brickCollisionCallback = function (brick) {        
     this.fallingBrick = null;
 
     brick.body.x -= brickWidthMargin;
@@ -345,7 +344,8 @@ World.prototype.brickCollisionCallback = function (brick, other) {
     brick.body.gravity.y = 0;
 
     brick.x = brick.body.x;
-    brick.y = brick.body.y; //the body may be about to be removed, 
+    brick.body.y = brick.brick.destY; //put the body in the proper place
+    brick.y = brick.brick.destY; //position based on body since it might be destroyed soon
 
     //so set the sprite's position to the body for the last time
 
@@ -381,7 +381,7 @@ World.prototype.brickCollisionCallback = function (brick, other) {
 
         var particleKey;
 
-        if (other.isGround) {
+        if (brick.brick.destY === windowHeight - groundHeight - brickHeight) { //first row
             //dirt particles
         
             particleKey = 'dirtparticle';
@@ -629,11 +629,6 @@ World.prototype.spawnLaser = function(x, y) {
     
     this.lasers.add(laser);
 };
-
-
-function processBrickCollision() {
-    return true;
-}
 
 function makeGround() {
     var groundHeight = 32;

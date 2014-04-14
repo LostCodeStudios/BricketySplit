@@ -203,7 +203,11 @@ function start() {
 
 var updateState = true;
 function update() {
-    
+    // for (var i = 0; i < 150; i++) {
+    //     console.log('Lagging up the system!');
+    // }
+
+
     if (!started) return;
     
     currentTime = game.time.now;

@@ -38,7 +38,8 @@ var skyTextColor = '#480000';
 //end enemy spawn pattern
 
 var fps = 10;
-var frameTime = 1000 / 30;
+var deltaCap = 1 / 60; //sec?
+var frameTime = deltaCap * 1000;
 
 var windowWidth = 800;
 var windowHeight = 480;
