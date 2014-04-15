@@ -137,8 +137,12 @@ function create() {
     loadingScreen = game.add.sprite(0, 0, 'loadingscreen');
 
     game.time.events.add(Phaser.Timer.SECOND, start, this);
+    if (debugTime) {
+        console.log('Time debugging happens');
 
-    game.time.deltaCap = frameTime;
+        game.time.advancedTiming = true;
+        game.time.events.add(Phaser.Timer.SECOND, logTime, this);
+    }
 
     jumpSound = game.add.audio('jump');
     brickFallSound = game.add.audio('brickfall');
@@ -162,6 +166,7 @@ function start() {
     started = true;
     
     game.stage.backgroundColor = backgroundColor;
+    game.time.deltaCap = deltaCap;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     
     updateWorldBounds();
@@ -203,8 +208,8 @@ function start() {
 
 var updateState = true;
 function update() {
-    // for (var i = 0; i < 150; i++) {
-    //     console.log('Lagging up the system!');
+    // for (var i = 0; i < 60000000; i++) {
+    //     //cause lag!
     // }
 
 
@@ -217,10 +222,6 @@ function update() {
         state.update(delta);
     } else {
         state.update(frameTime);
-    }
-
-    if (started && mobile && debugState) {
-        debugText.text = 'Updating state: ' + state;
     }
     
     lastTime = currentTime;
@@ -250,4 +251,12 @@ function setState(newState) {
 
     newState.show(state);
     state = newState;
+}
+
+function logTime() {
+    console.log('Max FPS: ' + game.time.fpsMax);
+    console.log('Min FPS: ' + game.time.fpsMin);
+    console.log('Current FPS: ' + game.time.fps);
+
+    game.time.events.add(Phaser.Timer.SECOND  * 5, logTime, this);
 }

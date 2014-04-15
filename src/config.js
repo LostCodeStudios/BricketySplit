@@ -5,6 +5,7 @@
     var debugPhysics = false;
     var resetSound = false;
     var debugState = false;
+    var debugTime = false;
 
 //end debug flags
 
@@ -38,7 +39,7 @@ var skyTextColor = '#480000';
 //end enemy spawn pattern
 
 var fps = 10;
-var deltaCap = 1 / 60; //sec?
+var deltaCap = 1 / 20; //sec?
 var frameTime = deltaCap * 1000;
 
 var windowWidth = 800;
